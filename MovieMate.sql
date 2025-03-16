@@ -123,6 +123,7 @@ Select * from UserReview;
 
 --Admin Functionalities
 --1, Admin can add movies
+go
 Create Procedure AddMovie
 @MovieID int,
 @Title varchar(50),
@@ -143,11 +144,13 @@ values(@MovieID,@Title,@MovieType,@Genre,@Duration);
 end
 
 end
+go
 
 exec AddMovie 1,'Batman vs SuperMan','HollyWood','Action','02:50:00';
 exec AddMovie 2,'Pathan','BollyWood','Thriller','03:10:00';
 
 --2, Admin can Add IMDB ratings of each movie
+go
 Create Procedure AddIMDb
 @RatingID int,
 @IMDbRating float,
@@ -171,10 +174,12 @@ print('IMDb rating insertion failed');
 end
 
 end
+go
 
 exec AddIMDb 1,6.7,'Batman finds about Superman Secret...','Batman vs SuperMan';
 
 --3 Admin can Remove Movie from list
+go
 Create Procedure RemoveMovie
 @MovieName varchar(30)
 as begin
@@ -192,10 +197,12 @@ print('Movie does not exist');
 end
 
 end
+go
 
 exec RemoveMovie 'Pathan';
 
 --4 Admin can Update IMDb rating of a movie
+go
 Create Procedure UpdateIMDb
 @MovieName varchar(30),
 @NewRating float
@@ -218,10 +225,12 @@ print('Unable to update IMDb');
 end
 
 end
+go
 
 exec UpdateIMDb 'Batman vs SuperMan',7.9;
 
 --5 Admin can Add Theaters information
+go
 Create Procedure AddTheaters
 @ID int,
 @ScreenType varchar(10)
@@ -239,10 +248,12 @@ print('Unable to Add Theater in Database');
 end
 
 end
+go
 
 exec AddTheaters 1,'Gold';
 
 --6 Admin can add SeatRecord for a theater
+go
 Create Procedure AddSeatRecord
 @ID int,
 @Total int
@@ -260,3 +271,4 @@ print('Seats out of Range');
 end
 
 end
+go
