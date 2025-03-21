@@ -7,13 +7,13 @@ Use MovieMate
 go
 
 Create Table Rating(
-RatingID int Primary Key,
+RatingID int Identity(1,1) Primary Key,
 IMDbRating float,
 Review varchar(100)
 )
 
 Create Table Movie(
-MovieID int Primary Key,
+MovieID int Identity(1,1) Primary Key,
 Title varchar(30),
 MovieType varchar(20),       --e.g. HollyWood,BollyWood,Punjabi
 Genre varchar(20),
@@ -23,7 +23,7 @@ Foreign Key (RatingID) references Rating(RatingID) On Delete set Null On Update 
 );
 
 Create Table SeatRecord(           --Each Theater Has a Seat Record
-SeatRecordID int Primary Key,
+SeatRecordID int Identity(1,1) Primary Key,
 TotalSeats int,
 AvailableSeats int,
 OccupiedSeats int,
@@ -32,27 +32,27 @@ FemaleCount int
 );
 
 Create Table Theater(
-TheaterID int Primary Key,
+TheaterID int Identity(1,1) Primary Key,
 ScreenType varchar(20),            --e.g. Gold,Platinum,Silver
 SeatRecordID int,                  --FK
 Foreign Key (SeatRecordID) references SeatRecord(SeatRecordID) On Delete Cascade On Update Cascade
 );
 
 Create Table Seat(                --Seat of Customer in a Theater hall
-SeatNumber int Primary Key,
+SeatNumber int Identity(1,1) Primary Key,
 TheaterID int,                    --FK
 RowNumber int,
 Foreign Key(TheaterID) references Theater(TheaterID)
 );
 
 Create Table Prices(
-PriceID int Primary Key,
+PriceID int Identity(1,1) Primary Key,
 Category varchar(20),           --e.g. Student,Bachelor
 Amount float
 );
 
 Create Table ShowTimings(
-ShowTimeID int Primary Key,
+ShowTimeID int Identity(1,1) Primary Key,
 MovieID int,                   --FK
 TheaterID int,                 --FK
 ShowDate Date,
@@ -64,7 +64,7 @@ Foreign Key(PriceID) references Prices(PriceID),
 );
 
 Create Table Users(
-UserID int Primary Key,
+UserID int Identity(1,1) Primary Key,
 UserName varchar(30),
 Email varchar(30),
 UserPassword char(10),
@@ -72,14 +72,14 @@ UserType varchar(30)               --e.g. Customer,Admin,Employee
 );
 
 Create Table Payment(
-PaymentID int Primary Key,
+PaymentID int Identity(1,1) Primary Key,
 PaymentStatus varchar(20),         --Paid or UnPaid
 PaymentMethod varchar(20),         --Online or Cash
 PaymentTime Time
 );
 
 Create Table Bookings(
-BookingID int Primary Key,
+BookingID int Identity(1,1) Primary Key,
 UserID int,                   --FK
 SeatNumber int,               --FK
 ShowTimeID int,               --FK
@@ -123,36 +123,34 @@ Select * from UserReview;
 
 --Admin Functionalities
 --1, Admin can add movies
-go
+GO
 Create Procedure AddMovie
-@MovieID int,
 @Title varchar(50),
 @MovieType varchar(20),
 @Genre varchar(20),
 @Duration Time
 as begin
 
-if exists (Select * from Movie where @MovieID = MovieID)
+if exists (Select * from Movie where @Title = Title)
 begin
-print('Insertion Failed as Movie ID already exists in database');
+print('Insertion Failed as Movie with this title already exists in database');
 end
 
 else
 begin
-Insert into Movie (MovieID,Title,MovieType,Genre,Duration)
-values(@MovieID,@Title,@MovieType,@Genre,@Duration);
+Insert into Movie (Title,MovieType,Genre,Duration)
+values(@Title,@MovieType,@Genre,@Duration);
 end
 
 end
-go
+GO
 
-exec AddMovie 1,'Batman vs SuperMan','HollyWood','Action','02:50:00';
-exec AddMovie 2,'Pathan','BollyWood','Thriller','03:10:00';
+exec AddMovie 'Batman vs SuperMan','HollyWood','Action','02:50:00';
+exec AddMovie 'Pathan','BollyWood','Thriller','03:10:00';
 
 --2, Admin can Add IMDB ratings of each movie
-go
+GO
 Create Procedure AddIMDb
-@RatingID int,
 @IMDbRating float,
 @Review varchar(100),
 @MovieName varchar(30)
@@ -160,8 +158,13 @@ as begin
 
 if exists (Select * from Movie where Title = @MovieName)
 begin
-Insert into Rating
-values(@RatingID,@IMDbRating,@Review);
+Insert into Rating (IMDbRating,Review)
+values(@IMDbRating,@Review);
+
+--Get the newly inserted identity
+DECLARE @RatingID int;
+Set @RatingID = SCOPE_IDENTITY();
+
 Update Movie
 Set RatingID = @RatingID
 where Title = @MovieName;
@@ -174,17 +177,17 @@ print('IMDb rating insertion failed');
 end
 
 end
-go
+Go
 
-exec AddIMDb 1,6.7,'Batman finds about Superman Secret...','Batman vs SuperMan';
+exec AddIMDb 6.7,'Batman finds about Superman Secret...','Batman vs SuperMan';
 
 --3 Admin can Remove Movie from list
-go
+GO
 Create Procedure RemoveMovie
 @MovieName varchar(30)
 as begin
 
-if exists (Select * from Movie where Title = @MovieName)
+if exists (Select 1 from Movie where Title = @MovieName)
 begin
 Delete from Movie
 where Title = @MovieName;
@@ -197,22 +200,23 @@ print('Movie does not exist');
 end
 
 end
-go
+GO
 
 exec RemoveMovie 'Pathan';
 
 --4 Admin can Update IMDb rating of a movie
-go
+GO
 Create Procedure UpdateIMDb
 @MovieName varchar(30),
 @NewRating float
 as begin
 
-if exists (Select * from Movie where Title = @MovieName and RatingID is not Null)
+if exists (Select 1 from Movie where Title = @MovieName and RatingID is not Null)
 begin
 declare @RatingID int
 Select @RatingID = RatingID from Movie
 where Title = @MovieName;
+
 Update Rating
 Set IMDbRating = @NewRating
 where RatingID = @RatingID;
@@ -225,21 +229,20 @@ print('Unable to update IMDb');
 end
 
 end
-go
+GO
 
 exec UpdateIMDb 'Batman vs SuperMan',7.9;
 
 --5 Admin can Add Theaters information
-go
+GO
 Create Procedure AddTheaters
-@ID int,
 @ScreenType varchar(10)
 as begin
 
 if @ScreenType in('Gold','Silver','Platinum','Bronze')
 begin
-Insert into Theater (TheaterID,ScreenType)
-values(@ID,@ScreenType);
+Insert into Theater (ScreenType)
+values(@ScreenType);
 end
 
 else
@@ -248,21 +251,20 @@ print('Unable to Add Theater in Database');
 end
 
 end
-go
+GO
 
-exec AddTheaters 1,'Gold';
+exec AddTheaters 'Gold';
 
 --6 Admin can add SeatRecord for a theater
-go
+GO
 Create Procedure AddSeatRecord
-@ID int,
 @Total int
 as begin
 
 if (@Total>100 and @Total<=800)
 begin
-Insert into SeatRecord
-values(@ID,@Total,0,0,0,0);
+Insert into SeatRecord (TotalSeats,AvailableSeats,OccupiedSeats,MaleCount,FemaleCount)
+values(@Total,@Total,0,0,0);
 end
 
 else
@@ -271,4 +273,6 @@ print('Seats out of Range');
 end
 
 end
-go
+GO
+
+exec AddSeatRecord 200;
