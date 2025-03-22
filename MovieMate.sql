@@ -108,6 +108,14 @@ Alter Table Theater
 Add constraint df_seatid
 Default(Null) for SeatRecordID;
 
+Alter Table ShowTimings
+Add constraint df_priceid
+Default(NULL) for PriceID;
+
+Alter Table Bookings
+Add constraint df_paymentid
+DEFAULT(NULL) for PaymentID;
+
 --Schema View
 Select * from Movie;
 Select * from Theater;
@@ -276,3 +284,183 @@ end
 GO
 
 exec AddSeatRecord 200;
+
+--7 Admin can add Show Timings for a movie
+GO
+Create Procedure AddShowTimings
+@MovieID int,
+@TheaterID int,
+@Date date,
+@ShowTime TIME
+as BEGIN
+
+if not exists(Select 1 from Movie where @MovieID = MovieID)
+BEGIN
+print('Insertion failed as movie was not found');
+end
+
+else if not exists(Select 1 from Theater where @TheaterID = TheaterID)
+BEGIN
+print('Insertion failed as theater was not found');
+END
+
+else
+BEGIN
+Insert into ShowTimings (MovieID,TheaterID,ShowDate,ShowTiming)
+values (@MovieID,@TheaterID,@Date,@ShowTime);
+end
+
+END
+GO
+
+exec AddShowTimings 1,1,'2025-07-15','11:30:00';
+Select * from ShowTimings;
+
+--8 Admin can add Prices for a Specific Show
+GO
+Create Procedure AddShowPrice
+@Category varchar(20),
+@Amount FLOAT,
+@ShowID int
+as BEGIN
+
+if @Category not in ('Student','Bachelor','Children','Old')
+BEGIN
+print('Insertion failed as no such category exists');
+Return;
+END
+
+if exists(Select 1 from ShowTimings where @ShowID = ShowTimeID)
+BEGIN
+
+--Giving Discounts according to Specific Categories
+if (@Category = 'Student')
+BEGIN
+set @Amount = @Amount * (20.0/100);
+END
+
+else if (@Category = 'Children')
+BEGIN
+set @Amount = @Amount * (10.0/100);
+END
+
+else if (@Category = 'Old')
+BEGIN
+set @Amount = @Amount * (15.0/100);
+END
+
+Insert into Prices (Category,Amount)
+values (@Category,@Amount);
+
+declare @CurrentPriceID int;
+Set @CurrentPriceID = SCOPE_IDENTITY();
+
+Update ShowTimings
+set PriceID = @CurrentPriceID
+where ShowTimeID = @ShowID;
+
+END
+
+ELSE
+BEGIN
+print('Insertion failed as show was not found');
+end
+
+END
+GO
+
+exec AddShowPrice 'Student',750.00,1;
+Select * from Prices;
+Select * from ShowTimings;
+
+--9 Admin can take Movie or Show related details from user to book him a show
+GO
+Create Procedure UserBooking
+@UserID int,
+@Moviename varchar(30),
+@ScreenType varchar(20),
+@ShowDate Date,
+@MovieTiming time,
+@Rownumber int
+as BEGIN
+
+if not exists(Select 1 from Users where @UserID = UserID)
+BEGIN
+print('Booking failed as User does not exist in our database');
+Return;
+END
+
+if not exists(Select 1 from Movie where @Moviename = Title)
+BEGIN
+print('Booking failed as Movie does not exist in our database');
+Return;
+END
+
+if not exists(Select 1 from Theater where @ScreenType = ScreenType)
+BEGIN
+print('Booking failed as we not have theaters with this ScreenTyoe');
+Return;
+END
+
+--Now check if given movie is being displayed on Given Screen Type, date and timning or not
+declare @MovieID int;
+Select @MovieID = MovieID from Movie
+where @Moviename = Title;
+
+if not exists(Select 1 from ShowTimings as S
+              join Theater as T
+              On S.TheaterID = T.TheaterID
+              where @MovieID = S.MovieID and @ScreenType = T.ScreenType
+              and @ShowDate = S.ShowDate and @MovieTiming = S.ShowTiming)
+BEGIN
+print('Booking failed as Given Movie is not being displayed at Your Given details');
+Return;
+end
+
+--Now Check if seat is availaible in given ScreenType(Theater) for that movie
+declare @TheaterID int;
+declare @ShowTimeID int;
+
+Select @TheaterID = T.TheaterID,@ShowTimeID = S.ShowTimeID from ShowTimings as S
+join Theater as T
+On S.TheaterID = T.TheaterID
+where @MovieID = S.MovieID and @ScreenType = T.ScreenType
+and @ShowDate = S.ShowDate and @MovieTiming = S.ShowTiming;
+
+if not exists(Select 1 from Theater as T
+              join SeatRecord as S
+              On T.SeatRecordID = S.SeatRecordID
+              where @TheaterID = T.TheaterID
+              and S.AvailableSeats>0)
+BEGIN
+print('Booking Failed as Given ScreenType has no seat availaible');
+RETURN;
+end
+
+--Now all checks all clear and now insert in tables
+--First insert in seat
+INSERT into Seat(TheaterID,RowNumber)
+values (@TheaterID,@Rownumber);
+
+declare @Seatnumber int;
+set @Seatnumber = SCOPE_IDENTITY();
+
+--Now update SeatRecord for that theater
+Update SeatRecord
+set AvailableSeats = AvailableSeats - 1, 
+    OccupiedSeats = OccupiedSeats + 1
+where SeatRecordID = (Select SeatRecordID from Theater
+                      where @TheaterID = TheaterID);
+
+--Now Finally Insert into Booking Table
+Insert into Bookings (UserID,SeatNumber,ShowTimeID)
+values (@UserID,@Seatnumber,@ShowTimeID);
+
+END
+GO
+
+exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00',5;
+
+--(Note: If above procedure, I have not added seat number as input because it is for now
+--       has an identity on it and I don't how to remove that Identity)
+
