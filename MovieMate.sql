@@ -266,13 +266,26 @@ exec AddTheaters 'Gold';
 --6 Admin can add SeatRecord for a theater
 GO
 Create Procedure AddSeatRecord
-@Total int
+@Total int,
+@TheaterID int
 as begin
+
+if not exists(Select 1 from Theater where TheaterID = @TheaterID)
+BEGIN
+print('Insertion failed as Theater not found');
+END
 
 if (@Total>100 and @Total<=800)
 begin
 Insert into SeatRecord (TotalSeats,AvailableSeats,OccupiedSeats,MaleCount,FemaleCount)
 values(@Total,@Total,0,0,0);
+
+declare @SeatRecordID int;
+set @SeatRecordID = SCOPE_IDENTITY();
+
+Update Theater
+set SeatRecordID = @SeatRecordID
+where TheaterID = @TheaterID;
 end
 
 else
@@ -283,7 +296,7 @@ end
 end
 GO
 
-exec AddSeatRecord 200;
+exec AddSeatRecord 200,1
 
 --7 Admin can add Show Timings for a movie
 GO
@@ -460,7 +473,88 @@ END
 GO
 
 exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00',5;
+SELECT * from Bookings;
+SELECT * from Seat;
+SELECT * from SeatRecord;
 
---(Note: If above procedure, I have not added seat number as input because it is for now
+--(Note: In above procedure, I have not added seat number as input because it is for now
 --       has an identity on it and I don't how to remove that Identity)
 
+--10 Users can view Seats of a theater
+GO
+Create Procedure ViewSeats
+@TheaterID int
+as BEGIN
+
+if exists(Select 1 from theater where TheaterID = @TheaterID)
+BEGIN
+Select * from Theater as T
+join SeatRecord as S
+On T.SeatRecordID = S.SeatRecordID
+where T.TheaterID = @TheaterID;
+END
+
+ELSE
+BEGIN
+print('Theater not found');
+END
+
+END
+GO
+
+exec ViewSeats 1;
+
+--11 Users can Browse Movies
+GO
+Create Procedure ViewMovies
+as begin
+
+Select M.Title,M.Genre,M.MovieType,M.Duration,R.IMDbRating,R.Review from Movie as M
+join Rating as R
+On M.RatingID = R.RatingID;
+
+end
+GO
+
+exec ViewMovies;
+
+--12 Users can View Show Timings and Theater
+Go
+Create procedure ViewShowTimings
+as BEGIN
+
+Select M.Title,T.ScreenType,S.ShowDate,S.ShowTiming,P.Amount,P.Category from ShowTimings as S
+join Theater as T
+On T.TheaterID = S.TheaterID
+join Movie as M
+On M.MovieID = S.MovieID
+join Prices as P
+On S.PriceID = P.PriceID;
+
+END
+Go
+
+exec ViewShowTimings;
+
+--13 Users can cancel their Booking
+Go
+Create PROCEDURE CancelBooking
+@UserID int,
+@BookingID int
+as BEGIN
+
+if exists (Select 1 from Bookings where UserID = @UserID and BookingID = @BookingID)
+BEGIN
+Delete from Bookings
+where UserID = @UserID and BookingID = @BookingID;
+END
+
+ELSE
+BEGIN
+print('Cancelation failed as Record not found');
+END
+
+END
+GO
+
+exec CancelBooking 2,2;
