@@ -39,9 +39,8 @@ Foreign Key (SeatRecordID) references SeatRecord(SeatRecordID) On Delete Cascade
 );
 
 Create Table Seat(                --Seat of Customer in a Theater hall
-SeatNumber int Identity(1,1) Primary Key,
+SeatNumber char(2) Primary Key,   --e.g: A1,B2
 TheaterID int,                    --FK
-RowNumber int,
 Foreign Key(TheaterID) references Theater(TheaterID)
 );
 
@@ -81,10 +80,9 @@ PaymentTime Time
 Create Table Bookings(
 BookingID int Identity(1,1) Primary Key,
 UserID int,                   --FK
-SeatNumber int,               --FK
+SeatNumber int,               --FK and its updated data-type is char(2)
 ShowTimeID int,               --FK
 PaymentID int,                --FK
-Foreign Key (SeatNumber) references Seat(SeatNumber),
 Foreign Key (ShowTimeID) references ShowTimings(ShowTimeID),
 Foreign Key (UserID) references Users(UserID),
 Foreign Key (PaymentID) references Payment(PaymentID)
@@ -115,6 +113,13 @@ Default(NULL) for PriceID;
 Alter Table Bookings
 Add constraint df_paymentid
 DEFAULT(NULL) for PaymentID;
+
+Alter Table Bookings
+Alter Column Seatnumber char(2);
+
+Alter Table Bookings
+Add constraint fk_bookings_SeatNumber
+Foreign Key (SeatNumber) references Seat(SeatNumber);
 
 --Schema View
 Select * from Movie;
@@ -394,7 +399,7 @@ Create Procedure UserBooking
 @ScreenType varchar(20),
 @ShowDate Date,
 @MovieTiming time,
-@Rownumber int
+@SeatNumber char(2)
 as BEGIN
 
 if not exists(Select 1 from Users where @UserID = UserID)
@@ -452,11 +457,8 @@ end
 
 --Now all checks all clear and now insert in tables
 --First insert in seat
-INSERT into Seat(TheaterID,RowNumber)
-values (@TheaterID,@Rownumber);
-
-declare @Seatnumber int;
-set @Seatnumber = SCOPE_IDENTITY();
+INSERT into Seat(TheaterID,SeatNumber)
+values (@TheaterID,@SeatNumber);
 
 --Now update SeatRecord for that theater
 Update SeatRecord
@@ -472,13 +474,77 @@ values (@UserID,@Seatnumber,@ShowTimeID);
 END
 GO
 
-exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00',5;
+exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00','A5';
 SELECT * from Bookings;
 SELECT * from Seat;
 SELECT * from SeatRecord;
 
---(Note: In above procedure, I have not added seat number as input because it is for now
---       has an identity on it and I don't how to remove that Identity)
+--9.5 After Booking User has to Do Payment
+GO
+Create Procedure PerformPayment
+@BookingID int,
+@PaymentMethod varchar(20),
+@UserAmount float
+as begin
+
+if not exists(Select 1 from Bookings where BookingID = @BookingID)
+begin
+print('Payment Failed! As Booking-ID not found');
+Return;
+end
+
+if exists (Select 1 from Bookings where BookingID = @BookingID and PaymentID is not NULL)
+begin
+print('Payment Failed! As Payment has already made on this Booking-ID');
+Return;
+end
+
+--Now Check if Given Amount = ShowAmount
+declare @ShowAmount float;
+Select @ShowAmount = P.Amount from Bookings as B
+join ShowTimings as S
+On B.ShowTimeID = S.ShowTimeID
+join Prices as P
+On S.PriceID = P.PriceID
+where B.BookingID = @BookingID;
+
+declare @Current_time time;
+Set @Current_time = Convert(time,GETDATE());
+
+if (@UserAmount < @ShowAmount)
+begin
+Insert into Payment(PaymentStatus,PaymentMethod,PaymentTime)
+values ('Unpaid',@PaymentMethod,@Current_time);
+print('Given Amount is less than ShowPrice');
+end
+
+else
+begin
+Insert into Payment(PaymentStatus,PaymentMethod,PaymentTime)
+values ('Paid',@PaymentMethod,@Current_time);
+print('Payment Successful!');
+end
+
+--Now Update Payemnt ID in Booking Table
+declare @PaymentID int;
+set @PaymentID = SCOPE_IDENTITY();
+
+Update Bookings
+set PaymentID = @PaymentID
+where BookingID = @BookingID;
+
+--Return balance if any to user
+if (@UserAmount > @ShowAmount)
+begin
+print('The return amount of user is: ' + Cast(@UserAmount - @ShowAmount as varchar));
+end
+
+end
+GO
+
+exec PerformPayment 2,'Online',1000;
+Select * from Payment;
+Select * from Bookings;
 
 --10 Users can view Seats of a theater
 GO
