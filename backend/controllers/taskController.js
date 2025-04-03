@@ -29,9 +29,54 @@ exports.createTask = async (req, res) => {
       console.error("Error creating task:", error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
-  
+};
 
+//MovieMate
+exports.AddMovie = async (req,res) => {
+  try {
+    const {Title, MovieType, Genre, Duration} = req.body;
+    await Task.AddMovie(Title, MovieType, Genre, Duration);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+exports.AddMovieRating = async (req,res) => {
+  try {
+    const {IMDbRating, Review, MovieName} = req.body;
+    await Task.AddMovieRating(IMDbRating, Review, MovieName);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+exports.DeleteMovie = async (req,res) => {
+  try {
+    const {MovieName} = req.body;
+    await Task.DeleteMovie(MovieName);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+exports.UpdateRating = async (req,res) => {
+  try {
+    const {MovieName, NewRating} = req.body;
+    await Task.UpdateRating(MovieName, NewRating);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+//--------------//
 exports.updateTask = async (req, res) => {
   try {
     const { title, description } = req.body;

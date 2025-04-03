@@ -21,6 +21,11 @@ router.post('/tasks',
   taskController.createTask
 );
 
+//MovieMate
+router.post('/movies',taskController.AddMovie);
+router.post('/MovieRating',taskController.AddMovieRating);
+router.delete('/movies',taskController.DeleteMovie);
+router.put('/MovieRating',taskController.UpdateRating);
 
 router.get('/tasks', taskController.getAllTasks);
 router.get('/tasks/:id', taskController.getTaskById);

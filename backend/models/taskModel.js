@@ -1,16 +1,17 @@
 const { sql, poolPromise } = require('../config/db');
+const { DeleteMovie, UpdateRating } = require('../controllers/taskController');
 
 const Task = {
   async getAllTasks() {
     const pool = await poolPromise;
-    const result = await pool.request().query('SELECT * FROM Student');
+    const result = await pool.request().query('SELECT * FROM Movie');
     return result.recordset;
   },
 
   async getTaskById(id) {
     const pool = await poolPromise;
     const result = await pool.request().input('id', sql.Int, id)
-      .query('SELECT * FROM Tasks WHERE RollNum = @id');
+      .query('SELECT * FROM Movie WHERE MovieID = @id');
     return result.recordset[0];
   },
 
@@ -31,12 +32,72 @@ const Task = {
       .input('description', sql.Text, description)
       .execute('CreateTask');  // Calls the stored procedure
     }
-    catch{
+    catch(error){
       console.error("Error executing stored procedure:", error);
       throw error; 
     }
-},
+  },
+  
+  //MovieMate 
+  async AddMovie(Title, MovieType, Genre, Duration){
+    try{
+      const pool = await poolPromise;
+      await pool.request()
+        .input('Title',sql.VarChar,Title)
+        .input('MovieType',sql.VarChar,MovieType)
+        .input('Genre',sql.VarChar,Genre)
+        .input('Duration',sql.Time,Duration)
+        .execute('AddMovie');
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
 
+  async AddMovieRating(IMDbRating, Review, MovieName){
+    try{
+      const pool = await poolPromise;
+      await pool.request()
+        .input('IMDbRating',sql.Float,IMDbRating)
+        .input('Review',sql.VarChar,Review)
+        .input('MovieName',sql.VarChar,MovieName)
+        .execute('AddIMDb');
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async DeleteMovie(MovieName){
+    try{
+      const pool = await poolPromise;
+      await pool.request()
+        .input('MovieName',sql.VarChar,MovieName)
+        .execute('RemoveMovie');
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async UpdateRating(MovieName, NewRating){
+    try{
+      const pool = await poolPromise;
+      await pool.request()
+        .input('MovieName',sql.VarChar,MovieName)
+        .input('NewRating',sql.Float,NewRating)
+        .execute('UpdateIMDb');
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  //-----------------//
   async updateTask(id, title, description) {
     const pool = await poolPromise;
     await pool.request()
