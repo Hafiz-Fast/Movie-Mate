@@ -41,7 +41,7 @@ exports.AddMovie = async (req,res) => {
     console.error("Error creating task:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
 exports.AddMovieRating = async (req,res) => {
   try {
@@ -52,7 +52,7 @@ exports.AddMovieRating = async (req,res) => {
     console.error("Error creating task:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
 exports.DeleteMovie = async (req,res) => {
   try {
@@ -63,7 +63,7 @@ exports.DeleteMovie = async (req,res) => {
     console.error("Error creating task:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
 exports.UpdateRating = async (req,res) => {
   try {
@@ -74,7 +74,40 @@ exports.UpdateRating = async (req,res) => {
     console.error("Error creating task:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
+
+exports.AddTheater = async (req,res) => {
+  try {
+    const {ScreenType} = req.body;
+    await Task.AddTheater(ScreenType);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.AddSeatRecord = async (req,res) => {
+  try {
+    const {Total,TheaterID} = req.body;
+    await Task.AddSeatRecord(Total,TheaterID);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.AddShowTime = async (req,res) => {
+  try {
+    const {MovieID, TheaterID, Date, ShowTime} = req.body;
+    await Task.AddShowTime(MovieID, TheaterID, Date, ShowTime);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 //--------------//
 exports.updateTask = async (req, res) => {

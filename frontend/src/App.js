@@ -5,6 +5,9 @@ import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
 import DeleteMovieForm from './components/DeleteMovieForm';
 import UpdateIMDbForm from './components/UpdateIMDb';
+import AddTheaterForm from './components/Theater';
+import AddSeatRecord from './components/AddSeatRecord';
+import AddShowTime from './components/AddShowTiming';
 
 function App(){
 
@@ -20,9 +23,9 @@ function App(){
     <div style={{textAlign: 'center',marginTop: '50px'}}>
       <h1>React Frontend</h1>
       <p>{message}</p>
-      <h1>Task Management</h1>
+      {/* <h1>Task Management</h1>
       <TaskForm />
-      <TaskList />
+      <TaskList /> */}
       <h2>Enter Movie</h2>
       <MovieForm />
       <h2>Enter IMDb rating of Movie</h2>
@@ -33,6 +36,15 @@ function App(){
       <br></br>
       <h2>Update IMDb Rating</h2>
       <UpdateIMDbForm />
+      <br></br>
+      <h2>Add Theater</h2>
+      <AddTheaterForm />
+      <br></br>
+      <h2>Enter SeatRecord</h2>
+      <AddSeatRecord />
+      <br></br>
+      <h2>Add ShowTime</h2>
+      <AddShowTime />
       <br></br>
     </div>
   );
