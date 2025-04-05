@@ -109,6 +109,27 @@ exports.AddShowTime = async (req,res) => {
   }
 };
 
+exports.AddShowPrice = async (req,res) => {
+  try {
+    const {Category, Amount, ShowID} = req.body;
+    await Task.AddShowPrice(Category, Amount, ShowID);
+    res.status(201).json({ message: 'Task created using stored procedure' });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.ViewMovies = async (req,res) => {
+  try {
+    const movies = await Task.ViewMovies();
+    res.json(movies);
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 //--------------//
 exports.updateTask = async (req, res) => {
   try {

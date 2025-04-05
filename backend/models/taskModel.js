@@ -1,5 +1,5 @@
 const { sql, poolPromise } = require('../config/db');
-const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord } = require('../controllers/taskController');
+const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies } = require('../controllers/taskController');
 
 const Task = {
   async getAllTasks() {
@@ -133,6 +133,34 @@ const Task = {
         .input('Date',sql.Date,Date)
         .input('ShowTime',sql.Time,ShowTime)
         .execute('AddShowTimings');
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async AddShowPrice(Category, Amount, ShowID){
+    try{
+      const pool = await poolPromise;
+      await pool.request()
+        .input('Category',sql.VarChar,Category)
+        .input('Amount',sql.Float,Amount)
+        .input('ShowID',sql.Int,ShowID)
+        .execute('AddShowPrice');
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async ViewMovies(){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+         .execute('ViewMovies');
+      return result.recordset;
     }
     catch(error){
       console.error("Error executing stored procedure:", error);

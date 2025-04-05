@@ -29,6 +29,8 @@ router.put('/MovieRating',taskController.UpdateRating);
 router.post('/Theater',taskController.AddTheater);
 router.post('/TheaterSeat',taskController.AddSeatRecord);
 router.post('/ShowTime',taskController.AddShowTime)
+router.post('/Prices',taskController.AddShowPrice);
+router.get('/movies',taskController.ViewMovies);
 
 //---------//
 router.get('/tasks', taskController.getAllTasks);
