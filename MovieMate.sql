@@ -121,6 +121,23 @@ Alter Table Bookings
 Add constraint fk_bookings_SeatNumber
 Foreign Key (SeatNumber) references Seat(SeatNumber);
 
+Alter table Users
+alter column UserName nvarchar(30) COLLATE Latin1_General_CS_AS NOT NULL;
+
+Alter table Users
+add constraint un_1
+Unique(UserName);
+
+Alter table Users
+alter column Email nvarchar(30) COLLATE Latin1_General_CS_AS NOT NULL;
+
+Alter table Users
+add constraint un_2
+Unique(Email);
+
+Alter table Users
+alter column UserPassword nvarchar(255) COLLATE Latin1_General_CS_AS NOT NULL;
+
 --Schema View
 Select * from Movie;
 Select * from Theater;
@@ -624,3 +641,235 @@ END
 GO
 
 exec CancelBooking 2,2;
+
+--14 Admin can view Theaters and their SeatRecord
+Go
+Create Procedure ShowTheaters
+as begin
+
+Select T.TheaterID,T.ScreenType,S.TotalSeats,S.AvailableSeats,S.OccupiedSeats from Theater as T
+left join SeatRecord as S
+On T.SeatRecordID = S.SeatRecordID;
+
+end
+Go
+
+exec ShowTheaters;
+
+---Abdullah Ejaz Combining---
+--15 Creating a new account
+go
+Create Procedure Signup
+@Username nvarchar(30), @email nvarchar(30),
+@password nvarchar(255), @UserType varchar(30), 
+@flag int OUTPUT
+
+As Begin
+if exists(select 1 from Users where Email = @email)
+	begin
+		set @flag = 1 --Email already exists
+		return;
+	end
+else if @UserType NOT IN('Customer','Admin','Employee')
+	begin
+		set @flag = 3 --userType is incorrect
+		return;
+	end
+else if exists(select 1 from Users where UserName = @Username) OR (@Username is NULL)
+	begin
+		set @flag = 2 --UserName already exists
+		return;
+	end
+else 
+	begin
+		insert into Users(UserName,Email,UserPassword,UserType)
+		values(@Username, @email, @password, @UserType);
+		set @flag = 0
+	end
+end
+go
+
+declare @flag int;
+exec Signup 'Bhatti','bhati123@gmail.com','playstation','Customer',@flag output;
+SELECT * from Users;
+
+--16 Login using Email
+Go
+create procedure loginE
+@email nvarchar(30), @password nvarchar(255), @flag int OUTPUT
+
+As Begin
+if NOT Exists(select 1 from Users where @email = Email)
+	begin
+		set @flag = 1 --Email does not exist
+		return;
+	end
+else
+	begin
+		if @password = (select UserPassword from Users where @email = Email)
+			begin
+				set @flag = 0 --login is successful
+				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				from Users AS U
+				join Bookings AS B on U.UserID = B.UserID
+				where U.Email = @email;
+			end
+		else
+			begin
+				set @flag = 1 --password is incorrect
+				return;
+			end
+	end
+end
+go
+
+declare @flag int;
+exec loginE 'bhati123@gmail.com','playstation',@flag output;
+Select @flag as Status;
+
+--17 login using Username
+Go
+create procedure loginU
+@Username nvarchar(30), @password nvarchar(255), @flag int OUTPUT
+
+As Begin
+if NOT Exists(select 1 from Users where @Username = UserName)
+	begin
+		set @flag = 1 --username does not exist
+		return;
+	end
+else
+	begin
+		if @password = (select UserPassword from Users where @Username = UserName)
+			begin
+				set @flag = 0 --login is successful
+				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				from Users AS U
+				join Bookings AS B on U.UserID = B.UserID
+				where U.UserName = @Username;
+			end
+		else
+			begin
+				set @flag = 1 --password is incorrect
+				return;
+			end
+	end
+end
+go
+
+declare @flag int;
+exec loginU 'Bhatti','playstation',@flag output;
+Select @flag as Status;
+
+--18 Update Password
+Go
+create procedure updatePass
+@UserName nvarchar(30),@oldPass nvarchar(255), @newPass nvarchar(255),
+@flag int OUTPUT
+
+As Begin
+
+if @oldPass = @newPass
+	begin
+		set @flag = 2 --password is the same
+		return;
+	end
+else
+	begin
+		if Exists (Select 1 From Users where UserName = @UserName and UserPassword = @oldPass)
+			begin
+				Update Users
+				Set UserPassword = @newPass
+				where @UserName = UserName;
+				Set @flag = 0	--password is successfully changed
+			end
+		else
+			begin
+				Set @flag = 1 --Password does not match
+				return;
+			end
+	end
+end
+go
+
+declare @flag int;
+exec updatePass 'Bhatti','playstation','playstation4',@flag output;
+Select * from Users;
+
+--19 Search a movie that is similar to that title
+GO
+create procedure searchMovie
+@movieName nvarchar(255)
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID from Movie As M
+where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%';	--in case some part of the name is known and not the full name
+
+end
+go
+
+exec searchMovie 'Batman';
+
+--20 all movie screening Details
+Go
+create procedure screeningDetails
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+join ShowTimings As ST on M.MovieID = ST.MovieID
+join Theater As T on ST.TheaterID = T.TheaterID
+Order By ST.ShowTiming; --earliest screening
+
+end
+go
+
+exec screeningDetails;
+
+--21 movie screening Details of the required movie
+Go
+create procedure SscreeningDetails
+@movieName nvarchar(255)
+
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+join ShowTimings As ST on M.MovieID = ST.MovieID
+join Theater As T on ST.TheaterID = T.TheaterID
+where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%'	--allow partial matches
+Order By ST.ShowTiming;
+
+end
+go
+
+exec SscreeningDetails 'SpiderMan';
+
+--22 confirms a payement
+GO
+create procedure PayementStatusUpdate
+@bookingID int, @Status int --1 for confirm, 2 for pending
+As Begin
+
+if Exists(Select 1 from Bookings where BookingID = @bookingID)
+	begin
+		if @Status = 1
+			begin
+				update Payment
+				set PaymentStatus = 'Paid'
+				where Exists(Select 1 from Bookings As B
+							join Payment As P on B.PaymentID = P.PaymentID);
+			end
+		else
+			begin
+			update Payment
+				set PaymentStatus = 'UnPaid'
+				where Exists(Select 1 from Bookings As B
+							join Payment As P on B.PaymentID = P.PaymentID);
+			end
+end
+end
+go
+
+declare @flag int;
+exec PayementStatusUpdate 2,2;
+
+Select *from Payment;
