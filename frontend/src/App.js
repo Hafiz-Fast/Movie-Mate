@@ -9,6 +9,8 @@ import AddSeatRecord from './components/AddSeatRecord';
 import AddShowTime from './components/AddShowTiming';
 import AddPriceForm from './components/AddPrice';
 import ShowMovies from './components/ShowMovies';
+import TheaterList from './components/DisplayThaeters';
+import ShowList from './components/DisplayShowTimings';
 
 function App(){
 
@@ -103,12 +105,30 @@ function App(){
         </div>
       </div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
+      <div class = "DisplayMovie">
+        <div class = "DisplayMovie-left">
           <h2>Movies</h2>
         </div>
-        <div class = "AddMovie-right">
+        <div class = "DisplayMovie-right">
           <ShowMovies />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Theaters</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <TheaterList />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>MovieShows</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <ShowList />
         </div>
       </div>
 

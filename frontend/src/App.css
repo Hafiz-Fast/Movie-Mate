@@ -18,6 +18,7 @@
     align-items: center;
     justify-content: center;
 }
+
 .Admin{
     width: 500px;
     height: 250px;
@@ -37,6 +38,7 @@
 .Admin p{
     font-size: 20px;
 }
+
 .AddMovie{
     margin-top: 9%;
     display: flex;
@@ -48,7 +50,7 @@
     border-radius: 20px;
 }
 .AddMovie-left{
-    flex-basis: 35%;
+    flex-basis: 30%;
 }
 .AddMovie-left h2{
     margin-left: 15%;
@@ -56,8 +58,9 @@
     font-size: 30px;
 }
 .AddMovie-right{
-    flex-basis: 60%;
+    flex-basis: 55%;
 }
+
 form input, form textarea{
     width:90%;
     border:0;
@@ -87,6 +90,31 @@ button:hover {
     box-shadow: 0 0 10px rgb(255, 162, 0), 0 0 30px rgb(255, 162, 0), 0 0 60px rgb(255, 162, 0);
     text-shadow: 0 0 10px rgb(255, 162, 0);
 }
+
+/* For Displaying Movie Section as they are long */
+.DisplayMovie{
+    margin-top: 9%;
+    display: flex;
+    align-items: center;
+    width: 97%;
+    height: 100vh;
+    border: 2px solid #fffb00;
+    box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
+    border-radius: 20px;
+}
+.DisplayMovie-left{
+    flex-basis: 25%;
+}
+.DisplayMovie-left h2{
+    margin-left: 15%;
+    margin-bottom: 70%;
+    font-size: 30px;
+}
+.DisplayMovie-right{
+    flex-basis: 73%;
+}
+
+/* The styling of row and columns of Table */
 .MovieTable{
     border: 1px solid white;
     width: 100%;
@@ -99,6 +127,6 @@ button:hover {
 .MovieTable tbody tr td{
     border: 1px solid white;
     padding: 10px;
-    width: 5px;
+    width: 10px;
     text-align: center;
 }

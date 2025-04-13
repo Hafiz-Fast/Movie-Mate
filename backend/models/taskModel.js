@@ -1,42 +1,7 @@
 const { sql, poolPromise } = require('../config/db');
-const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies } = require('../controllers/taskController');
+const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies, ViewTheaters, ViewShows } = require('../controllers/taskController');
 
 const Task = {
-  async getAllTasks() {
-    const pool = await poolPromise;
-    const result = await pool.request().query('SELECT * FROM Movie');
-    return result.recordset;
-  },
-
-  async getTaskById(id) {
-    const pool = await poolPromise;
-    const result = await pool.request().input('id', sql.Int, id)
-      .query('SELECT * FROM Movie WHERE MovieID = @id');
-    return result.recordset[0];
-  },
-
-  //const result = await pool.request().query(`SELECT * FROM Tasks WHERE id = ${id}`);
-
-//   async createTask(title, description) {
-//     const pool = await poolPromise;
-//     await pool.request()
-//       .input('title', sql.VarChar, title)
-//       .input('description', sql.VarChar, description)
-//       .query('INSERT INTO Tasks (title, description) VALUES (@title, @description)');
-//   },
-  async createTask(title, description) {
-    try{
-    const pool = await poolPromise;
-    await pool.request()
-      .input('title', sql.VarChar, title)
-      .input('description', sql.Text, description)
-      .execute('CreateTask');  // Calls the stored procedure
-    }
-    catch(error){
-      console.error("Error executing stored procedure:", error);
-      throw error; 
-    }
-  },
   
   //MovieMate 
   async AddMovie(Title, MovieType, Genre, Duration){
@@ -70,10 +35,11 @@ const Task = {
     }
   },
 
-  async DeleteMovie(MovieName){
+  async DeleteMovie(MovieID, MovieName){
     try{
       const pool = await poolPromise;
       await pool.request()
+        .input('MovieID',sql.Int,MovieID)
         .input('MovieName',sql.VarChar,MovieName)
         .execute('RemoveMovie');
     }
@@ -168,20 +134,32 @@ const Task = {
     }
   },
 
-  //-----------------//
-  async updateTask(id, title, description) {
-    const pool = await poolPromise;
-    await pool.request()
-      .input('id', sql.Int, id)
-      .input('title', sql.VarChar, title)
-      .input('description', sql.Text, description)
-      .query('UPDATE Tasks SET title = @title, description = @description WHERE id = @id');
+  async ViewTheaters(){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+         .execute('ShowTheaters');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
   },
 
-  async deleteTask(id) {
-    const pool = await poolPromise;
-    await pool.request().input('id', sql.Int, id).query('DELETE FROM Tasks WHERE id = @id');
-  }
+  async ViewShows(){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+         .execute('ViewShowTimings');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+  
 };
 
 module.exports = Task;

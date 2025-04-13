@@ -214,13 +214,14 @@ exec AddIMDb 6.7,'Batman finds about Superman Secret...','Batman vs SuperMan';
 --3 Admin can Remove Movie from list
 GO
 Create Procedure RemoveMovie
+@MovieID int,
 @MovieName varchar(30)
 as begin
 
-if exists (Select 1 from Movie where Title = @MovieName)
+if exists (Select 1 from Movie where MovieID = @MovieID)
 begin
 Delete from Movie
-where Title = @MovieName;
+where MovieID = @MovieID;
 print('Movie Removed Successfully');
 end
 
@@ -232,7 +233,8 @@ end
 end
 GO
 
-exec RemoveMovie 'Pathan';
+exec RemoveMovie 6,'SpiderMan';
+Select * from Movie;
 
 --4 Admin can Update IMDb rating of a movie
 GO
@@ -371,17 +373,17 @@ BEGIN
 --Giving Discounts according to Specific Categories
 if (@Category = 'Student')
 BEGIN
-set @Amount = @Amount * (20.0/100);
+set @Amount = @Amount - (@Amount * (20.0/100));
 END
 
 else if (@Category = 'Children')
 BEGIN
-set @Amount = @Amount * (10.0/100);
+set @Amount = @Amount - (@Amount * (10.0/100));
 END
 
 else if (@Category = 'Old')
 BEGIN
-set @Amount = @Amount * (15.0/100);
+set @Amount = @Amount - (@Amount * (15.0/100));
 END
 
 Insert into Prices (Category,Amount)
@@ -404,7 +406,7 @@ end
 END
 GO
 
-exec AddShowPrice 'Student',750.00,1;
+exec AddShowPrice 'Student',500,4;
 Select * from Prices;
 Select * from ShowTimings;
 
@@ -587,13 +589,13 @@ GO
 
 exec ViewSeats 1;
 
---11 Users can Browse Movies
+--11 Admin can View Movies Record
 GO
 Create Procedure ViewMovies
 as begin
 
-Select M.Title,M.Genre,M.MovieType,M.Duration,R.IMDbRating,R.Review from Movie as M
-join Rating as R
+Select M.MovieID,M.Title,M.Genre,M.MovieType,M.Duration,R.IMDbRating,R.Review from Movie as M
+left join Rating as R
 On M.RatingID = R.RatingID;
 
 end
@@ -601,17 +603,17 @@ GO
 
 exec ViewMovies;
 
---12 Users can View Show Timings and Theater
+--12 Admin can View Show Timings and Theater
 Go
 Create procedure ViewShowTimings
 as BEGIN
 
-Select M.Title,T.ScreenType,S.ShowDate,S.ShowTiming,P.Amount,P.Category from ShowTimings as S
-join Theater as T
+Select S.ShowTimeID,M.MovieID,T.TheaterID,S.ShowDate,S.ShowTiming,P.Amount,P.Category from ShowTimings as S
+left join Theater as T
 On T.TheaterID = S.TheaterID
-join Movie as M
+left join Movie as M
 On M.MovieID = S.MovieID
-join Prices as P
+left join Prices as P
 On S.PriceID = P.PriceID;
 
 END

@@ -30,6 +30,7 @@ const ShowMovies = () => {
         <table class = "MovieTable">
           <thead>
             <tr>
+              <th>MovieID</th>
               <th>Title</th>
               <th>Genre</th>
               <th>Type</th>
@@ -41,6 +42,7 @@ const ShowMovies = () => {
           <tbody>
             {movies.map((movie, index) => (
               <tr key={index}>
+                <td>{movie.MovieID}</td>
                 <td>{movie.Title}</td>
                 <td>{movie.Genre}</td>
                 <td>{movie.MovieType}</td>

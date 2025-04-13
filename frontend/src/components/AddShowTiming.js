@@ -38,7 +38,7 @@ const AddShowTime = () => {
       <input type="number" placeholder="Enter TheaterID" value={TheaterID} onChange={(e) => setID(e.target.value)} required />
       <input type="date" placeholder="Enter ShowDate" value={Date} onChange={(e) => setDate(e.target.value)} required />
       <input type="time" placeholder="Enter ShowTime" value={ShowTime} onChange={(e) => setTime(e.target.value)} required />
-      <button type="submit">Add Seat Record</button>
+      <button type="submit">Add Show</button>
     </form>
   );
 };
