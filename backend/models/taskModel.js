@@ -11,7 +11,7 @@ const Task = {
         .input('Title',sql.VarChar,Title)
         .input('MovieType',sql.VarChar,MovieType)
         .input('Genre',sql.VarChar,Genre)
-        .input('Duration',sql.Time,Duration)
+        .input('Duration',sql.VarChar,Duration)
         .execute('AddMovie');
     }
     catch(error){
@@ -97,7 +97,7 @@ const Task = {
         .input('MovieID',sql.Int,MovieID)
         .input('TheaterID',sql.Int,TheaterID)
         .input('Date',sql.Date,Date)
-        .input('ShowTime',sql.Time,ShowTime)
+        .input('ShowTime',sql.VarChar,ShowTime)
         .execute('AddShowTimings');
     }
     catch(error){

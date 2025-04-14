@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
+//function to format duration
+const FormatDuration = (Duration) =>{
+  const date = new Date(Duration);
+  
+  const hours = date.getUTCHours().toString().padStart(2, '0');
+  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    
+  return `${hours}:${minutes}`;
+};
+
 const ShowMovies = () => {
   const [movies, setMovies] = useState([]);
 
@@ -46,7 +56,7 @@ const ShowMovies = () => {
                 <td>{movie.Title}</td>
                 <td>{movie.Genre}</td>
                 <td>{movie.MovieType}</td>
-                <td>{movie.Duration}</td>
+                <td>{FormatDuration(movie.Duration)}</td>
                 <td>{movie.IMDbRating}</td>
                 <td>{movie.Review}</td>
               </tr>

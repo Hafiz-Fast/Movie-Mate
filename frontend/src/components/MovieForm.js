@@ -10,11 +10,12 @@ const MovieForm = () => {
     e.preventDefault();
 
     const formattedDuration = `${Duration}:00`;
+    console.log('Formatted Duration:', formattedDuration); //For Confirmation
 
     await fetch('http://localhost:5000/api/movies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Title, MovieType, Genre, formattedDuration })
+      body: JSON.stringify({ Title, MovieType, Genre, Duration:formattedDuration })
     });
 
     setTitle('');
