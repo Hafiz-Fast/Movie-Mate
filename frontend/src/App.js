@@ -11,6 +11,8 @@ import AddPriceForm from './components/AddPrice';
 import ShowMovies from './components/ShowMovies';
 import TheaterList from './components/DisplayThaeters';
 import ShowList from './components/DisplayShowTimings';
+import BookingList from './components/DisplayBookings';
+import UserList from './components/DisplayUsers';
 
 function App(){
 
@@ -44,19 +46,19 @@ function App(){
 
       <div class = "AddMovie">
         <div class = "AddMovie-left">
-          <h2>Enter IMDb Rating</h2>
+          <h2>Delete Movie</h2>
         </div>
         <div class = "AddMovie-right">
-          <IMDBForm />
+          <DeleteMovieForm />
         </div>
       </div>
 
       <div class = "AddMovie">
         <div class = "AddMovie-left">
-          <h2>Delete Movie</h2>
+          <h2>Enter IMDb Rating</h2>
         </div>
         <div class = "AddMovie-right">
-          <DeleteMovieForm />
+          <IMDBForm />
         </div>
       </div>
       
@@ -129,6 +131,24 @@ function App(){
         </div>
         <div class = "AddMovie-right">
           <ShowList />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Bookings</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <BookingList />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Users</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <UserList />
         </div>
       </div>
 

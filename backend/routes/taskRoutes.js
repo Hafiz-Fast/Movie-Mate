@@ -14,5 +14,7 @@ router.post('/Prices',taskController.AddShowPrice);
 router.get('/movies',taskController.ViewMovies);
 router.get('/theaters',taskController.ViewTheaters);
 router.get('/Shows',taskController.ViewShows);
+router.get('/Bookings',taskController.ViewBookings);
+router.get('/Users',taskController.ViewUsers);
 
 module.exports = router;

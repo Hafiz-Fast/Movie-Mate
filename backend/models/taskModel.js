@@ -1,5 +1,5 @@
 const { sql, poolPromise } = require('../config/db');
-const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies, ViewTheaters, ViewShows } = require('../controllers/taskController');
+const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies, ViewTheaters, ViewShows, ViewBookings, ViewUsers } = require('../controllers/taskController');
 
 const Task = {
   
@@ -152,6 +152,32 @@ const Task = {
       const pool = await poolPromise;
       const result = await pool.request()
          .execute('ViewShowTimings');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async ViewBookings(){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+         .execute('ShowBookings');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async ViewUsers(){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+         .execute('ShowUsers');
       return result.recordset;
     }
     catch(error){

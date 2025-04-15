@@ -118,3 +118,23 @@ exports.ViewShows = async(req,res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+exports.ViewBookings = async(req,res) => {
+  try {
+    const bookings = await Task.ViewBookings();
+    res.json(bookings);
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.ViewUsers = async(req,res) => {
+  try {
+    const users = await Task.ViewUsers();
+    res.json(users);
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
