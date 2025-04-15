@@ -98,6 +98,38 @@ Primary Key(UserID,MovieID)
 )
 
 --Additional Constraints
+Alter table Seat
+Add Constraint fk_Seat1
+Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On Update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_1
+Foreign Key(MovieID) references Movie(MovieID) On delete cascade On update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_2
+Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_3
+Foreign Key(PriceID) references Prices(PriceID) On delete cascade On update cascade;
+
+Alter table Bookings
+add constraint Book_1
+Foreign Key (ShowTimeID) references ShowTimings(ShowTimeID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_2
+Foreign Key (UserID) references Users(UserID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_3
+Foreign Key (PaymentID) references Payment(PaymentID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_4
+Foreign Key (SeatNumber) references Seat(SeatNumber) On Delete No Action;
+
 Alter Table Movie
 Add constraint df_id
 Default(NULL) for RatingID;
@@ -658,6 +690,40 @@ Go
 
 exec ShowTheaters;
 
+--14.1 Admin can view Booking Record
+Go
+Create Procedure ShowBookings
+as begin
+
+Select B.BookingID,U.UserName,B.SeatNumber,B.ShowTimeID,P.PaymentMethod,P.PaymentStatus from Bookings as B
+left join Users as U
+On B.UserID = U.UserID
+left join Seat as S
+On B.SeatNumber = S.SeatNumber
+left join ShowTimings as Sh
+On B.ShowTimeID = Sh.ShowTimeID
+left join Payment as P
+On B.PaymentID = P.PaymentID;
+
+END
+GO
+
+exec ShowBookings;
+
+--14.2 Admin can view User Record
+Go
+Create Procedure ShowUsers
+as BEGIN
+
+Select U.UserID,U.UserName,U.UserPassword,U.UserType,UR.MovieID,UR.Review from Users as U
+left join UserReview as UR
+On U.UserID = UR.UserID;
+
+END
+GO
+
+exec ShowUsers;
+
 ---Abdullah Ejaz Combining---
 --15 Creating a new account
 go
@@ -875,195 +941,3 @@ declare @flag int;
 exec PayementStatusUpdate 2,2;
 
 Select *from Payment;
-
-
---faizan
---a procedure for delete seat record with help of seat record id
---update seat record ,input seat record id
---delte show time with help of show id
---update show time with show id 
---update movie
---delete rating
---delete theater
- 
- go
- create procedure delete_SeatRecord_row
-@SeatId int
-as begin
-if exists(select* from SeatRecord where SeatRecordID=@SeatId)
-begin 
-
- DELETE FROM Seat 
-   WHERE TheaterID IN (SELECT TheaterID FROM Theater WHERE SeatRecordID = @SeatId);
- DELETE FROM Theater 
-   WHERE SeatRecordID = @SeatId;
-
-delete from SeatRecord
-where SeatRecordID=@SeatId
-print 'seat record deleted successfully'
-end
-else
-begin
-print 'seat record not found'
-end
-
-end
- go
-
-exec delete_SeatRecord_row 3
- Select * from SeatRecord;
-
-
---succussful
-go
-create procedure update_seatrecord
-@ID int,
-@totals int,
-@availSeats int,
-@Occupied int,
-@f int,
-@m int
-
-as begin
-if exists(select * from SeatRecord where SeatRecordID=@ID)
-  begin
-update SeatRecord
-set TotalSeats=@totals ,
- AvailableSeats=@availSeats,
- OccupiedSeats=@Occupied,
- MaleCount=@m,
- FemaleCount=@f
-where SeatRecordID=@ID
-print 'seat record updated successfully'
-  end
-ELSE
-  begin
-print 'seat record not updated'
-  end
-end
-go
-
-exec update_seatrecord 3,400,100,300,2,2
-Select * from SeatRecord;
-
-go
-create procedure delete_showtime_id
-@ShowTimeID int 
-as BEGIN
- if exists(select * from ShowTimings where ShowTimeID=@ShowTimeID)
-   begin
-   DELETE FROM Bookings WHERE ShowTimeID = @ShowTimeID;
-
-    delete from  ShowTimings
-	where  ShowTimeID=@ShowTimeID
-	print 'show time is deleted successfully'
-   END
- Else
-   BEGIN
-     print 'show time not exist'
-   end
-end   
-go
-
-exec delete_showtime_id 3
-Select * from ShowTimings;
-
-go 
-create procedure update_showtimings
-@ShowTimeID INT,
-@movieid INT,
-@theaterid int,
-@showdate date,
-@showtiming time,
-@priceid int
-as BEGIN
- if exists(select* from ShowTimings where ShowTimeID=@ShowTimeID)
-   begin
-     update ShowTimings
-	 set MovieID=@movieid,
-	     TheaterID=@theaterid,
-		 ShowDate=@showdate,
-		 ShowTiming=@showtiming,
-		 PriceID=@priceid
-     where ShowTimeID=@ShowTimeID
-     print 'show timings updated successfully'
-   end 
- ELSE
-  BEGIN
-    print 'show timings not updated'
-  end
-END
-go
-
-exec update_showtimings 2,1,1,'2025-07-11','11:10:30',NULL
-select * from ShowTimings
-
-
-go
-create procedure update_movie
-@movieid int,
-@title varchar(50),
-@type varchar(50),
-@genre varchar(50),
-@duration time,
-@ratingid int
-as BEGIN
- if exists(select* from Movie where MovieID=@movieid)
-   begin
-    update Movie
-	SET
-Title =@title,
-MovieType=@type ,       
-Genre =@genre,
-Duration =@duration,
-RatingID =@ratingid 
-    where MovieID=@movieid
-    print 'movie updated successfully'
-   end
- else
-   begin
-    print 'movie id not exist'
-   end
-end
-go
-
-exec update_movie 2,'Maula jutt','LollyWood','action','02:10:00',Null
-select* from Movie
-
-go 
-create procedure delete_rating
-@RatingID int 
-as BEGIN
-if exists(select* from Rating where RatingID=@RatingID)
-   begin
-    delete from Rating
-	where RatingID=@RatingID
-   end
- else
-   begin
-    print 'rating id not exist'
-   end
-end 
-go 
-
-exec delete_rating 3
-select * from Rating
-
-go
-create PROCEDURE delete_theater
-@theaterid int 
-as BEGIN
-if exists(select* from Theater where TheaterID=@theaterid)
-   begin
-   delete from Theater
-   where TheaterID=@theaterid
-   end
- else
-   begin
-    print 'theater id not exist'
-   end
-END
-go
-
-exec delete_theater 3
-select * from theater
