@@ -98,6 +98,38 @@ Primary Key(UserID,MovieID)
 )
 
 --Additional Constraints
+Alter table Seat
+Add Constraint fk_Seat1
+Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On Update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_1
+Foreign Key(MovieID) references Movie(MovieID) On delete cascade On update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_2
+Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_3
+Foreign Key(PriceID) references Prices(PriceID) On delete cascade On update cascade;
+
+Alter table Bookings
+add constraint Book_1
+Foreign Key (ShowTimeID) references ShowTimings(ShowTimeID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_2
+Foreign Key (UserID) references Users(UserID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_3
+Foreign Key (PaymentID) references Payment(PaymentID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_4
+Foreign Key (SeatNumber) references Seat(SeatNumber) On Delete No Action;
+
 Alter Table Movie
 Add constraint df_id
 Default(NULL) for RatingID;
@@ -657,6 +689,40 @@ end
 Go
 
 exec ShowTheaters;
+
+--14.1 Admin can view Booking Record
+Go
+Create Procedure ShowBookings
+as begin
+
+Select B.BookingID,U.UserName,B.SeatNumber,B.ShowTimeID,P.PaymentMethod,P.PaymentStatus from Bookings as B
+left join Users as U
+On B.UserID = U.UserID
+left join Seat as S
+On B.SeatNumber = S.SeatNumber
+left join ShowTimings as Sh
+On B.ShowTimeID = Sh.ShowTimeID
+left join Payment as P
+On B.PaymentID = P.PaymentID;
+
+END
+GO
+
+exec ShowBookings;
+
+--14.2 Admin can view User Record
+Go
+Create Procedure ShowUsers
+as BEGIN
+
+Select U.UserID,U.UserName,U.UserPassword,U.UserType,UR.MovieID,UR.Review from Users as U
+left join UserReview as UR
+On U.UserID = UR.UserID;
+
+END
+GO
+
+exec ShowUsers;
 
 ---Abdullah Ejaz Combining---
 --15 Creating a new account
