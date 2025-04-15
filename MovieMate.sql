@@ -875,3 +875,69 @@ declare @flag int;
 exec PayementStatusUpdate 2,2;
 
 Select *from Payment;
+
+
+--faizan
+--a procedure for deltee seat record with help of seat record id
+--update seat record input seat record id
+--delte show time with help of show id
+--update show time with show id 
+ 
+ go
+ create procedure delete_SeatRecordRow
+@SeatId int
+as begin
+if exists(select* from SeatRecord where SeatRecordID=@SeatId)
+begin 
+
+ DELETE FROM Seat 
+    WHERE TheaterID IN (SELECT TheaterID FROM Theater WHERE SeatRecordID = @SeatId);
+    DELETE FROM Theater 
+    WHERE SeatRecordID = @SeatId;
+
+delete from SeatRecord
+where SeatRecordID=@SeatId
+print 'seat record deleted successfully'
+end
+else
+begin
+print 'seat record not found'
+end
+
+end
+ go
+
+exec delete_SeatRecordRow 3
+ Select * from SeatRecord;
+
+
+go
+create procedure update_seatrecord
+@ID int,
+@totals int,
+@availSeats int,
+@Occupied int,
+@f int,
+@m int
+
+as begin
+if exists(select * from SeatRecord where SeatRecordID=@ID)
+  begin
+update SeatRecord
+set TotalSeats=@totals ,
+ AvailableSeats=@availSeats,
+ OccupiedSeats=@Occupied,
+ MaleCount=@m,
+ FemaleCount=@f
+where SeatRecordID=@ID
+print 'seat record updated successfully'
+  end
+ELSE
+  begin
+print 'seat record not updated'
+  end
+end
+go
+
+exec update_seatrecord 3,400,100,300,2,2
+Select * from SeatRecord;
