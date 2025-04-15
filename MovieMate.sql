@@ -878,7 +878,7 @@ Select *from Payment;
 
 
 --faizan
---a procedure for deltee seat record with help of seat record id
+--a procedure for delete seat record with help of seat record id
 --update seat record ,input seat record id
 --delte show time with help of show id
 --update show time with show id 
