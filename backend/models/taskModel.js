@@ -1,55 +1,139 @@
+const { NVarChar } = require('mssql');
 const { sql, poolPromise } = require('../config/db');
 
 const Task = {
-  async getAllTasks() {
-    const pool = await poolPromise;
-    const result = await pool.request().query('SELECT * FROM Student');
-    return result.recordset;
-  },
-
-  async getTaskById(id) {
-    const pool = await poolPromise;
-    const result = await pool.request().input('id', sql.Int, id)
-      .query('SELECT * FROM Tasks WHERE RollNum = @id');
-    return result.recordset[0];
-  },
-
-  //const result = await pool.request().query(`SELECT * FROM Tasks WHERE id = ${id}`);
-
-//   async createTask(title, description) {
-//     const pool = await poolPromise;
-//     await pool.request()
-//       .input('title', sql.VarChar, title)
-//       .input('description', sql.VarChar, description)
-//       .query('INSERT INTO Tasks (title, description) VALUES (@title, @description)');
-//   },
-  async createTask(title, description) {
-    try{
-    const pool = await poolPromise;
-    await pool.request()
-      .input('title', sql.VarChar, title)
-      .input('description', sql.Text, description)
-      .execute('CreateTask');  // Calls the stored procedure
+    async SignUp(username, email, password, userType){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .input('Username', sql.NVarChar, username)
+                .input('email', sql.NVarChar, email)
+                .input('password', sql.NVarChar, password)
+                .input('UserType', sql.VarChar, userType)
+                .output('flag', sql.Int)
+                .execute('Signup');
+                
+                const flag = result.output.flag; 
+                return flag;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async LoginE(email, password){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .input('email', sql.NVarChar, email)
+                .input('password', sql.NVarChar, password)
+                .output('flag', sql.Int)
+                .execute('loginE');
+            
+            return result;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async LoginU(userName, password){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .input('Username', sql.NVarChar, userName)
+                .input('password', sql.NVarChar, password)
+                .output('flag', sql.Int)
+                .execute('loginU');
+                
+            return result;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async updatePass(email, oPass, nPass){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .input('email', sql.NVarChar, email)
+                .input('oldPass', sql.NVarChar, oPass)
+                .input('newPass', sql.NVarChar, nPass)
+                .output('flag', sql.Int)
+                .execute('updatePass');
+                const flag = result.output.flag;
+                console.log("Flag:", flag);
+                return flag;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async Browse(){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+            .execute('browse');
+            return result;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async MovieSearch(MovieName){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .input('movieName', NVarChar, MovieName)
+                .execute('searchMovie');
+            return result;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async Screenings(){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .execute('screeningDetails');
+            return result;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async Sscreening(MovieName){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .input('movieName', NVarChar, MovieName)
+                .execute('SscreeningDetails');
+            return result;
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
+    },
+    async PStatusupdate(bookingID, status){
+        try{
+            const pool = await poolPromise;
+            await pool.request()
+                .input('bookingID', sql.Int, bookingID)
+                .input('Status', sql.Int, status)
+                .execute('PayementStatusUpdate');
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
     }
-    catch{
-      console.error("Error executing stored procedure:", error);
-      throw error; 
-    }
-},
-
-  async updateTask(id, title, description) {
-    const pool = await poolPromise;
-    await pool.request()
-      .input('id', sql.Int, id)
-      .input('title', sql.VarChar, title)
-      .input('description', sql.Text, description)
-      .query('UPDATE Tasks SET title = @title, description = @description WHERE id = @id');
-  },
-
-  async deleteTask(id) {
-    const pool = await poolPromise;
-    await pool.request().input('id', sql.Int, id).query('DELETE FROM Tasks WHERE id = @id');
-  }
-};
+}
 
 module.exports = Task;

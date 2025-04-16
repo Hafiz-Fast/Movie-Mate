@@ -1,9 +1,6 @@
 Use Master
 go
 
-drop database MovieMate
-go
-
 create database MovieMate
 go
 
@@ -193,30 +190,29 @@ else
 end
 go
 
-create procedure updatePass
-@UserName nvarchar(30),@oldPass nvarchar(255), @newPass nvarchar(255),
+alter procedure updatePass
+@email nvarchar(30),@oldPass nvarchar(255), @newPass nvarchar(255),
 @flag int OUTPUT
 
 As Begin
 
 if @oldPass = @newPass
 	begin
-		set @flag = 2 --password is the same
+		set @flag = 2; --password is the same
 		return;
 	end
 else
 	begin
-		if Exists (Select 1 From Users where UserName = @UserName and UserPassword = @oldPass)
+		if Exists (Select 1 From Users where Email = @email and UserPassword = @oldPass)
 			begin
 				Update Users
 				Set UserPassword = @newPass
-				where @UserName = UserName;
-				Set @flag = 0	--password is successfully changed
+				where @email = Email;
+				Set @flag = 0;	--password is successfully changed
 			end
 		else
 			begin
-				Set @flag = 1 --Password does not match
-				return;
+				Set @flag = 1; --Password does not match
 			end
 	end
 end

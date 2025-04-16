@@ -1,13 +1,151 @@
-body {
+/* General Reset and Base */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0f375e;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: lightcyan;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Title Styling */
+.M-Title {
+  color: white;
+  font-size: 800%;
+  text-align: center;
+  margin-top: 5%;
+}
+
+.M-Style {
+  color: #ffa14a !important;
+}
+
+/* Paragraph Styling */
+p {
+  color: lightcyan;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Label Styling */
+.label {
+  display: block;
+  margin: 1rem auto;
+  font-size: 1.2rem;
+  color: #ffa14a;
+  text-align: center;
+}
+
+/* Dropdown Styling */
+select {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.75rem 1.2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #133a5e;
+  color: lightcyan;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  width: 250px;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  background-color: #194e79;
+}
+
+option {
+  background-color: #133a5e;
+  color: lightcyan;
+}
+
+/* Button Styling */
+button {
+  padding: 0.7rem 1.5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  background-color: #ffa14a;
+  color: #0f375e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff8c1a;
+}
+
+/* Table Styling */
+table {
+  margin: 2rem auto;
+  border-collapse: collapse;
+  width: 90%;
+  background-color: #133a5e;
+  color: lightcyan;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+th, td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #0a2540;
+}
+
+th {
+  background-color: #ffa14a;
+  color: #0f375e;
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: #1a4d7a;
+}
+
+/* Form Containers */
+form {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 80%;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: none;
+  background-color: #1a4d7a;
+  color: white;
+  font-size: 1rem;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #b0d4e3;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  background-color: #22618e;
 }
