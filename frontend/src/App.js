@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import "./App.css"
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
@@ -25,134 +26,182 @@ function App(){
   },[]);
 
   return(
-    <div style={{marginTop: '40px',marginLeft: '25px'}}>
+    <Router>
+      <div style={{marginTop: '40px',marginLeft: '25px'}}>
       <div class = "Title">
         Movie Mate
       </div>
 
-      <div class = "Admin">
-        Welcome back, Admin
-        <p>Let’s add some Movies, Show Timings, IMDb Ratings, and Theaters to the spotlight!</p>
-      </div>
-
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Enter Movie</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <MovieForm />
-        </div>
-      </div>
-
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Delete Movie</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <DeleteMovieForm />
-        </div>
-      </div>
-
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Enter IMDb Rating</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <IMDBForm />
-        </div>
+      <div class = "Nav">
+        <ul>
+          <li><Link to = "/">Home</Link></li>
+          <li><Link to = "/Movies">Movies</Link></li>
+          <li><Link to = "/Theaters">Theaters</Link></li>
+          <li><Link to = "/Shows">Shows</Link></li>
+          <li><Link to = "/Bookings">Bookings</Link></li>
+          <li><Link to = "/Users">Users</Link></li>
+        </ul>
       </div>
       
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Update IMDb Rating</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <UpdateIMDbForm />
-        </div>
-      </div>
+      {/* Routes */}
+      <Routes>
+      
+        {/* Home Router */}
+        <Route path = "/" element = {
+          <div class = "Admin">
+              Welcome back, Admin
+              <p>Let’s add some Movies, Show Timings, IMDb Ratings, and Theaters to the spotlight!</p>
+          </div>
+        } />
+        
+        {/* Movies Router */}
+        <Route path = "/Movies" element = {
+          <div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Add Theater</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <AddTheaterForm />
-        </div>
-      </div>
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Enter Movie</h2>
+            </div>
+            <div class = "AddMovie-right">
+              <MovieForm />
+            </div>
+          </div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Enter Seat Record for a Theater</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <AddSeatRecord />
-        </div>
-      </div>
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Delete Movie</h2>
+            </div>
+            <div class = "AddMovie-right">
+               <DeleteMovieForm />
+            </div>
+          </div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Add ShowTime</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <AddShowTime />
-        </div>
-      </div>
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Enter IMDb Rating</h2>
+            </div>
+            <div class = "AddMovie-right">
+             <IMDBForm />
+            </div>
+          </div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Set Price for a Show</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <AddPriceForm />
-        </div>
-      </div>
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Update IMDb Rating</h2>
+            </div>
+            <div class = "AddMovie-right">
+              <UpdateIMDbForm />
+            </div>
+          </div>
 
-      <div class = "DisplayMovie">
-        <div class = "DisplayMovie-left">
-          <h2>Movies</h2>
-        </div>
-        <div class = "DisplayMovie-right">
-          <ShowMovies />
-        </div>
-      </div>
+          <div class = "DisplayMovie">
+            <div class = "DisplayMovie-left">
+              <h2>Movies</h2>
+            </div>
+            <div class = "DisplayMovie-right">
+              <ShowMovies />
+            </div>
+          </div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Theaters</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <TheaterList />
-        </div>
-      </div>
+          </div>
+        } />
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>MovieShows</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <ShowList />
-        </div>
-      </div>
+        {/* Theater Router */}
+         <Route path = "/Theaters" element = {
+          <div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Bookings</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <BookingList />
-        </div>
-      </div>
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Add Theater</h2>
+            </div>
+            <div class = "AddMovie-right">
+              <AddTheaterForm />
+            </div>
+          </div>
 
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Users</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <UserList />
-        </div>
-      </div>
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Enter Seat Record for a Theater</h2>
+            </div>
+            <div class = "AddMovie-right">
+              <AddSeatRecord />
+            </div>
+          </div>
 
-    </div>
+          <div class = "AddMovie">
+             <div class = "AddMovie-left">
+               <h2>Theaters</h2>
+             </div>
+             <div class = "AddMovie-right">
+               <TheaterList />
+             </div>
+          </div>
+
+          </div>
+        } />
+
+        {/* Shows Router */}
+        <Route path = "/Shows" element = {
+          <div>
+
+             <div class = "AddMovie">
+               <div class = "AddMovie-left">
+                 <h2>Add ShowTime</h2>
+               </div>
+               <div class = "AddMovie-right">
+                 <AddShowTime />
+               </div>
+             </div>
+
+             <div class = "AddMovie">
+               <div class = "AddMovie-left">
+                 <h2>Set Price for a Show</h2>
+               </div>
+               <div class = "AddMovie-right">
+                 <AddPriceForm />
+               </div>
+             </div>
+
+             <div class = "AddMovie">
+               <div class = "AddMovie-left">
+                 <h2>MovieShows</h2>
+               </div>
+               <div class = "AddMovie-right">
+                 <ShowList />
+               </div>
+             </div>
+
+          </div>
+        } />
+
+         {/* Bookings Router */}
+         <Route path = "/Bookings" element = {
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Bookings</h2>
+            </div>
+            <div class = "AddMovie-right">
+              <BookingList />
+            </div>
+          </div>
+        } />
+
+        {/* Users Router */}
+        <Route path = "/Users" element = {
+          <div class = "AddMovie">
+            <div class = "AddMovie-left">
+              <h2>Users</h2>
+            </div>
+            <div class = "AddMovie-right">
+              <UserList />
+            </div>
+          </div>
+        } />
+
+      </Routes>
+
+      </div>
+    </Router>
   );
 }
 

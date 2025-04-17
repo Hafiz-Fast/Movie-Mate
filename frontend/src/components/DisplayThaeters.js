@@ -17,6 +17,7 @@ const TheaterList = () => {
           <tr>
             <th>Theater ID</th>
             <th>Screen Type</th>
+            <th>SeatRecord ID</th>
             <th>Total Seats</th>
             <th>Available Seats</th>
             <th>Occupied Seats</th>
@@ -27,6 +28,7 @@ const TheaterList = () => {
             <tr key={index}>
               <td>{theater.TheaterID}</td>
               <td>{theater.ScreenType}</td>
+              <td>{theater.SeatRecordID}</td>
               <td>{theater.TotalSeats}</td>
               <td>{theater.AvailableSeats}</td>
               <td>{theater.OccupiedSeats}</td>

@@ -619,7 +619,7 @@ END
 END
 GO
 
-exec ViewSeats 1;
+exec ViewSeats 2;
 
 --11 Admin can View Movies Record
 GO
@@ -681,7 +681,7 @@ Go
 Create Procedure ShowTheaters
 as begin
 
-Select T.TheaterID,T.ScreenType,S.TotalSeats,S.AvailableSeats,S.OccupiedSeats from Theater as T
+Select T.TheaterID,T.ScreenType,S.SeatRecordID,S.TotalSeats,S.AvailableSeats,S.OccupiedSeats from Theater as T
 left join SeatRecord as S
 On T.SeatRecordID = S.SeatRecordID;
 

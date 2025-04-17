@@ -3,6 +3,7 @@
     background-color: black;
     font-family: Arial, sans-serif;
 }
+
 .Title{
     width: 300px;
     height: 100px;
@@ -12,11 +13,43 @@
     font-size: 40px;
     font-weight: bold;
     text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000;
-    margin-left: 36%;
+    margin-left: 2%;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.Nav ul{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 10px;
+    right: 70px;
+    
+    border: 2px solid rgb(255, 162, 0);
+    box-shadow: 0 0 5px rgb(255, 162, 0), 0 0 20px rgb(255, 162, 0), 0 0 40px rgb(255, 162, 0);
+}
+.Nav ul li{
+    display: inline-block;
+    list-style: none;
+    margin: 10px 20px;
+    font-weight: bold;
+}
+.Nav ul li:last-child{
+    margin-right: 20px;
+}
+.Nav ul li:first-child{
+    margin-left: 0;
+}
+.Nav ul li a {
+    text-decoration: none;
+}
+.Nav ul li a:hover{
+    color: rgb(255, 162, 0);
+    text-shadow: 0 0 10px rgb(255, 162, 0);
 }
 
 .Admin{
@@ -28,7 +61,7 @@
     font-size: 30px;
     font-weight: bold;
     margin-top: 6%;
-    margin-left: 27.5%;
+    margin-left: 2%;
     text-align: center;
     display: flex;
     align-items: center;
