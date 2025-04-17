@@ -31,7 +31,6 @@ function App(){
        <p>Welcome to MovieMate – Your go-to destination for the ultimate cinema experience.<br /> From the latest releases to upcoming hits, browse showtimes, book tickets, and enjoy personalized movie recommendations – all in one place.</p>
 
       <div>
-        <label htmlFor="formSelector">Choose a form:</label>
         <select id="formSelector" name="formSelector" onChange={handleFormChange}>
           <option value="">--Select a form--</option>
           <option value="SignUp">SignUp</option>

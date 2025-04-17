@@ -36,7 +36,7 @@ const SearchMovie = () => {
                     </thead>
                     <tbody>
                     {movies.map((movie) => (
-                        <tr key={movie.MovieID}>
+                        <tr key={movie.Title}>
                         <td>{movie.Title}</td>
                         <td>{movie.Genre}</td>
                         <td>{movie.Duration}</td>
