@@ -39,9 +39,8 @@ Foreign Key (SeatRecordID) references SeatRecord(SeatRecordID) On Delete Cascade
 );
 
 Create Table Seat(                --Seat of Customer in a Theater hall
-SeatNumber int Identity(1,1) Primary Key,
+SeatNumber char(2) Primary Key,   --e.g: A1,B2
 TheaterID int,                    --FK
-RowNumber int,
 Foreign Key(TheaterID) references Theater(TheaterID)
 );
 
@@ -81,10 +80,9 @@ PaymentTime Time
 Create Table Bookings(
 BookingID int Identity(1,1) Primary Key,
 UserID int,                   --FK
-SeatNumber int,               --FK
+SeatNumber int,               --FK and its updated data-type is char(2)
 ShowTimeID int,               --FK
 PaymentID int,                --FK
-Foreign Key (SeatNumber) references Seat(SeatNumber),
 Foreign Key (ShowTimeID) references ShowTimings(ShowTimeID),
 Foreign Key (UserID) references Users(UserID),
 Foreign Key (PaymentID) references Payment(PaymentID)
@@ -100,6 +98,38 @@ Primary Key(UserID,MovieID)
 )
 
 --Additional Constraints
+Alter table Seat
+Add Constraint fk_Seat1
+Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On Update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_1
+Foreign Key(MovieID) references Movie(MovieID) On delete cascade On update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_2
+Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On update cascade;
+
+Alter table ShowTimings
+add CONSTRAINT Show_3
+Foreign Key(PriceID) references Prices(PriceID) On delete cascade On update cascade;
+
+Alter table Bookings
+add constraint Book_1
+Foreign Key (ShowTimeID) references ShowTimings(ShowTimeID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_2
+Foreign Key (UserID) references Users(UserID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_3
+Foreign Key (PaymentID) references Payment(PaymentID) On Delete cascade On Update cascade;
+
+Alter table Bookings
+add constraint Book_4
+Foreign Key (SeatNumber) references Seat(SeatNumber) On Delete No Action;
+
 Alter Table Movie
 Add constraint df_id
 Default(NULL) for RatingID;
@@ -115,6 +145,30 @@ Default(NULL) for PriceID;
 Alter Table Bookings
 Add constraint df_paymentid
 DEFAULT(NULL) for PaymentID;
+
+Alter Table Bookings
+Alter Column Seatnumber char(2);
+
+Alter Table Bookings
+Add constraint fk_bookings_SeatNumber
+Foreign Key (SeatNumber) references Seat(SeatNumber);
+
+Alter table Users
+alter column UserName nvarchar(30) COLLATE Latin1_General_CS_AS NOT NULL;
+
+Alter table Users
+add constraint un_1
+Unique(UserName);
+
+Alter table Users
+alter column Email nvarchar(30) COLLATE Latin1_General_CS_AS NOT NULL;
+
+Alter table Users
+add constraint un_2
+Unique(Email);
+
+Alter table Users
+alter column UserPassword nvarchar(255) COLLATE Latin1_General_CS_AS NOT NULL;
 
 --Schema View
 Select * from Movie;
@@ -192,13 +246,14 @@ exec AddIMDb 6.7,'Batman finds about Superman Secret...','Batman vs SuperMan';
 --3 Admin can Remove Movie from list
 GO
 Create Procedure RemoveMovie
+@MovieID int,
 @MovieName varchar(30)
 as begin
 
-if exists (Select 1 from Movie where Title = @MovieName)
+if exists (Select 1 from Movie where MovieID = @MovieID)
 begin
 Delete from Movie
-where Title = @MovieName;
+where MovieID = @MovieID;
 print('Movie Removed Successfully');
 end
 
@@ -210,7 +265,8 @@ end
 end
 GO
 
-exec RemoveMovie 'Pathan';
+exec RemoveMovie 6,'SpiderMan';
+Select * from Movie;
 
 --4 Admin can Update IMDb rating of a movie
 GO
@@ -349,17 +405,17 @@ BEGIN
 --Giving Discounts according to Specific Categories
 if (@Category = 'Student')
 BEGIN
-set @Amount = @Amount * (20.0/100);
+set @Amount = @Amount - (@Amount * (20.0/100));
 END
 
 else if (@Category = 'Children')
 BEGIN
-set @Amount = @Amount * (10.0/100);
+set @Amount = @Amount - (@Amount * (10.0/100));
 END
 
 else if (@Category = 'Old')
 BEGIN
-set @Amount = @Amount * (15.0/100);
+set @Amount = @Amount - (@Amount * (15.0/100));
 END
 
 Insert into Prices (Category,Amount)
@@ -382,7 +438,7 @@ end
 END
 GO
 
-exec AddShowPrice 'Student',750.00,1;
+exec AddShowPrice 'Student',500,4;
 Select * from Prices;
 Select * from ShowTimings;
 
@@ -394,7 +450,7 @@ Create Procedure UserBooking
 @ScreenType varchar(20),
 @ShowDate Date,
 @MovieTiming time,
-@Rownumber int
+@SeatNumber char(2)
 as BEGIN
 
 if not exists(Select 1 from Users where @UserID = UserID)
@@ -452,11 +508,8 @@ end
 
 --Now all checks all clear and now insert in tables
 --First insert in seat
-INSERT into Seat(TheaterID,RowNumber)
-values (@TheaterID,@Rownumber);
-
-declare @Seatnumber int;
-set @Seatnumber = SCOPE_IDENTITY();
+INSERT into Seat(TheaterID,SeatNumber)
+values (@TheaterID,@SeatNumber);
 
 --Now update SeatRecord for that theater
 Update SeatRecord
@@ -472,13 +525,77 @@ values (@UserID,@Seatnumber,@ShowTimeID);
 END
 GO
 
-exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00',5;
+exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00','A5';
 SELECT * from Bookings;
 SELECT * from Seat;
 SELECT * from SeatRecord;
 
---(Note: In above procedure, I have not added seat number as input because it is for now
---       has an identity on it and I don't how to remove that Identity)
+--9.5 After Booking User has to Do Payment
+GO
+Create Procedure PerformPayment
+@BookingID int,
+@PaymentMethod varchar(20),
+@UserAmount float
+as begin
+
+if not exists(Select 1 from Bookings where BookingID = @BookingID)
+begin
+print('Payment Failed! As Booking-ID not found');
+Return;
+end
+
+if exists (Select 1 from Bookings where BookingID = @BookingID and PaymentID is not NULL)
+begin
+print('Payment Failed! As Payment has already made on this Booking-ID');
+Return;
+end
+
+--Now Check if Given Amount = ShowAmount
+declare @ShowAmount float;
+Select @ShowAmount = P.Amount from Bookings as B
+join ShowTimings as S
+On B.ShowTimeID = S.ShowTimeID
+join Prices as P
+On S.PriceID = P.PriceID
+where B.BookingID = @BookingID;
+
+declare @Current_time time;
+Set @Current_time = Convert(time,GETDATE());
+
+if (@UserAmount < @ShowAmount)
+begin
+Insert into Payment(PaymentStatus,PaymentMethod,PaymentTime)
+values ('Unpaid',@PaymentMethod,@Current_time);
+print('Given Amount is less than ShowPrice');
+end
+
+else
+begin
+Insert into Payment(PaymentStatus,PaymentMethod,PaymentTime)
+values ('Paid',@PaymentMethod,@Current_time);
+print('Payment Successful!');
+end
+
+--Now Update Payemnt ID in Booking Table
+declare @PaymentID int;
+set @PaymentID = SCOPE_IDENTITY();
+
+Update Bookings
+set PaymentID = @PaymentID
+where BookingID = @BookingID;
+
+--Return balance if any to user
+if (@UserAmount > @ShowAmount)
+begin
+print('The return amount of user is: ' + Cast(@UserAmount - @ShowAmount as varchar));
+end
+
+end
+GO
+
+exec PerformPayment 2,'Online',1000;
+Select * from Payment;
+Select * from Bookings;
 
 --10 Users can view Seats of a theater
 GO
@@ -502,15 +619,15 @@ END
 END
 GO
 
-exec ViewSeats 1;
+exec ViewSeats 2;
 
---11 Users can Browse Movies
+--11 Admin can View Movies Record
 GO
 Create Procedure ViewMovies
 as begin
 
-Select M.Title,M.Genre,M.MovieType,M.Duration,R.IMDbRating,R.Review from Movie as M
-join Rating as R
+Select M.MovieID,M.Title,M.Genre,M.MovieType,M.Duration,R.IMDbRating,R.Review from Movie as M
+left join Rating as R
 On M.RatingID = R.RatingID;
 
 end
@@ -518,17 +635,17 @@ GO
 
 exec ViewMovies;
 
---12 Users can View Show Timings and Theater
+--12 Admin can View Show Timings and Theater
 Go
 Create procedure ViewShowTimings
 as BEGIN
 
-Select M.Title,T.ScreenType,S.ShowDate,S.ShowTiming,P.Amount,P.Category from ShowTimings as S
-join Theater as T
+Select S.ShowTimeID,M.MovieID,T.TheaterID,S.ShowDate,S.ShowTiming,P.Amount,P.Category from ShowTimings as S
+left join Theater as T
 On T.TheaterID = S.TheaterID
-join Movie as M
+left join Movie as M
 On M.MovieID = S.MovieID
-join Prices as P
+left join Prices as P
 On S.PriceID = P.PriceID;
 
 END
@@ -558,3 +675,268 @@ END
 GO
 
 exec CancelBooking 2,2;
+
+--14 Admin can view Theaters and their SeatRecord
+Go
+Create Procedure ShowTheaters
+as begin
+
+Select T.TheaterID,T.ScreenType,S.SeatRecordID,S.TotalSeats,S.AvailableSeats,S.OccupiedSeats from Theater as T
+left join SeatRecord as S
+On T.SeatRecordID = S.SeatRecordID;
+
+end
+Go
+
+exec ShowTheaters;
+
+--14.1 Admin can view Booking Record
+Go
+Create Procedure ShowBookings
+as begin
+
+Select B.BookingID,U.UserName,B.SeatNumber,B.ShowTimeID,P.PaymentMethod,P.PaymentStatus from Bookings as B
+left join Users as U
+On B.UserID = U.UserID
+left join Seat as S
+On B.SeatNumber = S.SeatNumber
+left join ShowTimings as Sh
+On B.ShowTimeID = Sh.ShowTimeID
+left join Payment as P
+On B.PaymentID = P.PaymentID;
+
+END
+GO
+
+exec ShowBookings;
+
+--14.2 Admin can view User Record
+Go
+Create Procedure ShowUsers
+as BEGIN
+
+Select U.UserID,U.UserName,U.UserPassword,U.UserType,UR.MovieID,UR.Review from Users as U
+left join UserReview as UR
+On U.UserID = UR.UserID;
+
+END
+GO
+
+exec ShowUsers;
+
+---Abdullah Ejaz Combining---
+--15 Creating a new account
+go
+Create Procedure Signup
+@Username nvarchar(30), @email nvarchar(30),
+@password nvarchar(255), @UserType varchar(30), 
+@flag int OUTPUT
+
+As Begin
+if exists(select 1 from Users where Email = @email)
+	begin
+		set @flag = 1 --Email already exists
+		return;
+	end
+else if @UserType NOT IN('Customer','Admin','Employee')
+	begin
+		set @flag = 3 --userType is incorrect
+		return;
+	end
+else if exists(select 1 from Users where UserName = @Username) OR (@Username is NULL)
+	begin
+		set @flag = 2 --UserName already exists
+		return;
+	end
+else 
+	begin
+		insert into Users(UserName,Email,UserPassword,UserType)
+		values(@Username, @email, @password, @UserType);
+		set @flag = 0
+	end
+end
+go
+
+declare @flag int;
+exec Signup 'Bhatti','bhati123@gmail.com','playstation','Customer',@flag output;
+SELECT * from Users;
+
+--16 Login using Email
+Go
+create procedure loginE
+@email nvarchar(30), @password nvarchar(255), @flag int OUTPUT
+
+As Begin
+if NOT Exists(select 1 from Users where @email = Email)
+	begin
+		set @flag = 1 --Email does not exist
+		return;
+	end
+else
+	begin
+		if @password = (select UserPassword from Users where @email = Email)
+			begin
+				set @flag = 0 --login is successful
+				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				from Users AS U
+				join Bookings AS B on U.UserID = B.UserID
+				where U.Email = @email;
+			end
+		else
+			begin
+				set @flag = 1 --password is incorrect
+				return;
+			end
+	end
+end
+go
+
+declare @flag int;
+exec loginE 'bhati123@gmail.com','playstation',@flag output;
+Select @flag as Status;
+
+--17 login using Username
+Go
+create procedure loginU
+@Username nvarchar(30), @password nvarchar(255), @flag int OUTPUT
+
+As Begin
+if NOT Exists(select 1 from Users where @Username = UserName)
+	begin
+		set @flag = 1 --username does not exist
+		return;
+	end
+else
+	begin
+		if @password = (select UserPassword from Users where @Username = UserName)
+			begin
+				set @flag = 0 --login is successful
+				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				from Users AS U
+				join Bookings AS B on U.UserID = B.UserID
+				where U.UserName = @Username;
+			end
+		else
+			begin
+				set @flag = 1 --password is incorrect
+				return;
+			end
+	end
+end
+go
+
+declare @flag int;
+exec loginU 'Bhatti','playstation',@flag output;
+Select @flag as Status;
+go
+
+--18 Update Password
+alter procedure updatePass
+@email nvarchar(30),@oldPass nvarchar(255), @newPass nvarchar(255),
+@flag int OUTPUT
+
+As Begin
+
+if @oldPass = @newPass
+	begin
+		set @flag = 2; --password is the same
+		return;
+	end
+else
+	begin
+		if Exists (Select 1 From Users where Email = @email and UserPassword = @oldPass)
+			begin
+				Update Users
+				Set UserPassword = @newPass
+				where @email = Email;
+				Set @flag = 0;	--password is successfully changed
+			end
+		else
+			begin
+				Set @flag = 1; --Password does not match
+			end
+	end
+end
+go
+
+declare @flag int;
+exec updatePass 'Bhatti','playstation','playstation4',@flag output;
+Select * from Users;
+
+--19 Search a movie that is similar to that title
+GO
+create procedure searchMovie
+@movieName nvarchar(255)
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID from Movie As M
+where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%';	--in case some part of the name is known and not the full name
+
+end
+go
+
+exec searchMovie 'Batman';
+
+--20 all movie screening Details
+Go
+create procedure screeningDetails
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+join ShowTimings As ST on M.MovieID = ST.MovieID
+join Theater As T on ST.TheaterID = T.TheaterID
+Order By ST.ShowTiming; --earliest screening
+
+end
+go
+
+exec screeningDetails;
+
+--21 movie screening Details of the required movie
+Go
+create procedure SscreeningDetails
+@movieName nvarchar(255)
+
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+join ShowTimings As ST on M.MovieID = ST.MovieID
+join Theater As T on ST.TheaterID = T.TheaterID
+where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%'	--allow partial matches
+Order By ST.ShowTiming;
+
+end
+go
+
+exec SscreeningDetails 'SpiderMan';
+
+--22 confirms a payement
+GO
+create procedure PayementStatusUpdate
+@bookingID int, @Status int --1 for confirm, 2 for pending
+As Begin
+
+if Exists(Select 1 from Bookings where BookingID = @bookingID)
+	begin
+		if @Status = 1
+			begin
+				update Payment
+				set PaymentStatus = 'Paid'
+				where Exists(Select 1 from Bookings As B
+							join Payment As P on B.PaymentID = P.PaymentID);
+			end
+		else
+			begin
+			update Payment
+				set PaymentStatus = 'UnPaid'
+				where Exists(Select 1 from Bookings As B
+							join Payment As P on B.PaymentID = P.PaymentID);
+			end
+end
+end
+go
+
+declare @flag int;
+exec PayementStatusUpdate 2,2;
+
+Select *from Payment;
