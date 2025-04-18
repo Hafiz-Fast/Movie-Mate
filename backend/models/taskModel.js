@@ -1,6 +1,89 @@
 const { NVarChar } = require('mssql');
 const { sql, poolPromise } = require('../config/db');
 
+const Duration = (DurationString) => {
+    const duration = new Date(DurationString);
+
+    const hours = duration.getUTCHours();
+    const minutes = duration.getUTCMinutes();
+    const seconds = duration.getUTCSeconds();
+
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+}
+
+const Time = (nTime) => {
+    const duration = new Date(nTime);
+
+    let hours = duration.getUTCHours();
+    const minutes = duration.getUTCMinutes();
+
+    let quarter;
+
+    if(hours < 12){
+        quarter = 'AM';
+    }else{
+        quarter = 'PM';
+    }
+
+    hours = hours > 12 ? hours - 12 : hours;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${formattedHours}:${formattedMinutes} ${quarter}`
+}
+
+const date = (nTime) => {
+    const Ttime = new Date(nTime);
+
+    const date = Ttime.getUTCDate();
+    const month = Ttime.getUTCMonth() + 1;
+    const year = Ttime.getUTCFullYear();
+
+    const time = Time(nTime);
+
+    const fDate = date < 10 ? `0${date}` : date;
+    const fMonth = month < 10 ? `0${month}` : month;
+
+    return `${year}-${fMonth}-${fDate}  ${time}`;
+}
+
+const FormatDuration = (result) =>{
+    const formattedRecordSet = result.recordset.map(row => ({
+        ...row,
+        Duration: Duration(row.Duration) // Format the date
+    }));
+
+    const formattedResult = {
+        ...result,
+        recordset: formattedRecordSet,
+        recordsets: [formattedRecordSet], // Ensuring same structure as original
+    };
+
+    return formattedResult;
+}
+
+const FormatTime = (result) => {
+
+    const formattedDuration = FormatDuration(result);
+
+    const formattedRecordSet = formattedDuration.recordset.map(row => ({
+        ...row,
+        ShowTiming: date(row.ShowTiming),
+    }));
+
+    const finalResult = {
+        ...result,
+        recordset: formattedRecordSet,
+        recordsets: [formattedRecordSet]
+    }
+
+    return finalResult;
+}
+
 const Task = {
     async SignUp(username, email, password, userType){
         try{
@@ -63,7 +146,6 @@ const Task = {
                 .output('flag', sql.Int)
                 .execute('updatePass');
                 const flag = result.output.flag;
-                console.log("Flag:", flag);
                 return flag;
         }
         catch(error){
@@ -76,7 +158,10 @@ const Task = {
             const pool = await poolPromise;
             const result = await pool.request()
             .execute('browse');
-            return result;
+
+            const formattedResult = FormatDuration(result);
+            
+            return formattedResult;
         }
         catch(error){
             console.error("Error executing stored procedure:", error);
@@ -89,7 +174,10 @@ const Task = {
             const result = await pool.request()
                 .input('movieName', NVarChar, MovieName)
                 .execute('searchMovie');
-            return result;
+
+            const formattedResult = FormatDuration(result);
+                
+            return formattedResult;
         }
         catch(error){
             console.error("Error executing stored procedure:", error);
@@ -99,8 +187,11 @@ const Task = {
     async Screenings(){
         try{
             const pool = await poolPromise;
-            const result = await pool.request()
+            let result = await pool.request()
                 .execute('screeningDetails');
+
+            result = FormatTime(result);
+            
             return result;
         }
         catch(error){
@@ -111,9 +202,12 @@ const Task = {
     async Sscreening(MovieName){
         try{
             const pool = await poolPromise;
-            const result = await pool.request()
+            let result = await pool.request()
                 .input('movieName', NVarChar, MovieName)
                 .execute('SscreeningDetails');
+
+            result = FormatTime(result);
+
             return result;
         }
         catch(error){
