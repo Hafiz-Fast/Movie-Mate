@@ -11,7 +11,13 @@ import AddPriceForm from './components/AddPrice';
 import ShowMovies from './components/ShowMovies';
 import TheaterList from './components/DisplayThaeters';
 import ShowList from './components/DisplayShowTimings';
-
+import Delete_seatrecord from './components/delete_seatrecord';
+import Update_seatrecord from './components/update_seatrecord';
+import DeleteShowTime from './components/delete_showtime_id';
+import Update_showtimings from './components/Update_showtimings';
+import Update_movie from './components/Update_movie';
+import DeleteRating from './components/Delete_rating';
+import Delete_theater from './components/Delete_theater';
 function App(){
 
   const[message, setMessage]=useState('');
@@ -129,6 +135,70 @@ function App(){
         </div>
         <div class = "AddMovie-right">
           <ShowList />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Delete Seat Record</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Delete_seatrecord />
+        </div>
+      </div>
+
+      <div class = "AddMovie1">
+        <div class = "AddMovie-left">
+          <h2>Update Seat Record</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Update_seatrecord />
+        </div>
+      </div>
+      
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Delete Show Time</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <DeleteShowTime />
+        </div>
+      </div>
+      
+      <div class = "AddMovie1">
+        <div class = "AddMovie-left">
+          <h2>Update Movie</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Update_movie />
+        </div>
+      </div>
+
+      
+      <div class = "AddMovie1">
+        <div class = "AddMovie-left">
+          <h2>Update Show Timings</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Update_showtimings />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Delete Rating</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <DeleteRating/>
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Delete Theater</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Delete_theater/>
         </div>
       </div>
 

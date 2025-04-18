@@ -1,5 +1,5 @@
 const { sql, poolPromise } = require('../config/db');
-const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies, ViewTheaters, ViewShows } = require('../controllers/taskController');
+const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies, ViewTheaters, ViewShows, delete_seatrecord, update_seatrecord, Update_showtimings } = require('../controllers/taskController');
 
 const Task = {
   
@@ -160,6 +160,120 @@ const Task = {
     }
   },
   
+  async delete_seatrecord(SeatId){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+       .input('SeatId',sql.Int,SeatId)
+       .execute('delete_seatrecord');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async update_seatrecord(ID, totals, availSeats, Occupied, f, m){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+       .input('ID',sql.Int,ID)
+       .input('totals',sql.Int,totals)
+       .input('availSeats',sql.Int,availSeats)
+       .input('Occupied',sql.Int,Occupied)
+       .input('f',sql.Int,f)
+       .input('m',sql.Int,m)
+       .execute('update_seatrecord');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async Delete_showtime_id(ShowTimeID){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+       .input('ShowTimeID',sql.Int,ShowTimeID)
+       .execute('Delete_showtime_id');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async Update_movie(movieid,title,type,genre,duration,ratingid){
+    try{
+      const pool = await poolPromise;
+      const result = await pool.request()
+       .input('movieid',sql.Int,movieid)
+       .input('title',sql.Int,title)
+       .input('type',sql.Int,type)
+       .input('genre',sql.Int,genre)
+       .input('duration',sql.Int,duration)
+       .input('rating',sql.Int,rating)
+       .execute('Update_movie');
+      return result.recordset;
+    }
+    catch(error){
+      console.error("Error executing stored procedure:", error);
+      throw error; 
+    }
+  },
+
+  async Update_showtimings(ShowTimeID, movieid, theaterid, showdate, showtiming, priceid) {
+    try {
+      const pool = await poolPromise;
+      const result = await pool.request()
+        .input('ShowTimeID', sql.Int, ShowTimeID)
+        .input('movieid', sql.Int, movieid)
+        .input('theaterid', sql.Int, theaterid)
+        .input('showdate', sql.Date, showdate)
+        .input('showtiming', sql.Time, showtiming)
+        .input('priceid', sql.Int, priceid)
+        .execute('update_showtimings'); 
+      return result.recordset;
+    } catch (error) {
+      console.error("Error executing stored procedure:", error);
+      throw error;
+    }
+  },
+
+  async delete_rating(RatingID) {
+    try {
+      const pool = await poolPromise;
+      const result = await pool.request()
+        .input('RatingID', sql.Int, RatingID)
+        .execute('delete_rating');
+  
+      return result.recordset;
+    } catch (error) {
+      console.error("Error executing stored procedure:", error);
+      throw error;
+    }
+  },
+  
+  async Delete_theater(theaterid) {
+    try {
+      const pool = await poolPromise;
+      const result = await pool.request()
+        .input('theaterid', sql.Int, theaterid)
+        .execute('Delete_theater');
+  
+      return result.recordset;
+    } catch (error) {
+      console.error("Error executing stored procedure:", error);
+      throw error;
+    }
+  }
+  
+  
+
 };
 
 module.exports = Task;

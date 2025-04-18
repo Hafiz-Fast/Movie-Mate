@@ -130,3 +130,14 @@ button:hover {
     width: 10px;
     text-align: center;
 }
+
+.AddMovie1{
+    margin-top: 9%;
+    display: flex;
+    align-items: center;
+    width: 97%;
+    height: 120vh;
+    border: 2px solid #fffb00;
+    box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
+    border-radius: 20px;
+}
