@@ -62,4 +62,6 @@ router.get('/Movies', taskController.browseMovies);
 
 router.get('/Screenings', taskController.getScreenings);
 
+router.post('/booking', taskController.BookMovie);
+
 module.exports = router;

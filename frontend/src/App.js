@@ -7,6 +7,7 @@ import Browse from './components/Browse';
 import SearchMovie from './components/MovieSearch';
 import ScreeningSearch from './components/Sscreening';
 import Screening from './components/Screening';
+import BookingMovie from './components/BookingMovie';
 
 function App(){
 
@@ -39,6 +40,7 @@ function App(){
           <option value="UpdatePass">Update Password</option>
           <option value="SearchMovie">Search the Movie</option>
           <option value="ScreeningSearch">Search Screening Times</option>
+          <option value="BookMovie">Booking a Movie</option>
         </select>
 
         {/* Form 1 */}
@@ -58,6 +60,9 @@ function App(){
 
         {/*Form 6*/}
         {selectedForm === 'ScreeningSearch' && <ScreeningSearch/>}
+
+        {/*Form 7*/}
+        {selectedForm === 'BookMovie' && <BookingMovie/>}
       </div>
       <div>
         <Browse/>

@@ -157,3 +157,15 @@ exports.updatePaymentStatus = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+exports.BookMovie = async (req, res) => {
+  try{
+    const { UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber } = req.body;
+    await Task.MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber);
+    res.json({ message: 'Movie Booking sucessful' });
+  }
+  catch(error){
+    console.error("Error Booking Movie:", error);
+    res.status(500).json({ error: 'Internal Server Error'})
+  }
+};

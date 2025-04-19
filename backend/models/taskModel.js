@@ -227,6 +227,23 @@ const Task = {
             console.error("Error executing stored procedure:", error);
             throw error; 
         }
+    },
+    async MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber){
+        try{
+            const pool = await poolPromise;
+            await pool.request()
+                .input('UserID', sql.Int, UserID)
+                .input('Moviename', sql.VarChar, Moviename)
+                .input('ScreenType', sql.VarChar, ScreenType)
+                .input('ShowDate', sql.Date, ShowDate)
+                .input('MovieTiming', sql.DateTime2(3), MovieTiming)
+                .input('SeatNumber', sql.Char(2), SeatNumber)
+                .execute('UserBooking');
+        }
+        catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error; 
+        }
     }
 }
 
