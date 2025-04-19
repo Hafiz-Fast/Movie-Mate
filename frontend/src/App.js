@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import "./App.css"
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
@@ -15,18 +15,28 @@ import ShowList from './components/DisplayShowTimings';
 import BookingList from './components/DisplayBookings';
 import UserList from './components/DisplayUsers';
 
-function App(){
-
-  const[message, setMessage]=useState('');
+function AppContent(){
+  const location = useLocation();
 
   useEffect(()=>{
     fetch('http://localhost:5000')
     .then((response)=>response.text())
-    .then((data)=>setMessage(data));
   },[]);
 
+  // Apply background images for different pages
+  let className = '';
+  if(location.pathname === '/'){
+    className = 'home-background';
+  }
+  else if(location.pathname === '/Theaters' || location.pathname === '/Movies' || location.pathname === '/Shows' || location.pathname === '/Bookings' || location.pathname === '/Users'){
+    className = 'theater-background';
+  }
+  else{
+    className = '';
+  }
+
   return(
-    <Router>
+    <div class={className}>
       <div style={{marginTop: '40px',marginLeft: '25px'}}>
       <div class = "Title">
         Movie Mate
@@ -201,8 +211,16 @@ function App(){
       </Routes>
 
       </div>
-    </Router>
+    </div>
   );
+}
+
+function App(){
+  return(
+    <Router>
+      <AppContent />
+    </Router>
+  )
 }
 
 export default App;

@@ -23,7 +23,13 @@ const AddPriceForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Select Category (Student, Bachelor, Children, Old)" value={Category} onChange={(e) => setCategory(e.target.value)} required />
+      <input list="category" placeholder="Select Category" value={Category} onChange={(e) => setCategory(e.target.value)} required />
+      <datalist id="category">
+        <option value="Student" />
+        <option value="Bachelor" />
+        <option value="Children" />
+        <option value="Old" />
+      </datalist>
       <input type="number" placeholder="Enter Amount" value={Amount} onChange={(e) => setAmount(e.target.value)} required />
       <input type="number" placeholder="Enter ShowID" value={ShowID} onChange={(e) => setShowID(e.target.value)} required />
       <button type="submit">Add Price</button>

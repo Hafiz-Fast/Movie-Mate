@@ -27,8 +27,25 @@ const MovieForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <input type="text" placeholder="Title" value={Title} onChange={(e) => setTitle(e.target.value)} required />
-      <input type="text" placeholder="MovieType" value={MovieType} onChange={(e) => setMovieType(e.target.value)} required />
-      <input type="text" placeholder="Genre" value={Genre} onChange={(e) => setGenre(e.target.value)} required />
+      <input list="MovieTypes" placeholder="MovieType" value={MovieType} onChange={(e) => setMovieType(e.target.value)} required />
+      <datalist id = "MovieTypes">
+        <option value="HollyWood" />
+        <option value="BollyWood" />
+        <option value="LollyWood" />
+      </datalist>
+      <input list="Genres" placeholder="Genre" value={Genre} onChange={(e) => setGenre(e.target.value)} required />
+      <datalist id = "Genres">
+        <option value="Action" />
+        <option value="Adventure" />
+        <option value="Comedy" />
+        <option value="Drama" />
+        <option value="Fantasy" />
+        <option value="Horror" />
+        <option value="Mystery" />
+        <option value="Romance" />
+        <option value="Sci-Fi" />
+        <option value="Thriller" />
+      </datalist>
       <input type="time" Duration value={Duration} onChange={(e) => setDuration(e.target.value)} required />
       <button type="submit">Add Movie</button>
     </form>

@@ -15,13 +15,14 @@ const AddTheaterForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <select value={ScreenType} onChange={(e) => setScreen(e.target.value)} required>
+      <input list="ScreenTypes" placeholder="ScreenType" value={ScreenType} onChange={(e) => setScreen(e.target.value)} required />
+      <datalist id="ScreenTypes">
         <option value="">Select ScreenType</option>
         <option value="Bronze">Bronze</option>
         <option value="Silver">Silver</option>
         <option value="Gold">Gold</option>
         <option value="Platinum">Platinum</option>
-      </select>
+      </datalist>
       <button type="submit">Add Theater</button>
     </form>
   );
