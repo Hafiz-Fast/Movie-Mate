@@ -763,7 +763,7 @@ SELECT * from Users;
 
 --16 Login using Email
 Go
-create procedure loginE
+alter procedure loginE
 @email nvarchar(30), @password nvarchar(255), @flag int OUTPUT
 
 As Begin
@@ -777,9 +777,8 @@ else
 		if @password = (select UserPassword from Users where @email = Email)
 			begin
 				set @flag = 0 --login is successful
-				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				select U.UserID, U.UserName, U.Email, U.UserType
 				from Users AS U
-				join Bookings AS B on U.UserID = B.UserID
 				where U.Email = @email;
 			end
 		else
@@ -797,7 +796,7 @@ Select @flag as Status;
 
 --17 login using Username
 Go
-create procedure loginU
+alter procedure loginU
 @Username nvarchar(30), @password nvarchar(255), @flag int OUTPUT
 
 As Begin
@@ -811,9 +810,8 @@ else
 		if @password = (select UserPassword from Users where @Username = UserName)
 			begin
 				set @flag = 0 --login is successful
-				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				select U.UserID, U.UserName, U.Email, U.UserType
 				from Users AS U
-				join Bookings AS B on U.UserID = B.UserID
 				where U.UserName = @Username;
 			end
 		else
@@ -940,3 +938,4 @@ declare @flag int;
 exec PayementStatusUpdate 2,2;
 
 Select *from Payment;
+Select * from Users;

@@ -83,7 +83,6 @@ exports.updatePassword = async (req, res) => {
     
     const flag = await Task.updatePass(email, oPass, nPass);
 
-    
     switch(flag){
       case 0:
         return res.status(200).json({ message: 'Password Changed Successfully'});
