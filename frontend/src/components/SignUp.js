@@ -5,7 +5,7 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('Customer');
+  const userType = 'Customer';
   const [message, setMessage] = useState('');
   const [messageColor, setMessageColor] = useState('black');
   const navigate = useNavigate();
@@ -47,7 +47,8 @@ const SignUp = () => {
   return (
     <>
       <div className='Logging'>
-        <img src='/logo.png' alt='Website Logo' className='LogoF'></img>
+        <img src='/logo.png' alt='Website Logo' className='LogoF'></img><br />
+        <label>SignUp</label>
         <form onSubmit={handleSubmit} className='LogData'>
           <input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} required /><br /><br />
           <input type="text" placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)} required /><br /><br />

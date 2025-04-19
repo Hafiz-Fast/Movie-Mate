@@ -78,8 +78,6 @@ exports.loginWithUsername = async (req, res) => {
 exports.updatePassword = async (req, res) => {
   try {
     const { email, oPass, nPass } = req.body;
-
-    console.log(req.body);
     
     const flag = await Task.updatePass(email, oPass, nPass);
 

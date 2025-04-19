@@ -39,10 +39,10 @@ p {
 }
 
 /* Label Styling */
-.label {
+label {
   display: block;
   margin: 1rem auto;
-  font-size: 1.2rem;
+  font-size: 3.5rem;
   color: #ffa14a;
   text-align: center;
 }
@@ -155,6 +155,19 @@ input, textarea {
   width: 80%;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+a{
+  color: #48c6ef;
+}
+
+a:hover{
+  color: rgb(253, 211, 0);
+}
+
+a:focus{
+  color: #e74c3c;
+  outline: none;
 }
 
 input::placeholder, textarea::placeholder {

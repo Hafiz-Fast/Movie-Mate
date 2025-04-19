@@ -1,5 +1,6 @@
 import React, {useState, useEffect, Component} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import RouteLogger from './js/background_img';
 
 import SignUp from './components/SignUp';
 import Home from './components/Home';
@@ -20,6 +21,7 @@ function App(){
   return(
     <div>
        <Router>
+       <RouteLogger />
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />

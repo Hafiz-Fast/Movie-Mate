@@ -65,7 +65,8 @@ const Login = () => {
     return(
         <>
             <div className='Logging'>
-                <img src='/logo.png' alt='Website Logo' className='LogoF'></img>
+                <img src='/logo.png' alt='Website Logo' className='LogoF'></img><br /><br /><br />
+                <label>Login</label>
                 <form onSubmit={handleSubmit} className='LogData'>
                     <input type="text" placeholder="Enter email or username" value={logD} onChange={(e) => setLogD(e.target.value)} required /><br /><br />
                     <input type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} required /><br />
