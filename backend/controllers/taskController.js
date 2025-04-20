@@ -120,6 +120,17 @@ exports.searchMovie = async (req, res) => {
   }
 };
 
+//Get Coming soon Movies
+exports.ComingSoon = async (req, res) => {
+  try{
+    const result = await Task.ComingSoon();
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Browse Error:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 // Get All Screenings
 exports.getScreenings = async (req, res) => {
   try {

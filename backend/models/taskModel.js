@@ -1,5 +1,6 @@
 const { NVarChar } = require('mssql');
 const { sql, poolPromise } = require('../config/db');
+const { ComingSoon } = require('../controllers/taskController');
 
 const Duration = (DurationString) => {
     const duration = new Date(DurationString);
@@ -166,6 +167,18 @@ const Task = {
         catch(error){
             console.error("Error executing stored procedure:", error);
             throw error; 
+        }
+    },
+    async ComingSoon(){
+        try{
+            const pool = await poolPromise;
+            const result = await pool.request()
+            .execute('comingSoon');
+
+            return result;
+        }catch(error){
+            console.error("Error executing stored procedure:", error);
+            throw error;    
         }
     },
     async MovieSearch(MovieName){

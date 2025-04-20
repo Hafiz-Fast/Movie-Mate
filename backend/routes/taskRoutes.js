@@ -60,6 +60,8 @@ router.post('/search-screening', taskController.getScreeningsForMovie);
 
 router.get('/Movies', taskController.browseMovies);
 
+router.get('/Coming-soon', taskController.ComingSoon);
+
 router.get('/Screenings', taskController.getScreenings);
 
 router.post('/booking', taskController.BookMovie);

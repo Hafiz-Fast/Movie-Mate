@@ -1,6 +1,6 @@
 import React , { useState, useEffect } from 'react';
 
-const Home = () => {
+const Movies = () => {
     const [refresh, setRefresh] = useState(false);
     const [Nmovies, setNMovies] = useState([]);
     const [CMovies, setCMovies] = useState([]);
@@ -34,4 +34,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Movies;
