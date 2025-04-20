@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Component} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import RouteLogger from './js/background_img';
+import RouteLogger from './Styling';
 
 import SignUp from './components/SignUp';
 import Home from './components/Home';
