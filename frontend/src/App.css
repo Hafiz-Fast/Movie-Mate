@@ -179,3 +179,20 @@ button:hover {
     color: #b15b0b;
   }
   
+
+.home-page {
+    background-image: url('https://cdn.pixabay.com/photo/2016/10/04/08/58/theater-1713816_1280.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; 
+  }
+  
+  .Title {
+    color: #fff; /* Text color for readability on the background */
+  }
+  
+  .Admin {
+    color: #fff; /* Text color for readability on the background */
+  }
+  

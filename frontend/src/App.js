@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { useLocation } from 'react-router-dom';
 import "./App.css"
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
@@ -34,10 +34,12 @@ function App(){
     .then((data)=>setMessage(data));
   },[]);
 
+  const isHomePage = location.pathname === "/";
+  
   return(     
     <Router>
-
-    <div style={{marginTop: '40px',marginLeft: '25px'}}>
+ <div className={isHomePage ? "home-page" : ""} 
+ style={{ marginTop: '40px', marginLeft: '25px' }}>
         <MenuBar />
     <Routes>
     <Route path="/" element={
