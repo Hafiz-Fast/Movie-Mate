@@ -151,8 +151,8 @@ input, textarea {
 .Logging{
   background-color: rgba(255, 255, 255, 0.05);
   padding: 2rem;
-  margin: 2rem auto;
-  width: 80%;
+  margin: 0.5rem auto;
+  width: 60%;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
