@@ -1,14 +1,14 @@
-*{
+#Admin *{
     color: white;
     font-family: Arial, sans-serif;
     box-sizing: border-box;
 }
 
-body{
+#Admin body{
     background: black;    /* Add seperatly as it clashes with background of home page */
 }
 
-.Title{
+#Admin .Title{
     width: 300px;
     height: 100px;
     border: 2px solid #ff0000;
@@ -25,7 +25,7 @@ body{
     background: black;
 }
 
-.Nav ul{
+#Admin .Nav ul{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,28 +38,28 @@ body{
     box-shadow: 0 0 5px rgb(255, 162, 0), 0 0 20px rgb(255, 162, 0), 0 0 40px rgb(255, 162, 0);
     background: black;
 }
-.Nav ul li{
+#Admin .Nav ul li{
     display: inline-block;
     list-style: none;
     margin: 10px 20px;
     font-weight: bold;
     background: black;
 }
-.Nav ul li:last-child{
+#Admin .Nav ul li:last-child{
     margin-right: 20px;
 }
-.Nav ul li:first-child{
+#Admin .Nav ul li:first-child{
     margin-left: 0;
 }
-.Nav ul li a {
+#Admin .Nav ul li a {
     text-decoration: none;
 }
-.Nav ul li a:hover{
+#Admin .Nav ul li a:hover{
     color: rgb(255, 162, 0);
     text-shadow: 0 0 10px rgb(255, 162, 0);
 }
 
-.Admin{
+#Admin .Admin{
     width: 500px;
     height: 250px;
     border: 2px solid #00ff00;
@@ -76,12 +76,12 @@ body{
     flex-direction: column;
     background: black;
 }
-.Admin p{
+#Admin .Admin p{
     font-size: 20px;
     background: black;
 }
 
-.AddMovie{
+#Admin .AddMovie{
     margin-top: 9%;
     display: flex;
     align-items: center;
@@ -91,19 +91,19 @@ body{
     box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
     border-radius: 20px;
 }
-.AddMovie-left{
+#Admin .AddMovie-left{
     flex-basis: 30%;
 }
-.AddMovie-left h2{
+#Admin .AddMovie-left h2{
     margin-left: 15%;
     margin-bottom: 70%;
     font-size: 30px;
 }
-.AddMovie-right{
+#Admin .AddMovie-right{
     flex-basis: 55%;
 }
 
-form input, form textarea{
+#Admin form input, form textarea{
     width:90%;
     border:0;
     outline:none;
@@ -114,7 +114,7 @@ form input, form textarea{
     background:#262626;
     color:white;
 }
-button {
+#Admin button {
     margin-top: 3%;
     background-color: black;
     color: rgb(255, 162, 0); /* Neon Pink */
@@ -128,13 +128,13 @@ button {
     transition: all 0.3s ease-in-out;
 }
   
-button:hover {
+#Admin button:hover {
     box-shadow: 0 0 10px rgb(255, 162, 0), 0 0 30px rgb(255, 162, 0), 0 0 60px rgb(255, 162, 0);
     text-shadow: 0 0 10px rgb(255, 162, 0);
 }
 
 /* For Displaying Movie Section as they are long */
-.DisplayMovie{
+#Admin .DisplayMovie{
     margin-top: 9%;
     display: flex;
     align-items: center;
@@ -144,36 +144,36 @@ button:hover {
     box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
     border-radius: 20px;
 }
-.DisplayMovie-left{
+#Admin .DisplayMovie-left{
     flex-basis: 25%;
 }
-.DisplayMovie-left h2{
+#Admin .DisplayMovie-left h2{
     margin-left: 15%;
     margin-bottom: 70%;
     font-size: 30px;
 }
-.DisplayMovie-right{
+#Admin .DisplayMovie-right{
     flex-basis: 73%;
 }
 
 /* The styling of row and columns of Table */
-.MovieTable{
+#Admin .MovieTable{
     border: 1px solid white;
     width: 100%;
     height: 50vh;
 }
-.MovieTable thead tr th{
+#Admin .MovieTable thead tr th{
     border: 1px solid white;
     padding: 10px;
 }
-.MovieTable tbody tr td{
+#Admin .MovieTable tbody tr td{
     border: 1px solid white;
     padding: 10px;
     width: 10px;
     text-align: center;
 }
 
-.home-background{
+#Admin .home-background{
     background-image: url('https://images.unsplash.com/photo-1643553517154-24eb7fd86437?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover;
     background-position: center;
@@ -184,7 +184,7 @@ button:hover {
     position: absolute;
 }
 
-.theater-background{
+#Admin .theater-background{
     background-image: url('https://images.unsplash.com/photo-1653853301139-f57c5fdc069a?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover;
     background-position: center;

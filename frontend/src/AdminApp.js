@@ -217,7 +217,9 @@ function AppContent(){
 
 function App(){
   return(
-    <AppContent />
+    <div id = "Admin">
+      <AppContent />
+    </div>
   )
 }
 
