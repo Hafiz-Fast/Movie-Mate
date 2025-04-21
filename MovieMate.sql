@@ -758,7 +758,7 @@ end
 go
 
 declare @flag int;
-exec Signup 'Bhatti','bhati123@gmail.com','playstation','Customer',@flag output;
+exec Signup 'hamza','hamza123@gmail.com','hamzastation','Admin',@flag output;
 SELECT * from Users;
 
 --16 Login using Email

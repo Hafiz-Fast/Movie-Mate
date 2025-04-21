@@ -4,8 +4,10 @@
     box-sizing: border-box;
 }
 
-.adm body{
+.adm html,body{
     background: black;    /* Add seperatly as it clashes with background of home page */
+    margin: 0;
+    padding: 0;
 }
 
 .adm .Title{
@@ -63,7 +65,7 @@
     width: 500px;
     height: 250px;
     border: 2px solid #00ff00;
-    box-shadow: 0 0 10px #00ff00, 0 0 30px #00ff00, 0 0 50px #00ff00;
+    box-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00, 0 0 25px #00ff00;
     color: #0ff;
     font-size: 30px;
     font-weight: bold;
@@ -76,7 +78,7 @@
     flex-direction: column;
     background: black;
 }
-.adm .adm p{
+.adm .Admin p{
     font-size: 20px;
     background: black;
 }
@@ -88,7 +90,7 @@
     width: 97%;
     height: 80vh;
     border: 2px solid #fffb00;
-    box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
+    box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
     border-radius: 20px;
 }
 .adm .AddMovie-left{
@@ -141,7 +143,7 @@
     width: 97%;
     height: 130vh;
     border: 2px solid #fffb00;
-    box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
+    box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
     border-radius: 20px;
 }
 .adm .DisplayMovie-left{
