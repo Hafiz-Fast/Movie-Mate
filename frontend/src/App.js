@@ -18,6 +18,10 @@ import Update_showtimings from './components/Update_showtimings';
 import Update_movie from './components/Update_movie';
 import DeleteRating from './components/Delete_rating';
 import Delete_theater from './components/Delete_theater';
+import MenuBar from './components/MenuBar';
+
+
+
 function App(){
 
   const[message, setMessage]=useState('');
@@ -28,8 +32,9 @@ function App(){
     .then((data)=>setMessage(data));
   },[]);
 
-  return(
+  return(     
     <div style={{marginTop: '40px',marginLeft: '25px'}}>
+        <MenuBar />
       <div class = "Title">
         Movie Mate
       </div>
@@ -203,6 +208,7 @@ function App(){
       </div>
 
     </div>
+
   );
 }
 

@@ -201,3 +201,14 @@ exports.Delete_theater = async (req, res) => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+

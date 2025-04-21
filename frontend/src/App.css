@@ -12,7 +12,7 @@
     font-size: 40px;
     font-weight: bold;
     text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000;
-    margin-left: 36%;
+    margin-left: 5%;
     text-align: center;
     display: flex;
     align-items: center;
@@ -28,7 +28,7 @@
     font-size: 30px;
     font-weight: bold;
     margin-top: 6%;
-    margin-left: 27.5%;
+    margin-left:5%;
     text-align: center;
     display: flex;
     align-items: center;
@@ -141,3 +141,41 @@ button:hover {
     box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
     border-radius: 20px;
 }
+
+
+
+
+
+
+
+
+
+
+
+.menu-bar {
+    font-size: 20px;
+    background-color: #333;
+    margin-left: 60%;
+    box-shadow: 0 0 10px #0892c4, 0 0 30px #ff0000, 0 0 50px #ff0000;
+  }
+  
+  .menu-bar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+  }
+  
+  .menu-bar ul li {
+    margin-right: 20px;
+  }
+  
+  .menu-bar ul li a {
+    color: rgb(29, 219, 80);
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .menu-bar ul li a:hover {
+    color: #b15b0b;
+  }
+  

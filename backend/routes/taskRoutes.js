@@ -21,4 +21,12 @@ router.put('/Update_movie',taskController.Update_movie);
 router.put('/Update_showtimings',taskController.Update_showtimings);
 router.delete('/Delete_rating',taskController.delete_rating);
 router.delete('/Delete_theater',taskController.Delete_theater);
+
+
+
+
+
+
+
+
 module.exports = router;
