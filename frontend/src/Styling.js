@@ -5,14 +5,38 @@ import login from './js/Login';
 import home from './js/Home';
 import './css/home.css';
 import './css/login.css';
+import './UserApp.css';
+import './AdminApp.css';
 
 const RouteLogger = () => {
   const location = useLocation();
+
+  const regex = /^\/(user|admin)/;
+  const match = location.pathname.match(regex);
+
+  console.log('Pathname:', location.pathname);
+  console.log('match:', match)
+
+  let type = match ? match[1] : null;
+
+  if(type){
+    sessionStorage.setItem('AccessType', type);
+  }
 
   useEffect(() => {
     const body = document.querySelector('body');
 
     body.className = '';
+
+    const access = sessionStorage.getItem('AccessType');
+
+    console.log('AccessType from sessionStorage:', access);
+
+    if(access === 'user' || location.pathname === '/login' || location.pathname === '/signup'){
+      body.classList.add('user');
+    }else if(access === 'admin'){
+      body.classList.add('adm');
+    }
 
     switch(location.pathname){
 
@@ -25,12 +49,10 @@ const RouteLogger = () => {
             body.classList.add('home-page');
             home();
             break;
-        default:
-          document.querySelector('body').style.backgroundImage = "url('')";
     }
   }, [location]);
-
-  return null;
+  
+return null;
 };
 
 export default RouteLogger;

@@ -1,15 +1,15 @@
 /* General Reset and Base */
-.userContainer * {
+.user * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.userContainer html {
+.user html {
   scroll-behavior: smooth;
 }
 
-.userContainer body {
+.user body {
   background-color: #0f375e;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -19,19 +19,19 @@
 }
 
 /* Title Styling */
-.userContainer .M-Title {
+.user .M-Title {
   color: white;
   font-size: 800%;
   text-align: center;
   margin-top: 5%;
 }
 
-.userContainer .M-Style {
+.user .M-Style {
   color: #ffa14a !important;
 }
 
 /* Paragraph Styling */
-.userContainer p {
+.user p {
   color: lightcyan;
   text-align: center;
   font-size: 1.5rem;
@@ -39,7 +39,7 @@
 }
 
 /* Label Styling */
-.userContainer label {
+.user label {
   display: block;
   margin: 1rem auto;
   font-size: 3.5rem;
@@ -48,7 +48,7 @@
 }
 
 /* Dropdown Styling */
-.userContainer select {
+.user select {
   display: block;
   margin: 1rem auto;
   padding: 0.75rem 1.2rem;
@@ -63,18 +63,18 @@
   cursor: pointer;
 }
 
-.userContainer select:focus {
+.user select:focus {
   outline: none;
   background-color: #194e79;
 }
 
-.userContainer option {
+.user option {
   background-color: #133a5e;
   color: lightcyan;
 }
 
 /* Button Styling */
-.userContainer button {
+.user button {
   padding: 0.7rem 1.5rem;
   margin: 0.5rem;
   font-size: 1rem;
@@ -87,12 +87,12 @@
   transition: background-color 0.3s ease;
 }
 
-.userContainer button:hover {
+.user button:hover {
   background-color: #ff8c1a;
 }
 
 /* Table Styling */
-.userContainer table {
+.user table {
   margin: 2rem auto;
   border-collapse: collapse;
   width: 90%;
@@ -103,24 +103,24 @@
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
-.userContainer th, td {
+.user th, td {
   padding: 1rem;
   text-align: center;
   border-bottom: 1px solid #0a2540;
 }
 
-.userContainer th {
+.user th {
   background-color: #ffa14a;
   color: #0f375e;
   font-weight: bold;
 }
 
-.userContainer tr:hover {
+.user tr:hover {
   background-color: #1a4d7a;
 }
 
 /* Form Containers */
-.userContainer form:not(.LogData) {
+.user form:not(.LogData) {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 2rem;
   margin: 2rem auto;
@@ -129,7 +129,7 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
-.userContainer input, textarea {
+.user input, textarea {
   display: block;
   width: 100%;
   margin: 1rem 0;
@@ -141,14 +141,14 @@
   font-size: 1rem;
 }
 
-.userContainer .LogoF{
+.user .LogoF{
   width:15%;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
-.userContainer .Logging{
+.user .Logging{
   background-color: rgba(255, 255, 255, 0.05);
   padding: 2rem;
   margin: 0.5rem auto;
@@ -157,24 +157,24 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
-.userContainer a{
+.user a{
   color: #48c6ef;
 }
 
-.userContainer a:hover{
+.user a:hover{
   color: rgb(253, 211, 0);
 }
 
-.userContainer a:focus{
+.user a:focus{
   color: #e74c3c;
   outline: none;
 }
 
-.userContainer input::placeholder, textarea::placeholder {
+.user input::placeholder, textarea::placeholder {
   color: #b0d4e3;
 }
 
-.userContainer input:focus, textarea:focus {
+.user input:focus, textarea:focus {
   outline: none;
   background-color: #22618e;
 }

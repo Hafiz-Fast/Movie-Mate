@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import RouteLogger from './Styling';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
-import SignUp from './components/SignUp';
+import RouteLogger from './Styling';
 import Home from './components/Home';
-import Login from './components/Login';
 
 function App(){
 
@@ -19,12 +17,13 @@ function App(){
   console.log({message});
 
   return(
-    <div>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<Home />} />
-        </Routes>
-    </div>
+    <>
+      <RouteLogger />
+      <Routes>
+        <Route path='/' element={<Navigate to='/home' />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </>
   );
 }
 

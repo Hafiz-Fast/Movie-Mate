@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import "./AdminApp.css"
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
 import DeleteMovieForm from './components/DeleteMovieForm';
@@ -14,6 +13,7 @@ import TheaterList from './components/DisplayThaeters';
 import ShowList from './components/DisplayShowTimings';
 import BookingList from './components/DisplayBookings';
 import UserList from './components/DisplayUsers';
+import RouteLogger from './Styling';
 
 function AppContent(){
   const location = useLocation();
@@ -53,6 +53,7 @@ function AppContent(){
         </ul>
       </div>
       
+      <RouteLogger />
       {/* Routes */}
       <Routes>
       
@@ -217,9 +218,9 @@ function AppContent(){
 
 function App(){
   return(
-    <div id = "Admin">
+    <>
       <AppContent />
-    </div>
+    </>
   )
 }
 

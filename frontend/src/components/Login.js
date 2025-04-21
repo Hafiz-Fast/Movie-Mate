@@ -46,7 +46,12 @@ const Login = () => {
                 //--------------------------------------------
                 setLogD('');
                 setPassword('');
-                navigate('/user'); // Navigate to home
+                if(user.UserType === 'Customer'){
+                    navigate('/user');
+                }else{
+                    navigate('/admin');
+                }
+                
             }else if(!response.ok && data.errors){
                 let errorMessages = '';
                 data.errors.forEach(error => {
