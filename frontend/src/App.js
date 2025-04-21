@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import "./App.css"
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
@@ -18,7 +20,7 @@ import Update_showtimings from './components/Update_showtimings';
 import Update_movie from './components/Update_movie';
 import DeleteRating from './components/Delete_rating';
 import Delete_theater from './components/Delete_theater';
-import MenuBar from './components/MenuBar';
+import MenuBar from './components/MenuBar1';
 
 
 
@@ -33,8 +35,13 @@ function App(){
   },[]);
 
   return(     
+    <Router>
+
     <div style={{marginTop: '40px',marginLeft: '25px'}}>
         <MenuBar />
+    <Routes>
+    <Route path="/" element={
+        <>
       <div class = "Title">
         Movie Mate
       </div>
@@ -43,7 +50,12 @@ function App(){
         Welcome back, Admin
         <p>Let’s add some Movies, Show Timings, IMDb Ratings, and Theaters to the spotlight!</p>
       </div>
+      </>
+       } />
 
+
+<Route path="add-movie" element={
+  <>
       <div class = "AddMovie">
         <div class = "AddMovie-left">
           <h2>Enter Movie</h2>
@@ -59,24 +71,6 @@ function App(){
         </div>
         <div class = "AddMovie-right">
           <IMDBForm />
-        </div>
-      </div>
-
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Delete Movie</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <DeleteMovieForm />
-        </div>
-      </div>
-      
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>Update IMDb Rating</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <UpdateIMDbForm />
         </div>
       </div>
 
@@ -116,30 +110,16 @@ function App(){
         </div>
       </div>
 
-      <div class = "DisplayMovie">
-        <div class = "DisplayMovie-left">
-          <h2>Movies</h2>
-        </div>
-        <div class = "DisplayMovie-right">
-          <ShowMovies />
-        </div>
-      </div>
-
+      </>
+      }/>
+<Route path="delete_movie" element={
+<>
       <div class = "AddMovie">
         <div class = "AddMovie-left">
-          <h2>Theaters</h2>
+          <h2>Delete Movie</h2>
         </div>
         <div class = "AddMovie-right">
-          <TheaterList />
-        </div>
-      </div>
-
-      <div class = "AddMovie">
-        <div class = "AddMovie-left">
-          <h2>MovieShows</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <ShowList />
+          <DeleteMovieForm />
         </div>
       </div>
 
@@ -152,14 +132,6 @@ function App(){
         </div>
       </div>
 
-      <div class = "AddMovie1">
-        <div class = "AddMovie-left">
-          <h2>Update Seat Record</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <Update_seatrecord />
-        </div>
-      </div>
       
       <div class = "AddMovie">
         <div class = "AddMovie-left">
@@ -167,25 +139,6 @@ function App(){
         </div>
         <div class = "AddMovie-right">
           <DeleteShowTime />
-        </div>
-      </div>
-      
-      <div class = "AddMovie1">
-        <div class = "AddMovie-left">
-          <h2>Update Movie</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <Update_movie />
-        </div>
-      </div>
-
-      
-      <div class = "AddMovie1">
-        <div class = "AddMovie-left">
-          <h2>Update Show Timings</h2>
-        </div>
-        <div class = "AddMovie-right">
-          <Update_showtimings />
         </div>
       </div>
 
@@ -207,8 +160,91 @@ function App(){
         </div>
       </div>
 
-    </div>
+ 
+      </>
+}/>
+      
+<Route path="update_movie" element={
+        <>
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Update IMDb Rating</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <UpdateIMDbForm />
+        </div>
+      </div>
 
+      <div class = "AddMovie1">
+        <div class = "AddMovie-left">
+          <h2>Update Seat Record</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Update_seatrecord />
+        </div>
+      </div>
+      
+      
+      <div class = "AddMovie1">
+        <div class = "AddMovie-left">
+          <h2>Update Movie</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Update_movie />
+        </div>
+      </div>
+
+      <div class = "AddMovie1">
+        <div class = "AddMovie-left">
+          <h2>Update Show Timings</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <Update_showtimings />
+        </div>
+      </div>
+
+
+      </>
+}/>
+
+     
+<Route path="display_movie" element={
+        <>
+          <div class = "DisplayMovie">
+        <div class = "DisplayMovie-left">
+          <h2>Movies</h2>
+        </div>
+        <div class = "DisplayMovie-right">
+          <ShowMovies />
+        </div>
+      </div>
+
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>Theaters</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <TheaterList />
+        </div>
+      </div>
+
+      
+      <div class = "AddMovie">
+        <div class = "AddMovie-left">
+          <h2>MovieShows</h2>
+        </div>
+        <div class = "AddMovie-right">
+          <ShowList />
+        </div>
+      </div>
+        
+        </>
+    }/>
+    
+      </Routes>
+
+    </div>
+    </Router>
   );
 }
 
