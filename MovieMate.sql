@@ -763,7 +763,7 @@ SELECT * from Users;
 
 --16 Login using Email
 Go
-create procedure loginE
+Create procedure loginE
 @email nvarchar(30), @password nvarchar(255), @flag int OUTPUT
 
 As Begin
@@ -777,9 +777,8 @@ else
 		if @password = (select UserPassword from Users where @email = Email)
 			begin
 				set @flag = 0 --login is successful
-				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				select U.UserID, U.UserName, U.Email, U.UserType
 				from Users AS U
-				join Bookings AS B on U.UserID = B.UserID
 				where U.Email = @email;
 			end
 		else
@@ -797,7 +796,7 @@ Select @flag as Status;
 
 --17 login using Username
 Go
-create procedure loginU
+Create procedure loginU
 @Username nvarchar(30), @password nvarchar(255), @flag int OUTPUT
 
 As Begin
@@ -811,9 +810,8 @@ else
 		if @password = (select UserPassword from Users where @Username = UserName)
 			begin
 				set @flag = 0 --login is successful
-				select U.UserID, U.UserName, U.Email, U.UserType, B.BookingID, B.SeatNumber, B.ShowTimeID
+				select U.UserID, U.UserName, U.Email, U.UserType
 				from Users AS U
-				join Bookings AS B on U.UserID = B.UserID
 				where U.UserName = @Username;
 			end
 		else
@@ -828,6 +826,7 @@ go
 declare @flag int;
 exec loginU 'Bhatti','playstation',@flag output;
 Select @flag as Status;
+go
 
 --18 Update Password
 Go
@@ -941,3 +940,34 @@ declare @flag int;
 exec PayementStatusUpdate 2,2;
 
 Select *from Payment;
+
+--23 Browse Movies
+Go
+Create procedure [browse]
+As Begin
+
+Select M.Title, M.MovieType, M.Genre, M.Duration, R.IMDbRating, R.Review  from Movie As M
+left join Rating as R On M.RatingID = R.RatingID	--all the necessary movie details relevent to the user 
+Order By M.title;	--Order them in ascending order
+
+end
+go
+
+--24 Display Coming soon Movies
+create procedure comingSoon
+As BEGIN
+
+	Select M.Title, M.MovieType, M.Genre, M.Duration, R.IMDbRating, R.Review  from Movie As M
+	left join Rating as R On M.RatingID = R.RatingID 
+
+	EXCEPT
+
+	Select M.Title, M.MovieType, M.Genre, M.Duration, R.IMDbRating, R.Review from Movie As M
+	left join Rating as R on M.RatingID = R.RatingID
+	join ShowTimings As ST on M.MovieID = ST.MovieID
+	join Theater As T on ST.TheaterID = T.TheaterID
+	Order By M.Title;
+
+End
+
+go
