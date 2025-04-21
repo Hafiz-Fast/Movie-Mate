@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import "./AdminApp.module.css"
+import "./AdminApp.css"
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
 import DeleteMovieForm from './components/DeleteMovieForm';
@@ -25,10 +25,10 @@ function AppContent(){
 
   // Apply background images for different pages
   let className = '';
-  if(location.pathname === '/'){
+  if(location.pathname === '/admin'){
     className = 'home-background';
   }
-  else if(location.pathname === '/Theaters' || location.pathname === '/Movies' || location.pathname === '/Shows' || location.pathname === '/Bookings' || location.pathname === '/Users'){
+  else if(location.pathname === '/admin/Theaters' || location.pathname === '/admin/Movies' || location.pathname === '/admin/Shows' || location.pathname === '/admin/Bookings' || location.pathname === '/admin/Users'){
     className = 'theater-background';
   }
   else{
@@ -36,7 +36,6 @@ function AppContent(){
   }
 
   return(
-    <div class = "AdminContainer">
     <div class={className}>
       <div style={{marginTop: '40px',marginLeft: '25px'}}>
       <div class = "Title">
@@ -45,12 +44,12 @@ function AppContent(){
 
       <div class = "Nav">
         <ul>
-          <li><Link to = "/">Home</Link></li>
-          <li><Link to = "/Movies">Movies</Link></li>
-          <li><Link to = "/Theaters">Theaters</Link></li>
-          <li><Link to = "/Shows">Shows</Link></li>
-          <li><Link to = "/Bookings">Bookings</Link></li>
-          <li><Link to = "/Users">Users</Link></li>
+          <li><Link to = "/admin">Home</Link></li>
+          <li><Link to = "/admin/Movies">Movies</Link></li>
+          <li><Link to = "/admin/Theaters">Theaters</Link></li>
+          <li><Link to = "/admin/Shows">Shows</Link></li>
+          <li><Link to = "/admin/Bookings">Bookings</Link></li>
+          <li><Link to = "/admin/Users">Users</Link></li>
         </ul>
       </div>
       
@@ -58,7 +57,7 @@ function AppContent(){
       <Routes>
       
         {/* Home Router */}
-        <Route path = "/" element = {
+        <Route path = "" element = {
           <div class = "Admin">
               Welcome back, Admin
               <p>Let’s add some Movies, Show Timings, IMDb Ratings, and Theaters to the spotlight!</p>
@@ -66,7 +65,7 @@ function AppContent(){
         } />
         
         {/* Movies Router */}
-        <Route path = "/Movies" element = {
+        <Route path = "Movies" element = {
           <div>
 
           <div class = "AddMovie">
@@ -118,7 +117,7 @@ function AppContent(){
         } />
 
         {/* Theater Router */}
-         <Route path = "/Theaters" element = {
+         <Route path = "Theaters" element = {
           <div>
 
           <div class = "AddMovie">
@@ -152,7 +151,7 @@ function AppContent(){
         } />
 
         {/* Shows Router */}
-        <Route path = "/Shows" element = {
+        <Route path = "Shows" element = {
           <div>
 
              <div class = "AddMovie">
@@ -186,7 +185,7 @@ function AppContent(){
         } />
 
          {/* Bookings Router */}
-         <Route path = "/Bookings" element = {
+         <Route path = "Bookings" element = {
           <div class = "AddMovie">
             <div class = "AddMovie-left">
               <h2>Bookings</h2>
@@ -198,7 +197,7 @@ function AppContent(){
         } />
 
         {/* Users Router */}
-        <Route path = "/Users" element = {
+        <Route path = "Users" element = {
           <div class = "AddMovie">
             <div class = "AddMovie-left">
               <h2>Users</h2>
@@ -213,7 +212,6 @@ function AppContent(){
 
       </div>
     </div>
-  </div>
   );
 }
 
