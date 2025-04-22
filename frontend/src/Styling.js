@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import login from './js/Login';
-import home from './js/Home';
+import Home from './js/Home';
 import './css/home.css';
 import './css/login.css';
 import './UserApp.css';
@@ -47,11 +47,17 @@ const RouteLogger = () => {
             break;
         case '/home':
             body.classList.add('home-page');
-            home();
             break;
+        default:
+            break;
+            
     }
   }, [location]);
   
+  if (location.pathname === '/home') {
+    return <Home />;
+  }
+
 return null;
 };
 

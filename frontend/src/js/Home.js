@@ -1,10 +1,29 @@
-const home = () => {
-    /*const body = document.querySelector('body');
-    body.style.backgroundImage = "url('/BLogoLS.png')";
-    body.style.backgroundPosition = 'center';
-    body.style.backgroundRepeat = 'no-repeat';
-    body.style.backgroundSize = "100%";
-    body.style.backgroundAttachment = 'fixed';*/
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const Home = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        let lastHistoryState = window.history.state;
+
+        const handlePopState = () => {
+            const currentHistoryState = window.history.state;
+            if(currentHistoryState.idx < lastHistoryState.idx){
+                sessionStorage.clear();
+                navigate('/login');
+            }
+            lastHistoryState = currentHistoryState;
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
+
+    return null;
 };
 
-export default home;
+export default Home;

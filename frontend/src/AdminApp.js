@@ -53,7 +53,6 @@ function AppContent(){
         </ul>
       </div>
       
-      <RouteLogger />
       {/* Routes */}
       <Routes>
       
