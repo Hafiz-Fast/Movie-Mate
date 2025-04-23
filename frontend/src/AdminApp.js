@@ -13,7 +13,6 @@ import TheaterList from './components/DisplayThaeters';
 import ShowList from './components/DisplayShowTimings';
 import BookingList from './components/DisplayBookings';
 import UserList from './components/DisplayUsers';
-import RouteLogger from './Styling';
 
 function AppContent(){
   const location = useLocation();

@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import RouteLogger from './Styling';
 import Home from './components/Home';
+import Movies from './components/Movies';
 
 function App(){
 
@@ -19,9 +19,9 @@ function App(){
   return(
     <>
       <Routes>
-        <Route path='/' element={<Navigate to='/home' />} />
-        <Route path="/home" element={<Home />} />
-        <Route path='/movies' element={<Movies />} />
+        <Route path='/' element={<Navigate to='home' />} />
+        <Route path="home" element={<Home />} />
+        <Route path='movies' element={<Movies />} />
       </Routes>
     </>
   );

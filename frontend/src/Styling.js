@@ -45,7 +45,7 @@ const RouteLogger = () => {
             body.classList.add('login-page');
             login();
             break;
-        case '/home':
+        case '/user/home':
             body.classList.add('home-page');
             break;
         default:
@@ -54,7 +54,7 @@ const RouteLogger = () => {
     }
   }, [location]);
   
-  if (location.pathname === '/home') {
+  if (location.pathname === '/user/home') {
     return <Home />;
   }
 

@@ -170,6 +170,8 @@ Unique(Email);
 Alter table Users
 alter column UserPassword nvarchar(255) COLLATE Latin1_General_CS_AS NOT NULL;
 
+Alter table Movie add links varchar(MAX);
+
 --Schema View
 Select * from Movie;
 Select * from Theater;
@@ -865,11 +867,11 @@ Select * from Users;
 
 --19 Search a movie that is similar to that title
 GO
-create procedure searchMovie
+alter procedure searchMovie
 @movieName nvarchar(255)
 As Begin
 
-Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID from Movie As M
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.links, M.RatingID from Movie As M
 where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%';	--in case some part of the name is known and not the full name
 
 end
@@ -879,13 +881,12 @@ exec searchMovie 'Batman';
 
 --20 all movie screening Details
 Go
-create procedure screeningDetails
+alter procedure screeningDetails
 As Begin
 
-Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+Select DISTINCT M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links from Movie As M
 join ShowTimings As ST on M.MovieID = ST.MovieID
 join Theater As T on ST.TheaterID = T.TheaterID
-Order By ST.ShowTiming; --earliest screening
 
 end
 go
@@ -894,12 +895,12 @@ exec screeningDetails;
 
 --21 movie screening Details of the required movie
 Go
-create procedure SscreeningDetails
+alter procedure SscreeningDetails
 @movieName nvarchar(255)
 
 As Begin
 
-Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
 join ShowTimings As ST on M.MovieID = ST.MovieID
 join Theater As T on ST.TheaterID = T.TheaterID
 where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%'	--allow partial matches
@@ -943,10 +944,10 @@ Select *from Payment;
 
 --23 Browse Movies
 Go
-Create procedure [browse]
+alter procedure [browse]
 As Begin
 
-Select M.Title, M.MovieType, M.Genre, M.Duration, R.IMDbRating, R.Review  from Movie As M
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.links, R.IMDbRating, R.Review  from Movie As M
 left join Rating as R On M.RatingID = R.RatingID	--all the necessary movie details relevent to the user 
 Order By M.title;	--Order them in ascending order
 
@@ -954,15 +955,15 @@ end
 go
 
 --24 Display Coming soon Movies
-create procedure comingSoon
+alter procedure comingSoon
 As BEGIN
 
-	Select M.Title, M.MovieType, M.Genre, M.Duration, R.IMDbRating, R.Review  from Movie As M
+	Select M.Title, M.MovieType, M.Genre, M.Duration, M.links, R.IMDbRating, R.Review  from Movie As M
 	left join Rating as R On M.RatingID = R.RatingID 
 
 	EXCEPT
 
-	Select M.Title, M.MovieType, M.Genre, M.Duration, R.IMDbRating, R.Review from Movie As M
+	Select M.Title, M.MovieType, M.Genre, M.Duration, M.links, R.IMDbRating, R.Review from Movie As M
 	left join Rating as R on M.RatingID = R.RatingID
 	join ShowTimings As ST on M.MovieID = ST.MovieID
 	join Theater As T on ST.TheaterID = T.TheaterID
@@ -971,3 +972,5 @@ As BEGIN
 End
 
 go
+
+SELECT * from Movie;
