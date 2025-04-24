@@ -1,10 +1,10 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import login from './js/Login';
 import Home from './js/Home';
 import './css/home.css';
 import './css/login.css';
+import './css/movie.css';
 import './UserApp.css';
 import './AdminApp.css';
 
@@ -43,10 +43,12 @@ const RouteLogger = () => {
         case '/login':
         case '/signup':
             body.classList.add('login-page');
-            login();
             break;
         case '/user/home':
             body.classList.add('home-page');
+            break;
+        case '/user/movies':
+            body.classList.add('movie-page');
             break;
         default:
             break;

@@ -75,7 +75,7 @@ router.post('/search-movie', taskController.searchMovie);
 
 router.post('/search-screening', taskController.getScreeningsForMovie);
 
-router.get('/Movies', taskController.browseMovies);
+router.get('/browseMovies', taskController.browseMovies);
 
 router.get('/Coming-soon', taskController.ComingSoon);
 

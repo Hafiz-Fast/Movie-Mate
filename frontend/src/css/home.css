@@ -1,5 +1,6 @@
 body.home-page {
-    background-Image: url('../../public/BLogoLS.png');
+    background-Image: none;
+    background-color: #0f375e;
     background-Position: center;
     background-Repeat: no-repeat;
     background-Size: 100%;

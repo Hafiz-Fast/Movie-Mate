@@ -21,10 +21,12 @@
 
 /* Title Styling */
 .user .M-Title {
+  letter-spacing: 0;
+  white-space: nowrap;
   color: white;
   font-size: 800%;
   text-align: center;
-  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .user .M-Style {
@@ -182,7 +184,8 @@
 
 /*navigation bar for Home*/
 .user .Nav {
-  background-color: #133a5e; 
+  background-image: url("../public/BLogoLS.png");
+  background-position: 0 10%;
   position: fixed;
   width: 100%;
   transform: translateY(0);
@@ -191,6 +194,16 @@
   top: 0;
   z-index: 100;
   transition: transform 0.3s ease-in-out;
+}
+
+.user .Nav::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 55, 94, 0.5);
 }
 
 .user.nav-hidden .Nav {
@@ -254,7 +267,7 @@
   width: 100%;
 }
 
-.user span{
+.user span:not(.M-Style){
   padding-left: 41.5vw;
   font-size: 250%;
   color:#ffa14a;

@@ -38,6 +38,9 @@ const Home = () => {
               </ul>
             </div>
             <br /><br /><br /><br />
+            <h1 className='M-Title' style={{ marginBottom: 0 }}>Welcome To</h1><br />
+            <h1 className = 'M-Title'><span className = 'M-Style'>M</span>ovie<span className = 'M-Style'>M</span>ate</h1>
+            <p>Welcome to MovieMate – Your gateway to the enchanting universe of cinema.<br /> From breathtaking blockbusters to captivating indie gems, experience the art of storytelling brought to life on the big screen,<br /> crafted just for true movie lovers like you.</p>
             <span>Now Showing</span>
             <hr style={{ marginTop: 0, border: 'none', borderTop: '4px solid #ffa14a' }} />
             <div className='Grid'>
