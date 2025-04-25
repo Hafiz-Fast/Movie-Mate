@@ -5,7 +5,6 @@ import Home from './js/Home';
 import Movie from './js/Movie';
 import './css/home.css';
 import './css/login.css';
-import './css/movie.css';
 import './UserApp.css';
 import './AdminApp.css';
 
@@ -35,8 +34,10 @@ const RouteLogger = () => {
 
     if(access === 'user' || location.pathname === '/login' || location.pathname === '/signup'){
       body.classList.add('user');
+      body.classList.add('user-mode');
     }else if(access === 'admin'){
       body.classList.add('adm');
+      body.classList.add('admin-mode');
     }
 
     switch(location.pathname){
@@ -47,9 +48,6 @@ const RouteLogger = () => {
             break;
         case '/user/home':
             body.classList.add('home-page');
-            break;
-        case '/user/movies':
-            body.classList.add('movie-page');
             break;
         default:
             break;

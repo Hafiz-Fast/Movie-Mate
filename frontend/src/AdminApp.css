@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-.adm html,body{
+html.admin-mode, body.admin-mode{
     background: black;    /* Add seperatly as it clashes with background of home page */
     margin: 0;
     padding: 0;
