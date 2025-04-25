@@ -123,7 +123,7 @@
 }
 
 /* Form Containers */
-.user form:not(.LogData) {
+.user form:not(.LogData):not(.NavBar) {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 2rem;
   margin: 2rem auto;
@@ -267,6 +267,15 @@
   width: 100%;
 }
 
+/*Search bar in Movies*/
+.user .Nav .NavSearch{
+  width:15%;
+  position:absolute;
+  top:0;
+  bottom:12%;
+  left: 10vw;
+}
+
 .user span:not(.M-Style){
   padding-left: 41.5vw;
   font-size: 250%;
@@ -289,6 +298,16 @@
   display: inline-block;
   text-align: center;
   transition: color 0.2s ease-in-out;
+}
+
+.user .Grid .Movies a{
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.user .Grid .Movies a:focus{
+  color: red;
 }
 
 .user .Grid .Movies:focus{

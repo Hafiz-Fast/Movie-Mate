@@ -46,8 +46,8 @@ const Home = () => {
             <div className='Grid'>
               {Nmovies.map((movie) => (
                   <div key = {movie.Title} className = 'Movies'>
-                    <img src= {movie.links} alt={movie.Title}></img>
-                    <br />{movie.Title}<br />
+                    <Link to={`/user/booking/${encodeURIComponent(movie.Title)}`}><img src= {movie.links} alt={movie.Title}></img>
+                    <br />{movie.Title}<br /></Link>
                     <div className='Booking'>Book Now</div>
                   </div> 
               ))}

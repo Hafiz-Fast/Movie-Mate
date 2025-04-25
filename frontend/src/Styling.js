@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import Home from './js/Home';
+import Movie from './js/Movie';
 import './css/home.css';
 import './css/login.css';
 import './css/movie.css';
@@ -58,6 +59,8 @@ const RouteLogger = () => {
   
   if (location.pathname === '/user/home') {
     return <Home />;
+  }else if(location.pathname === '/user/movies'){
+    return <Movie />;
   }
 
 return null;

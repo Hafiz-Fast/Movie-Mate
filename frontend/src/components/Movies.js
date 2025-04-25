@@ -5,38 +5,47 @@ const Movies = () => {
     const [refresh, setRefresh] = useState(false);
     const [search, setSearch] = useState('');
     const [movies, setMovies] = useState([]);
+    const [debounceTimeOut, setDebounceTimeOut] = useState(null);
 
     const handleDataChange = () =>{
       setRefresh(prev => !prev);
     }
 
-    useEffect(() => {
-      fetch('http://localhost:5000/api/browseMovies')
-        .then(res => res.json())
-        .then(data => setMovies(data));
-    }, [refresh]);
-
-    console.log("movies:", movies);
-    
-    /*const handleForm = async(e) =>{
-      setMovies([]);
-
-      const response = await fetch('http://localhost:5000/api/search-movie', {
+    const fetchMovies = async() =>{
+      if (search) {
+        const response = await fetch('http://localhost:5000/api/search-movie', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({MovieName: search})
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ MovieName: search.trim() })
+        });
+        const data = await response.json();
+        setMovies(data);  // Set search results
+      } else {
+          const response = await fetch('http://localhost:5000/api/browseMovies');
+          const data = await response.json();
+          setMovies(data);  // Set default movies
       }
-      );
-      const data = await response.json();
+    };
 
-      setMovies(data); 
-    };*/
+    useEffect(() => {
+      if(debounceTimeOut)
+        clearTimeout(debounceTimeOut);
+
+      const newDebounceTimeOut = setTimeout(() => {
+        fetchMovies();
+      }, 500);
+
+      setDebounceTimeOut(newDebounceTimeOut);
+
+      return () => clearTimeout(newDebounceTimeOut);
+
+    },[refresh, search]);
 
     return(
         <>
             <div className='Nav'>
-              <form>
-                <input type='text' placeholder='Search Movies' value={search} onChange={(e) => setSearch(e.target.value)} />
+              <form className='NavBar'>
+                <input className='NavSearch' type='text' placeholder='Search Movies' value={search} onChange={(e) => setSearch(e.target.value)} />
               </form>
               <ul>
                 <li><Link to = "/user/home">Home</Link></li>
@@ -49,8 +58,8 @@ const Movies = () => {
             <div className='Grid' style={{ paddingBottom: "10rem" }}>
               {movies.map((movie) => (
                   <div key = {movie.Title} className = 'Movies'>
-                    <img src= {movie.links} alt={movie.Title}></img>
-                    <br />{movie.Title}<br />
+                    <Link to = {`/user/movies/${encodeURIComponent(movie.Title)}`}><img src= {movie.links} alt={movie.Title}></img>
+                    <br />{movie.Title}</Link><br />
                   </div> 
               ))}
             </div>
