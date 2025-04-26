@@ -332,3 +332,28 @@ body.user-mode {
 .user .Movies img:hover{
     border-color: rgb(253, 211, 0);
 }
+
+.user .detailPage{
+    background-color: #DCDCDC;
+    border-radius: 12px;
+    display: block;
+    width: 60vw; /* or any width you like */
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 700px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
+    padding-bottom: 0;
+}
+
+.detailPage h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.detailPage p {
+  font-size: 1.1rem;
+  color:#c0392b;
+  margin-bottom: 0.5rem;
+}

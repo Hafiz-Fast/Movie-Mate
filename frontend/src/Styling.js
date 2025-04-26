@@ -5,6 +5,7 @@ import Home from './js/Home';
 import Movie from './js/Movie';
 import './css/home.css';
 import './css/login.css';
+import './css/detail.css'
 import './UserApp.css';
 import './AdminApp.css';
 
@@ -40,6 +41,10 @@ const RouteLogger = () => {
       body.classList.add('admin-mode');
     }
 
+    if(location.pathname.startsWith('/user/movies/')){
+      body.classList.add('detail-page');
+    }
+    
     switch(location.pathname){
 
         case '/login':

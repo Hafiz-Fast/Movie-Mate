@@ -74,7 +74,8 @@ const FormatTime = (result) => {
 
   const formattedRecordSet = formattedDuration.recordset.map(row => ({
       ...row,
-      ShowTiming: date(row.ShowTiming),
+      ShowTiming: Time(row.ShowTiming),
+      ShowDate: date(row.ShowDate)
   }));
 
   const finalResult = {
