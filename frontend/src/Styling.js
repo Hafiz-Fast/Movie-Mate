@@ -34,11 +34,11 @@ const RouteLogger = () => {
     console.log('AccessType from sessionStorage:', access);
 
     if(access === 'user' || location.pathname === '/login' || location.pathname === '/signup'){
-      body.classList.add('user');
       body.classList.add('user-mode');
+      body.classList.add('user');
     }else if(access === 'admin'){
-      body.classList.add('adm');
       body.classList.add('admin-mode');
+      body.classList.add('adm');
     }
 
     if(location.pathname.startsWith('/user/movies/')){

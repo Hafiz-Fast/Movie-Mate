@@ -5,25 +5,37 @@ const ScreeningDetail = () => {
     const { title } = useParams();
     const [futureShows, setFutureShows] = useState(false);
     const [Screenings, setScreeningDetails] = useState([]);
+    const [Movie, setMovie] = useState([]);
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = today.toLocaleDateString(undefined, options);
 
-    console.log(formattedDate);
+    const handleToggle = () =>{
+        setFutureShows(prev => !prev);
+    }
 
     useEffect(() =>{
         const Details = async() =>{
 
-            const response = await fetch("http://localhost:5000/api/search-screening", {
+            let response = await fetch("http://localhost:5000/api/search-screening", {
                 method: 'POST',
                 headers: {"content-type": "application/json"},
                 body: JSON.stringify({ MovieName: title })
             });
 
-            const data = await response.json();
+            let data = await response.json();
             
             setScreeningDetails(data);
-            console.log("data:", data);
+
+            response = await fetch("http://localhost:5000/api/search-movie", {
+                method: 'POST',
+                headers: {"content-type": "application/json"},
+                body: JSON.stringify({ MovieName: title })
+            });
+
+            data = await response.json();
+            
+            setMovie(data[0]);
         };
 
         Details();
@@ -31,52 +43,65 @@ const ScreeningDetail = () => {
 
     return (
         <>
+        <h1 style={{ fontSize: '300%', textAlign: 'center' }}>{Movie.Title}</h1>
+         <img src={Movie.links} alt={title} style={{ width: "25%", display: 'block', marginLeft: 'auto', marginRight: 'auto' }}></img>
           {Screenings.length === 0 ? (
             <p>No Current Screenings</p>
           ) : (
             (() => {
               let hasTodayShows = false;
-              let lastRenderedDate = "";
-      
-              const screeningsList = Screenings.map((show) => {
+              const groupByDate = {};
+
+              Screenings.forEach(show => {
                 const showDate = new Date(show.ShowDate);
                 const formattedSDate = showDate.toLocaleDateString(undefined, options);
-                let renderDateHeader = false;
-
-                if (formattedSDate !== lastRenderedDate) {
-                    // New date encountered
-                    lastRenderedDate = formattedSDate;
-                    renderDateHeader = true;
+                
+                if(!groupByDate[formattedSDate]){
+                    groupByDate[formattedSDate] = [];
                 }
+                groupByDate[formattedSDate].push(show);
 
                 if (formattedDate === formattedSDate) {
                     hasTodayShows = true;
                 }
+                });
 
-                if (formattedDate === formattedSDate || futureShows) {
-                    return (
-                        <div key={`${show.ShowTiming}`}>
-                            {renderDateHeader && (
-                                <>
-                                    <h3>{formattedSDate}</h3>
-                                    <hr />
-                                </>
-                            )}
-                            <div>
-                                <p>{show.ScreenType} {show.ShowTiming}</p>
-                            </div>
-                        </div>
-                    );
+                if (!hasTodayShows && !futureShows) {
+                    return <p>No Screenings today</p>;
                 }
 
-                return null;
-            });
+                return Object.entries(groupByDate).map(([date, shows]) => {
+                    if (date !== formattedDate && !futureShows) {
+                        return null;
+                    }
 
-            if (!hasTodayShows && !futureShows) {
-                return <p>No Screenings today</p>;
-            }
+                    return (
+                        <div key={date}>
+                          <div className='Detail'>
+                            <h3>{date}</h3>
+                            {date === formattedDate && (
+                              <div className="displayD" tabIndex="0" onClick={handleToggle}>
+                                    {futureShows ? "Hide Future Shows" : "Show Future Shows"}
+                                <span className={`arrow ${futureShows ? 'up' : ''}`}>&#x25BC;</span>
+                              </div>
+                            )}
+                          </div>
+                          <hr />
 
-            return screeningsList;
+                          <div className='times' style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', padding: 0}}>
+                            {shows.map(show => (
+                                <Link to={`/booking/${title}/seats?ShowtimeID=${show.ShowTimeID}&showDate=${show.ShowDate}&showTiming=${show.ShowTiming}`}>
+                                    <div className="show-card" key={show.ShowTiming}>
+                                    <p className={`badge ${show.ScreenType}`}>{show.ScreenType}</p>
+                                    <p>{show.ShowTiming}</p>
+                                    </div>
+                                </Link>
+                            ))}
+                            </div>
+
+                        </div>
+                    );
+                });
         })()
     )}
     </>

@@ -171,6 +171,7 @@ Alter table Users
 alter column UserPassword nvarchar(255) COLLATE Latin1_General_CS_AS NOT NULL;
 
 Alter table Movie add links varchar(MAX);
+Alter table Movie add trailer varchar(MAX);
 
 --Schema View
 Select * from Movie;
@@ -871,8 +872,10 @@ alter procedure searchMovie
 @movieName nvarchar(255)
 As Begin
 
-Select M.Title, M.MovieType, M.Genre, M.Duration, M.links, M.RatingID from Movie As M
-where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%';	--in case some part of the name is known and not the full name
+Select M.Title, M.MovieType, M.Genre, M.Duration, M.links, M.trailer, R.IMDbRating, R.Review from Movie As M
+left join Rating as R On M.RatingID = R.RatingID
+where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%'	--in case some part of the name is known and not the full name
+ORDER By M.Title;
 
 end
 go
@@ -884,9 +887,9 @@ Go
 alter procedure screeningDetails
 As Begin
 
-Select DISTINCT M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links from Movie As M
+Select DISTINCT M.Title, M.MovieType, M.Genre, M.Duration, M.links from Movie As M
 join ShowTimings As ST on M.MovieID = ST.MovieID
-join Theater As T on ST.TheaterID = T.TheaterID
+join Theater As T on ST.TheaterID = T.TheaterID;
 
 end
 go
@@ -900,16 +903,16 @@ alter procedure SscreeningDetails
 
 As Begin
 
-Select M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links, ST.ShowTiming, T.TheaterID, T.ScreenType from Movie As M
+Select ST.ShowTimeID, M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links, ST.ShowDate, ST.ShowTiming, T.ScreenType from Movie As M
 join ShowTimings As ST on M.MovieID = ST.MovieID
 join Theater As T on ST.TheaterID = T.TheaterID
 where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%'	--allow partial matches
-Order By ST.ShowTiming;
+order by ST.ShowDate, ST.ShowTiming;
 
 end
 go
 
-exec SscreeningDetails 'SpiderMan';
+exec SscreeningDetails 'A Working Man';
 
 --22 confirms a payement
 GO
@@ -974,3 +977,51 @@ End
 go
 
 SELECT * from Movie;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/NhWg7AQLI_8'
+where MovieID = 1;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/vqu4z34wENw'
+where MovieID = 2;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/uhlBqFj9kDw', MovieType = 'Anime'
+where MovieID = 3;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/bKGxHflevuk'
+where MovieID = 4;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/xEkVUPvYNUI'
+where MovieID = 5;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/dx1AyG6-dnc'
+where MovieID = 6;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/q8wthQkVfU0'
+where MovieID = 7;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/hs3w32RG8L8'
+where MovieID = 8;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/r-7g08INMSI'
+where MovieID = 9;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/ysWq7nLVww4'
+where MovieID = 10;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/PO4c5d6rNqw'
+where MovieID = 11;
+
+update Movie
+set trailer = 'https://www.youtube.com/embed/9Js9joUIsAk'
+where MovieID = 12;

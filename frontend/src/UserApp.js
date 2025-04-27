@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Movies from './components/Movies';
 import MovieDetail from './components/MovieDetail';
 import ScreeningDetail from './components/ScreeningDetail';
+import SeatSelection from './components/SeatSelection';
 
 function App(){
 
@@ -26,6 +27,7 @@ function App(){
         <Route path='movies' element={<Movies />} />
         <Route path="movies/:title" element={<MovieDetail />} />
         <Route path='booking/:title' element={<ScreeningDetail />} />
+        <Route path='booking/:title/seats' element={<SeatSelection />} />
       </Routes>
     </>
   );

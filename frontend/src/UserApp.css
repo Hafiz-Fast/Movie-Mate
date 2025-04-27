@@ -1,4 +1,6 @@
 /* General Reset and Base */
+/*Important notes
+  .Transform does not work on pure inline elements*/
 .user * {
   margin: 0;
   padding: 0;
@@ -345,15 +347,103 @@ body.user-mode {
     padding-bottom: 0;
 }
 
-.detailPage h1 {
+.user .detailPage h1 {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: #333;
 }
 
-.detailPage p {
+.user .detailPage p {
   font-size: 1.1rem;
   color:#c0392b;
   margin-bottom: 0.5rem;
+}
+
+.user .Detail{
+  width: 100%;
+  display: block;
+  text-align: justify;
+}
+
+.user .Detail h3{
+  margin: 0; 
+  padding-right: 79vw; 
+  font-weight: bold;
+  display: inline-block;
+}
+
+.user .Detail .displayD{
+  margin: 0; 
+  padding: 0;
+  display: inline-block;
+  text-align: right;
+  white-space: nowrap;
+  color:cyan;
+  text-decoration: underline;
+  text-decoration-color: cyan;
+  transition: color 0.3s ease-in-out;
+  cursor: pointer;
+} 
+
+.user .Detail .displayD .arrow {
+  font-size: 70%;
+  padding:0;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.user .Detail .displayD .arrow.up{
+  transform: rotate(180deg) !important;
+}
+
+.user .Detail .displayD .arrow:not(.up) {
+  transform: none; /* Remove any existing transformations */
+}
+
+.user .Detail .displayD:focus{
+  color:rgb(253, 211, 0);
+  text-decoration-color: rgb(253, 211, 0);
+}
+
+.user .show-card{
+  display: flex;
+  margin-left: 1rem;
+  padding: 5px;
+  justify-content: space-between;
+  background-color: #1a4d7a;
+  border-radius: 10%;
+  box-shadow: 0px 8px 30px rgba(0,0,0,0.2);
+  margin-bottom: 7vh;
+  height: 5rem; /* Set a fixed height */
+  align-items: center;
+}
+
+.user .badge{
+  font-weight: bold;
+  font-size: 80%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10%;
+  color: #333333;
+}
+
+.user .badge.Bronze{
+  background-color: #CD7F32;
+}
+
+.user .badge.Silver{
+  background-color: #C0C0C0;
+}
+
+.user .badge.Gold{
+  background-color: #FFD700;
+}
+
+.user .badge.Platinum{
+  background-color: #E5E4E2;
+}
+
+.user .times a{
+  text-decoration: none;
 }
