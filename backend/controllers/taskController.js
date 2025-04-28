@@ -314,6 +314,20 @@ exports.BookMovie = async (req, res) => {
   }
   catch(error){
     console.error("Error Booking Movie:", error);
-    res.status(500).json({ error: 'Internal Server Error'})
+    res.status(500).json({ error: 'Internal Server Error'});
   }
 };
+
+exports.SeatsData = async(req, res) => {
+  try{
+    const {TheaterID} = req.body;
+    const result = await Task.viewSeats(TheaterID);
+    res.json({ message: 'Seat Data Successfully retrieved',
+              data:result.recordset
+     });
+  }
+  catch(error){
+    console.error("Error Getting seat Data:", error);
+    res.status(500).json({ error: 'Internal Server Error'});
+  }
+}

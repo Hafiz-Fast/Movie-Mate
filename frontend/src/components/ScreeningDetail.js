@@ -1,5 +1,6 @@
 import React , { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import SeatSelection from './SeatSelection';
 
 const ScreeningDetail = () => {
     const { title } = useParams();
@@ -10,8 +11,10 @@ const ScreeningDetail = () => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = today.toLocaleDateString(undefined, options);
     const todayRef = useRef(null);
+    const todayDivRef = useRef(null);
     const [maxHeight, setMaxHeight] = useState('0px');
     const [todayHeight, setTodayHeight] = useState('0px');
+    const [selectedScreen, setSelectedScreen] = useState(null);
 
     const handleToggle = () =>{
         setFutureShows(prev => !prev);
@@ -40,9 +43,9 @@ const ScreeningDetail = () => {
             
             setMovie(data[0]);
 
-            if (todayRef.current) {
-                setTodayHeight(`${todayRef.current.scrollHeight}px`);
-                setMaxHeight(`${todayRef.current.scrollHeight}px`);
+            if (todayDivRef.current) {
+                setTodayHeight(`${todayDivRef.current.scrollHeight}px`);
+                setMaxHeight(`${todayDivRef.current.scrollHeight}px`);
             }
         };
 
@@ -93,9 +96,8 @@ const ScreeningDetail = () => {
                 }
 
                 return Object.entries(groupByDate).map(([date, shows]) => {
-
                     return (
-                        <div key={date}>
+                        <div key={date} ref={ date === formattedDate ? todayDivRef : null }>
                           <div className='Detail'>
                             <h3>{date}</h3>
                             {date === formattedDate && (
@@ -109,12 +111,12 @@ const ScreeningDetail = () => {
 
                           <div className='times' style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', padding: 0}}>
                             {shows.map(show => (
-                                <Link to={`/booking/${title}/seats?ShowtimeID=${show.ShowTimeID}&showDate=${show.ShowDate}&showTiming=${show.ShowTiming}`}>
-                                    <div className="show-card" key={show.ShowTiming}>
+                                <a href='#seatSelection' style={{ textDecoration: 'none', color: 'inherit' }}  key={show.ShowTiming}>
+                                    <div className="show-card" tabIndex='0' onClick={() => setSelectedScreen(prev => prev?.ShowTiming === show.ShowTiming ? null : show)}>
                                     <p className={`badge ${show.ScreenType}`}>{show.ScreenType}</p>
                                     <p>{show.ShowTiming}</p>
                                     </div>
-                                </Link>
+                                </a>
                             ))}
                             </div>
 
@@ -124,6 +126,11 @@ const ScreeningDetail = () => {
         })()
     )}
     </div>
+    {selectedScreen && (
+        <div id="seatSelection">
+            <SeatSelection selectedScreen={selectedScreen}/>
+        </div>
+    )}
     </>
     );
 }

@@ -83,4 +83,6 @@ router.get('/Screenings', taskController.getScreenings);
 
 router.post('/booking', taskController.BookMovie);
 
+router.post('/seats', taskController.SeatsData);
+
 module.exports = router;
