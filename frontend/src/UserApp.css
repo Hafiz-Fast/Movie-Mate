@@ -447,3 +447,9 @@ body.user-mode {
 .user .times a{
   text-decoration: none;
 }
+
+.user .showing-container {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out; /* Smooth transition */
+  max-height: var(--max-height, 0px); /* Default fallback value */
+}

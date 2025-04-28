@@ -1,4 +1,4 @@
-import React , { useState, useEffect } from 'react';
+import React , { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 const ScreeningDetail = () => {
@@ -9,6 +9,9 @@ const ScreeningDetail = () => {
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = today.toLocaleDateString(undefined, options);
+    const todayRef = useRef(null);
+    const [maxHeight, setMaxHeight] = useState('0px');
+    const [todayHeight, setTodayHeight] = useState('0px');
 
     const handleToggle = () =>{
         setFutureShows(prev => !prev);
@@ -36,15 +39,34 @@ const ScreeningDetail = () => {
             data = await response.json();
             
             setMovie(data[0]);
+
+            if (todayRef.current) {
+                setTodayHeight(`${todayRef.current.scrollHeight}px`);
+                setMaxHeight(`${todayRef.current.scrollHeight}px`);
+            }
         };
 
         Details();
     }, [title]);
 
+    useEffect(() => {
+        const element = todayRef.current;
+        if (!element){ return;}
+    
+        
+        if (futureShows) {
+            const scrollHeight = element.scrollHeight;
+            setMaxHeight(`${scrollHeight}px`);
+        } else {
+            setMaxHeight(todayHeight);  // Collapse to today's height
+        }
+    },[futureShows, todayHeight]);
+
     return (
         <>
         <h1 style={{ fontSize: '300%', textAlign: 'center' }}>{Movie.Title}</h1>
          <img src={Movie.links} alt={title} style={{ width: "25%", display: 'block', marginLeft: 'auto', marginRight: 'auto' }}></img>
+         <div ref={todayRef} className={"showing-container"} style={{ '--max-height': maxHeight }}>
           {Screenings.length === 0 ? (
             <p>No Current Screenings</p>
           ) : (
@@ -71,9 +93,6 @@ const ScreeningDetail = () => {
                 }
 
                 return Object.entries(groupByDate).map(([date, shows]) => {
-                    if (date !== formattedDate && !futureShows) {
-                        return null;
-                    }
 
                     return (
                         <div key={date}>
@@ -104,6 +123,7 @@ const ScreeningDetail = () => {
                 });
         })()
     )}
+    </div>
     </>
     );
 }

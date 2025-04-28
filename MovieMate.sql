@@ -1025,3 +1025,5 @@ where MovieID = 11;
 update Movie
 set trailer = 'https://www.youtube.com/embed/9Js9joUIsAk'
 where MovieID = 12;
+
+Select * from ShowTimings;
