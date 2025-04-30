@@ -24,7 +24,6 @@ const ScreeningDetail = () => {
 
     const fetchScreeningDetails = async () => {
         try {
-            console.log("FetchScreening:",selectedScreen);
             const response = await fetch("http://localhost:5000/api/search-screening", {
                 method: 'POST',
                 headers: { "content-type": "application/json" },
@@ -37,32 +36,16 @@ const ScreeningDetail = () => {
                 setMaxHeight(`${todayDivRef.current.scrollHeight}px`);
             }
 
-            checkDataOnCleanUp(data);
+            if(!selectedScreen){
+                setSelectedScreen(null);
+            }
         } catch (error) {
             console.error("Error fetching screenings:", error);
         }
     };
 
-    const checkDataOnCleanUp = ({ newScreening }) => {
-        console.log("Checking my choice");
-        console.log('Data:',selectedScreen);
-        if (selectedScreen) {
-            console.log("Choice exists");
-            const stillExists = newScreening.some(screen =>
-                screen.ShowTiming === selectedScreen.ShowTiming &&
-                screen.ScreenType === selectedScreen.ScreenType
-            );
-            if (!stillExists) {
-                console.log("Removing the Screening");
-                setSelectedScreen(null);
-            }
-            console.log("Choice reset");
-        }
-    };
-
     const fetchMovieDetails = async () => {
         try {
-            console.log("FetchMoveScreen:",selectedScreen);
             const response = await fetch("http://localhost:5000/api/search-movie", {
                 method: 'POST',
                 headers: { "content-type": "application/json" },
@@ -85,7 +68,6 @@ const ScreeningDetail = () => {
 
         setTimeout(async () => {
             if (!isRunning) {
-                console.log("Timeout:",selectedScreen);
                 setIsRunning(true);
                 await fetchScreeningDetails(); // Fetch new data
                 setIsRunning(false);

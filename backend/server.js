@@ -12,9 +12,7 @@ app.use('/api', taskRoutes);
 
 const runCleanup = async () => {
     try {
-        console.log("Cleanup triggered at:", new Date().toISOString());
-        await cleanupExpiredSeats.cleanup();    // ← actually runs your cleanup SP
-        console.log("Cleanup completed at:", new Date().toISOString());
+        await cleanupExpiredSeats.cleanup();
     } catch (error) {
     console.error("Error during cleanup:", error);
     }
