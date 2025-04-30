@@ -15,41 +15,70 @@ const ScreeningDetail = () => {
     const [maxHeight, setMaxHeight] = useState('0px');
     const [todayHeight, setTodayHeight] = useState('0px');
     const [selectedScreen, setSelectedScreen] = useState(null);
+    const [isRunning, setIsRunning] = useState(false);
+    const [dataChanged, setDatachanged] = useState(false);
 
     const handleToggle = () =>{
         setFutureShows(prev => !prev);
     }
 
-    useEffect(() =>{
-        const Details = async() =>{
+    const handleDataChange = () =>{
+        setDatachanged(prev => !prev);
+    }
 
-            let response = await fetch("http://localhost:5000/api/search-screening", {
+    const fetchScreeningDetails = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/search-screening", {
                 method: 'POST',
-                headers: {"content-type": "application/json"},
+                headers: { "content-type": "application/json" },
                 body: JSON.stringify({ MovieName: title })
             });
-
-            let data = await response.json();
-            
+            const data = await response.json();
             setScreeningDetails(data);
-
-            response = await fetch("http://localhost:5000/api/search-movie", {
-                method: 'POST',
-                headers: {"content-type": "application/json"},
-                body: JSON.stringify({ MovieName: title })
-            });
-
-            data = await response.json();
-            
-            setMovie(data[0]);
-
             if (todayDivRef.current) {
                 setTodayHeight(`${todayDivRef.current.scrollHeight}px`);
                 setMaxHeight(`${todayDivRef.current.scrollHeight}px`);
             }
-        };
+        } catch (error) {
+            console.error("Error fetching screenings:", error);
+        }
+    };
 
-        Details();
+    const fetchMovieDetails = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/search-movie", {
+                method: 'POST',
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ MovieName: title })
+            });
+            const data = await response.json();
+            setMovie(data[0]);
+        } catch (error) {
+            console.error("Error fetching movie details:", error);
+        }
+    };
+
+    const scheduleNextCleanup = async () => {
+        const now = Date.now();
+        const msUntilNext5Min = 300000 - (now % 300000) + 2000; // Next 5-minute mark + 1s buffer
+        setTimeout(async () => {
+            if (!isRunning) {
+                setIsRunning(true);
+                await fetchScreeningDetails(); // Fetch new data
+                setIsRunning(false);
+                scheduleNextCleanup(); // Schedule next fetch
+            } else {
+                console.log("Previous fetch is still running, skipping this interval.");
+                scheduleNextCleanup(); // Keep scheduling, but don't run if still fetching
+            }
+        }, msUntilNext5Min);
+    };
+
+    useEffect(() => {
+        fetchMovieDetails(); // Fetch movie details once on mount
+
+        fetchScreeningDetails(); // Fetch screening details on mount
+        scheduleNextCleanup(); // Schedule subsequent data fetches
     }, [title]);
 
     useEffect(() => {
@@ -111,8 +140,10 @@ const ScreeningDetail = () => {
 
                           <div className='times' style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', padding: 0}}>
                             {shows.map(show => (
-                                <a href='#seatSelection' style={{ textDecoration: 'none', color: 'inherit' }}  key={show.ShowTiming}>
-                                    <div className="show-card" tabIndex='0' onClick={() => setSelectedScreen(prev => prev?.ShowTiming === show.ShowTiming ? null : show)}>
+                                <a href='#seatSelection' style={{ textDecoration: 'none', color: 'inherit', marginTop: '1vh' }}  key={show.ShowTiming}>
+                                    <div className={`show-card ${selectedScreen?.ShowTiming === show.ShowTiming ? "selected" : ""}`}
+                                        tabIndex='0' onClick={() => setSelectedScreen(prev => prev?.ShowTiming === show.ShowTiming ? null : show)} role="button"
+                                        aria-pressed={selectedScreen?.ShowTiming === show.ShowTiming}>
                                     <p className={`badge ${show.ScreenType}`}>{show.ScreenType}</p>
                                     <p>{show.ShowTiming}</p>
                                     </div>

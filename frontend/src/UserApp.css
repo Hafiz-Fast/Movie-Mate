@@ -280,17 +280,18 @@ body.user-mode {
 }
 
 .user span:not(.M-Style){
-  padding-left: 41.5vw;
+  display:flex;
+  justify-content: center;
   font-size: 250%;
   color:#ffa14a;
 }
 
 .user .Grid{
   display:grid;
-  grid-template-columns: 40% 40%;
+  grid-template-columns: 50% 50%;
   row-gap: 5%;
   padding-top: 9vh;
-  padding-left: 15vw;
+  place-items: center;
   padding-bottom: 20rem;
   font-size: 150%;
   font-weight: bold;
@@ -337,7 +338,7 @@ body.user-mode {
 }
 
 .user .detailPage{
-    background-color: #DCDCDC;
+    background-color: #1a3650;
     border-radius: 12px;
     display: block;
     width: 60vw; /* or any width you like */
@@ -352,12 +353,12 @@ body.user-mode {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #333;
+  color: #f0993d;
 }
 
 .user .detailPage p {
   font-size: 1.1rem;
-  color:#c0392b;
+  color:#e0e0e0;
   margin-bottom: 0.5rem;
 }
 
@@ -420,6 +421,23 @@ body.user-mode {
   height: 5rem; /* Set a fixed height */
   align-items: center;
   cursor:pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Pressed/selected state */
+.show-card.selected {
+  transform: scale(0.99) translateY(2px);
+  background: #123654; /* Darker than both container and background */
+  box-shadow: 
+    0 1px 4px rgba(0, 0, 0, 0.2),
+    inset 0 2px 3px rgba(0, 0, 0, 0.3); /* Deeper inner shadow */
+}
+
+/* Temporary click feedback */
+.show-card:active:not(.selected) {
+  transform: scale(0.95) translateY(3px);
+  background: #1a4d7a; /* Original color */
+  transition-duration: 0.1s;
 }
 
 .user .badge{
@@ -446,6 +464,10 @@ body.user-mode {
   background-color: #E5E4E2;
 }
 
+.user .times{
+
+}
+
 .user .times a{
   text-decoration: none;
 }
@@ -460,6 +482,7 @@ body.user-mode {
   margin: 0;
   color: blue;
   font-size: 1rem;
+  transition: color 0.3s ease-in-out;
 }
 
 .user .lessB.start{
@@ -470,6 +493,7 @@ body.user-mode {
   margin: 0;
   color: red;
   font-size: 1rem;
+  transition: color 0.3s ease-in-out;
 }
 
 .user .moreB.end{

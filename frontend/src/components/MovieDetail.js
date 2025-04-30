@@ -38,14 +38,11 @@ const MovieDetail = () => {
                 </iframe>
                 </div><br />
             <p style={{ textAlign: 'left', marginLeft: "0.5vw" }}>{Movie.Review}</p><br/>
-            <div style={{ display: 'flex', gap: '25vw', marginLeft: "0.5vw" }}>
-                    <p>MovieType: {Movie.MovieType}</p>
-                    <p>Genre: {Movie.Genre}</p>
-            </div><br/>
-
-            <div style={{ display: 'flex', gap: '25vw', marginLeft: "0.5vw" }}>
-                <p>Runtime: {Movie.Duration} hours</p>
-                <p>IMDb Rating: {Movie.IMDbRating}</p>
+            <div className='Grid' style={{gridTemplateColumns: '25% 25% 25% 25%', rowGap:'5vh', paddingBottom: '2vh', paddingTop: '2vh'}}>
+                <p style={{ color:'#88a4c4' }}>MovieType: </p><p>{Movie.MovieType}</p>
+                <p style={{ color:'#88a4c4' }}>Genre: </p><p>{Movie.Genre}</p>
+                <p style={{ color:'#88a4c4' }}>Runtime: </p><p>{Movie.Duration} hours</p>
+                <p style={{ color: '#88a4c4'}}>IMDb Rating: </p><p style={{ color:'#f0993d' }}>{Movie.IMDbRating}</p>
             </div>
             </div>
         )}

@@ -34,9 +34,8 @@ const Login = () => {
             }
             const data = await response.json();
 
-            const user = data.data[0];
-
             if (response.ok) {
+                const user = data.data[0];
                 setMessage(data.message);
                 setMessageColor('green');
                 //store data for future use
@@ -59,7 +58,10 @@ const Login = () => {
                 });
                 setMessage(errorMessages);
                 setMessageColor('red');
-            } 
+            }else{
+                setMessage(data.message);
+                setMessageColor('red');
+            }
         }
         catch(err){
             setMessage('An error occurred');
