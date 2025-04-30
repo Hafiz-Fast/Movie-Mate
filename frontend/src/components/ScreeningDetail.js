@@ -16,18 +16,15 @@ const ScreeningDetail = () => {
     const [todayHeight, setTodayHeight] = useState('0px');
     const [selectedScreen, setSelectedScreen] = useState(null);
     const [isRunning, setIsRunning] = useState(false);
-    const [dataChanged, setDatachanged] = useState(false);
+    const timeoutRef = useRef(null);
 
     const handleToggle = () =>{
         setFutureShows(prev => !prev);
-    }
-
-    const handleDataChange = () =>{
-        setDatachanged(prev => !prev);
-    }
+    };
 
     const fetchScreeningDetails = async () => {
         try {
+            console.log("FetchScreening:",selectedScreen);
             const response = await fetch("http://localhost:5000/api/search-screening", {
                 method: 'POST',
                 headers: { "content-type": "application/json" },
@@ -39,13 +36,33 @@ const ScreeningDetail = () => {
                 setTodayHeight(`${todayDivRef.current.scrollHeight}px`);
                 setMaxHeight(`${todayDivRef.current.scrollHeight}px`);
             }
+
+            checkDataOnCleanUp(data);
         } catch (error) {
             console.error("Error fetching screenings:", error);
         }
     };
 
+    const checkDataOnCleanUp = ({ newScreening }) => {
+        console.log("Checking my choice");
+        console.log('Data:',selectedScreen);
+        if (selectedScreen) {
+            console.log("Choice exists");
+            const stillExists = newScreening.some(screen =>
+                screen.ShowTiming === selectedScreen.ShowTiming &&
+                screen.ScreenType === selectedScreen.ScreenType
+            );
+            if (!stillExists) {
+                console.log("Removing the Screening");
+                setSelectedScreen(null);
+            }
+            console.log("Choice reset");
+        }
+    };
+
     const fetchMovieDetails = async () => {
         try {
+            console.log("FetchMoveScreen:",selectedScreen);
             const response = await fetch("http://localhost:5000/api/search-movie", {
                 method: 'POST',
                 headers: { "content-type": "application/json" },
@@ -61,8 +78,14 @@ const ScreeningDetail = () => {
     const scheduleNextCleanup = async () => {
         const now = Date.now();
         const msUntilNext5Min = 300000 - (now % 300000) + 2000; // Next 5-minute mark + 1s buffer
+
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current); // Clear the previous timeout if it exists
+        }
+
         setTimeout(async () => {
             if (!isRunning) {
+                console.log("Timeout:",selectedScreen);
                 setIsRunning(true);
                 await fetchScreeningDetails(); // Fetch new data
                 setIsRunning(false);
@@ -79,6 +102,11 @@ const ScreeningDetail = () => {
 
         fetchScreeningDetails(); // Fetch screening details on mount
         scheduleNextCleanup(); // Schedule subsequent data fetches
+
+        return() => {
+            if(timeoutRef.current)
+            clearTimeout(timeoutRef.current);
+        }
     }, [title]);
 
     useEffect(() => {
@@ -140,9 +168,9 @@ const ScreeningDetail = () => {
 
                           <div className='times' style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', padding: 0}}>
                             {shows.map(show => (
-                                <a href='#seatSelection' style={{ textDecoration: 'none', color: 'inherit', marginTop: '1vh' }}  key={show.ShowTiming}>
+                                <a href='#seatSelection' style={{ textDecoration: 'none', color: 'inherit', marginTop: '1vh' }}  key={`${show.ShowTiming}-${show.ScreenType}`}>
                                     <div className={`show-card ${selectedScreen?.ShowTiming === show.ShowTiming ? "selected" : ""}`}
-                                        tabIndex='0' onClick={() => setSelectedScreen(prev => prev?.ShowTiming === show.ShowTiming ? null : show)} role="button"
+                                        tabIndex='0' onClick={() => setSelectedScreen(prev => prev?.ShowTiming === show.ShowTiming && prev?.ScreenType === show.ScreenType ? null : show)} role="button"
                                         aria-pressed={selectedScreen?.ShowTiming === show.ShowTiming}>
                                     <p className={`badge ${show.ScreenType}`}>{show.ScreenType}</p>
                                     <p>{show.ShowTiming}</p>

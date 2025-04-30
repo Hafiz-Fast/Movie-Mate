@@ -1,7 +1,7 @@
 import React , { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const SeatSelection = ({selectedScreen}) => {
+const SeatSelection = ({ selectedScreen }) => {
     const [seatCount, setSeatCount] = useState(0);
     const [count, setCount] = useState(0);
     const [selected, setSelected] = useState([]);
@@ -18,7 +18,6 @@ const SeatSelection = ({selectedScreen}) => {
                 const data = await response.json();
                 setSelected(data.data[0]);
                 setSeatCount(data.data[0].AvailableSeats);
-                console.log("Data:", selectedScreen);
             }
             catch(error){
                 console.error("Error receiving data");
