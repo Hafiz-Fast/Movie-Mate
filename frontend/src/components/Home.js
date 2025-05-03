@@ -43,8 +43,8 @@ const Home = () => {
             <p>Welcome to MovieMate – Your gateway to the enchanting universe of cinema.<br /> From breathtaking blockbusters to captivating indie gems, experience the art of storytelling brought to life on the big screen,<br /> crafted just for true movie lovers like you.</p>
             <span>Now Showing</span>
             <hr style={{ marginTop: 0, border: 'none', borderTop: '4px solid #ffa14a' }} />
-            <div className='Grid'>
-              {Nmovies.map((movie) => (
+            {Nmovies.length > 0 ? (<div className='Grid'>
+              {Nmovies && Nmovies.map((movie) => (
                   <div key = {movie.Title} className = 'Movies'>
                     <Link to={`/user/booking/${encodeURIComponent(movie.Title)}`}><img src= {movie.links} alt={movie.Title}></img>
                     <br />{movie.Title}<br /></Link>
@@ -52,6 +52,9 @@ const Home = () => {
                   </div> 
               ))}
             </div>
+            ) : (
+              <h1 style={{ textAlign: 'center', padding: '9rem 0' }}>No Shows are available Right now</h1>
+            )}
             <span>Coming Soon</span>
             <hr style={{ marginTop: 0, border: 'none', borderTop: '4px solid #ffa14a' }} />
             <div className='Grid' style={{ paddingBottom: "10rem" }}>

@@ -903,9 +903,10 @@ alter procedure SscreeningDetails
 
 As Begin
 
-Select ST.ShowTimeID, M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links, ST.ShowDate, ST.ShowTiming, T.ScreenType from Movie As M
+Select T.TheaterID, ST.ShowTimeID, M.Title, M.MovieType, M.Genre, M.Duration, M.RatingID, M.links, ST.ShowDate, ST.ShowTiming, T.ScreenType, P.Amount from Movie As M
 join ShowTimings As ST on M.MovieID = ST.MovieID
 join Theater As T on ST.TheaterID = T.TheaterID
+left join Prices As P on ST.PriceID = P.PriceID
 where M.Title COLLATE Latin1_General_CI_AI Like '%' + @movieName + '%'	--allow partial matches
 order by ST.ShowDate, ST.ShowTiming;
 
@@ -976,6 +977,37 @@ End
 
 go
 
+--25 Deletes all the ShowTiming which have passed
+create procedure CleanupIfNeeded
+As BEGIN
+  Set Nocount On;
+
+  Begin Tran;
+
+  Declare @rc int;
+  Exec @rc = sp_getapplock
+    @Resource    = 'CleanupExpiredRows',
+    @LockMode    = 'Exclusive',
+    @LockOwner   = 'Transaction',
+    @LockTimeout = 0;
+
+  IF @rc >= 0
+  begin
+    Delete From ShowTimings
+     Where  ShowDate < CAST(GetDate() As Date) or 
+	 (ShowDate = CAST(GetDate() As Date) And ShowTiming <= CAST(GetDate() As Time));
+
+    Exec sp_releaseapplock
+      @Resource  = 'CleanupExpiredRows',
+      @LockOwner = 'Transaction';
+  End
+
+  Commit Tran;
+End
+Go
+
+exec CleanupIfNeeded;
+
 SELECT * from Movie;
 
 update Movie
@@ -1027,3 +1059,7 @@ set trailer = 'https://www.youtube.com/embed/9Js9joUIsAk'
 where MovieID = 12;
 
 Select * from ShowTimings;
+select * from Movie;
+
+delete ShowTimings
+where ShowTimeID = 1032;

@@ -1,9 +1,9 @@
 import React , { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 const SeatSelection = ({ selectedScreen }) => {
     const [seatCount, setSeatCount] = useState(0);
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(1);
     const [selected, setSelected] = useState([]);
 
     useEffect(() => {
@@ -27,6 +27,10 @@ const SeatSelection = ({ selectedScreen }) => {
         setCount(0);
     },[selectedScreen]);
 
+    const handleSubmit = () => {
+        Navigate('/user/booking/', {state: { title: 'Inception', time: '7:00 PM' } });
+    }
+
     return(
         <>
         <div style={{ display: 'flex', gap: '8vw', border:'2px solid white', paddingTop: '5vh', paddingBottom: '5vh' }}>
@@ -37,13 +41,13 @@ const SeatSelection = ({ selectedScreen }) => {
             </div>
             <div style={{ backgroundColor: 'white', borderRadius: "8px", height: '2.55rem', position:'relative', top:'0.8vw'}}>
                 <div style={{ display: "flex", alignItems: "center", gap: 0, fontSize: 0 }}>
-                    <button style={{ cursor: count === 0 ? 'not-allowed' : 'pointer'}} className={`lessB ${count === 0  ? 'start' : ''}`} onClick={() => {if(count > 0) setCount(count - 1);}}>-</button>
+                    <button style={{ cursor: count === 0 ? 'not-allowed' : 'pointer'}} className={`lessB ${count === 1  ? 'start' : ''}`} onClick={() => {if(count > 1) setCount(count - 1);}}>-</button>
                     <div style={{padding:'1vh 2vw', backgroundColor: 'white', color: 'black', fontSize: '1rem' }}>{count}</div>
                     <button style={{ cursor: count === seatCount ? 'not-allowed' : 'pointer'}} className={`moreB ${count === seatCount ? 'end' : ''}`} onClick={() => {if(count < seatCount) setCount(count + 1);}}>+</button>
                 </div>
             </div>
         </div>
-        <button onClick={() => <Link to={`/user`}></Link>}>Confirm</button>
+        <button onClick={() => <Link to={'/user/booking/'}></Link>}>Confirm</button>
        </>
     );
 }
