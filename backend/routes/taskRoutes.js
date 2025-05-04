@@ -85,4 +85,6 @@ router.post('/booking', taskController.BookMovie);
 
 router.post('/seats', taskController.SeatsData);
 
+router.post('/seatRecord', taskController.seatRecord);
+
 module.exports = router;

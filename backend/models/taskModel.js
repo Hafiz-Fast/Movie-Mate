@@ -458,6 +458,19 @@ const Task = {
         console.error("Error executing stored procedure:", error);
             throw error; 
       }
+    },
+    async SeatRecord(TheaterID){
+      try{
+        const pool = await poolPromise;
+        const result = await pool.request()
+          .input('TheaterID', sql.Int, TheaterID)
+          .execute('getSeatRecord');
+
+          return result;
+      }catch(error){
+        console.error("Error executing stored procedure:", error);
+            throw error; 
+      }
     }
   
 };

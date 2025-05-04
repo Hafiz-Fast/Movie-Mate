@@ -39,7 +39,7 @@ Foreign Key (SeatRecordID) references SeatRecord(SeatRecordID) On Delete Cascade
 );
 
 Create Table Seat(                --Seat of Customer in a Theater hall
-SeatNumber char(2) Primary Key,   --e.g: A1,B2
+SeatNumber char(2),   --e.g: A1,B2
 TheaterID int,                    --FK
 Foreign Key(TheaterID) references Theater(TheaterID)
 );
@@ -127,8 +127,11 @@ add constraint Book_3
 Foreign Key (PaymentID) references Payment(PaymentID) On Delete cascade On Update cascade;
 
 Alter table Bookings
+add TheaterID int;
+
+Alter table Bookings
 add constraint Book_4
-Foreign Key (SeatNumber) references Seat(SeatNumber) On Delete No Action;
+Foreign Key (SeatNumber, TheaterID) references Seat(SeatNumber, TheaterID) On Delete No Action;
 
 Alter Table Movie
 Add constraint df_id
@@ -151,7 +154,7 @@ Alter Column Seatnumber char(2);
 
 Alter Table Bookings
 Add constraint fk_bookings_SeatNumber
-Foreign Key (SeatNumber) references Seat(SeatNumber);
+Foreign Key (SeatNumber, TheaterID) references Seat(SeatNumber, TheaterID);
 
 Alter table Users
 alter column UserName nvarchar(30) COLLATE Latin1_General_CS_AS NOT NULL;
@@ -170,8 +173,24 @@ Unique(Email);
 Alter table Users
 alter column UserPassword nvarchar(255) COLLATE Latin1_General_CS_AS NOT NULL;
 
+ALTER TABLE Seat
+ALTER COLUMN TheaterID INT NOT NULL;
+
+ALTER TABLE Seat
+ALTER COLUMN SeatNumber char(3);
+
+Alter Table Bookings
+Alter Column SeatNumber char(3);
+
+Alter TABLE Seat
+add constraint seat_PK
+primary key(SeatNumber, TheaterID); 
+
+
+
 Alter table Movie add links varchar(MAX);
 Alter table Movie add trailer varchar(MAX);
+Alter table Seat add available int;
 
 --Schema View
 Select * from Movie;
@@ -447,7 +466,7 @@ Select * from ShowTimings;
 
 --9 Admin can take Movie or Show related details from user to book him a show
 GO
-Create Procedure UserBooking
+Alter Procedure UserBooking
 @UserID int,
 @Moviename varchar(30),
 @ScreenType varchar(20),
@@ -509,10 +528,9 @@ print('Booking Failed as Given ScreenType has no seat availaible');
 RETURN;
 end
 
---Now all checks all clear and now insert in tables
---First insert in seat
-INSERT into Seat(TheaterID,SeatNumber)
-values (@TheaterID,@SeatNumber);
+Update Seat
+set Seat.available = 0
+where TheaterID = @TheaterID And SeatNumber = @SeatNumber; 
 
 --Now update SeatRecord for that theater
 Update SeatRecord
@@ -522,8 +540,8 @@ where SeatRecordID = (Select SeatRecordID from Theater
                       where @TheaterID = TheaterID);
 
 --Now Finally Insert into Booking Table
-Insert into Bookings (UserID,SeatNumber,ShowTimeID)
-values (@UserID,@Seatnumber,@ShowTimeID);
+Insert into Bookings (UserID,SeatNumber, TheaterID, ShowTimeID)
+values (@UserID,@Seatnumber,@TheaterID, @ShowTimeID);
 
 END
 GO
@@ -1008,8 +1026,60 @@ Go
 
 exec CleanupIfNeeded;
 
+--26 get seat record of a theater
+go
+ALter PROCEDURE getSeatRecord
+@TheaterID int
+as BEGIN
+
+Select SeatNumber, available from Seat
+where TheaterID = @TheaterID
+Order by SeatNumber;
+
+END
+go
+
+exec getSeatRecord 3;
 SELECT * from Movie;
 
+--27 Assign Seats
+
+GO
+ALTER PROCEDURE AssignSeats
+    @TheaterID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @row CHAR(1);
+    DECLARE @num INT;
+    DECLARE @seatNumber CHAR(3);
+	DECLARE @available INT;
+
+    SET @row = 'A';
+	SET @available = 1;
+
+    WHILE @row <= 'E'
+    BEGIN
+        SET @num = 0;
+
+        WHILE @num < 10
+        BEGIN
+            -- Build SeatNumber (e.g., A1, A2, ..., E10)
+            SET @seatNumber = @row + CAST(@num AS VARCHAR);
+
+            INSERT INTO Seat (SeatNumber, TheaterID, available)
+            VALUES (@seatNumber, @TheaterID, @available);
+
+            SET @num = @num + 1;
+        END
+
+        SET @row = CHAR(ASCII(@row) + 1);
+    END
+END
+GO
+
+exec AssignSeats 3;
 update Movie
 set trailer = 'https://www.youtube.com/embed/NhWg7AQLI_8'
 where MovieID = 1;
@@ -1061,5 +1131,7 @@ where MovieID = 12;
 Select * from ShowTimings;
 select * from Movie;
 
-delete ShowTimings
-where ShowTimeID = 1032;
+Select* from Seat
+where TheaterID = 1;
+
+delete seat;

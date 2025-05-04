@@ -496,3 +496,71 @@ body.user-mode {
 .user .moreB.end{
   color: grey;
 }
+
+.user .Screen{
+  background-color: rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.user .seat{
+  width: 4rem;
+  height: 4rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.user .seat[data-status="1"]{
+  background-image: url( "../public/available.png");
+}
+
+.user .seat[data-status="you"]{
+  background-image: url("../public/your_seat.png");
+}
+
+.user .seat[data-status="0"]{
+  background-image: url("../public/sold.png");
+}
+
+.user .Keys{
+  padding-left: 4rem;
+}
+
+.user .Keys img{
+  width: 2rem;
+  height: 2rem;
+  float: left;
+}
+
+.user .Keys span{
+  text-align: left;
+  color:white;
+  font-size: 100%;
+}
+
+.user .Keys .board{
+  display:flex;
+  justify-content: space-evenly;
+}
+
+.user .Keys .key-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;  /* small gap between icon & text */
+}
+
+.user .seat-grid {
+  padding-top: 5rem;
+  display: grid;
+  /* 10 columns (you have seats 0–9), each takes equal space */
+  grid-template-columns: repeat(10, 4rem);
+  /* One row per letter, use “.” for an empty/aisle cell */
+  grid-template-areas:
+    "A0 A1 . A2 A3 A4 A5 A6 . A7 A8 A9"
+    "B0 B1 . B2 B3 B4 B5 B6 . B7 B8 B9"
+    "C0 C1 . C2 C3 C4 C5 C6 . C7 C8 C9"
+    "D0 D1 . D2 D3 D4 D5 D6 . D7 D8 D9"
+    "E0 E1 . E2 E3 E4 E5 E6 . E7 E8 E9";
+  gap: 0.1rem;
+  margin: 1.3rem 25rem;
+  max-width: 600px;  /* adjust to your design */
+}

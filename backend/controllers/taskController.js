@@ -331,3 +331,17 @@ exports.SeatsData = async(req, res) => {
     res.status(500).json({ error: 'Internal Server Error'});
   }
 }
+
+exports.seatRecord = async(req, res) => {
+  try{
+      const { TheaterID } = req.body;
+      const result = await Task.SeatRecord(TheaterID);
+      res.json({ message: 'Seat Data Successfully retrieved',
+        data:result.recordset
+      });
+  }
+  catch(error){
+    console.error("Error Getting seat Availability Record:", error);
+    res.status(500).json({ error: 'Internal Server Error'});
+  }
+}
