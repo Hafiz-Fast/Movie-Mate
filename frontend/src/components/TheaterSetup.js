@@ -59,12 +59,12 @@ const TheaterSetup = () => {
                     
                 <div
                     key={seat.SeatNumber}
-                    className="seat"
                     data-status={
                     selectedSeats.includes(seat.SeatNumber)
                         ? 'you'
                         : seat.available
                     }
+                    className={ !selectedSeats.includes(seat.SeatNumber) && seat.available === 1 && selectedSeats.length === tickets ? "Full":"seat"}
                     style={{ gridArea: seat.SeatNumber }}
                     onClick={() => {
                         if(seat.available){

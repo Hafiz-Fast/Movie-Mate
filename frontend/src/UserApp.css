@@ -511,14 +511,30 @@ body.user-mode {
 
 .user .seat[data-status="1"]{
   background-image: url( "../public/available.png");
+  cursor: pointer;
 }
 
 .user .seat[data-status="you"]{
   background-image: url("../public/your_seat.png");
+  cursor: pointer;
 }
 
 .user .seat[data-status="0"]{
   background-image: url("../public/sold.png");
+  cursor: default;
+}
+
+.user .Full{
+  width: 4rem;
+  height: 4rem;
+  background-image: url( "../public/available.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: default;
+}
+
+.user .Full p{
+  cursor: default;
 }
 
 .user .Keys{
