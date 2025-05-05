@@ -46,12 +46,10 @@ const date = (nTime) => {
   const month = Ttime.getUTCMonth() + 1;
   const year = Ttime.getUTCFullYear();
 
-  const time = Time(nTime);
-
   const fDate = date < 10 ? `0${date}` : date;
   const fMonth = month < 10 ? `0${month}` : month;
 
-  return `${year}-${fMonth}-${fDate}  ${time}`;
+  return `${year}-${fMonth}-${fDate}`;
 }
 
 const FormatDuration = (result) =>{
@@ -86,6 +84,37 @@ const FormatTime = (result) => {
   }
 
   return finalResult;
+}
+
+const reformatDate = (result) => {
+  const ShowDate = new Date(result);
+  const formattedShowDate = ShowDate.toISOString().split('T')[0];
+  return formattedShowDate; 
+}
+
+const reformatTime = (inputTime) => {
+  const timeFormat = /(\d{1,2}):(\d{2}) (AM|PM)/i;
+    const match = inputTime.match(timeFormat);
+
+    if (!match) {
+        throw new Error("Invalid time format");
+    }
+
+    let hours = parseInt(match[1]);
+    const minutes = match[2];
+    const period = match[3].toUpperCase();
+
+    // Convert 12 AM to 00:xx, 12 PM stays 12:xx
+    if (period === 'AM' && hours === 12) {
+        hours = 0; // 12 AM -> 00
+    } else if (period === 'PM' && hours !== 12) {
+        hours += 12; // Convert PM hours to 24-hour format
+    }
+
+    // Pad single-digit hours with a leading zero
+    const formattedTime = `${String(hours).padStart(2, '0')}:${minutes}:00`;
+
+    return new Date(`1970-01-01T${formattedTime}Z`);
 }
 
 const Task = {
@@ -431,13 +460,15 @@ const Task = {
     },
     async MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber){
         try{
+            const formattedDate = reformatDate(ShowDate);
+            const formattedTime = reformatTime(MovieTiming);
             const pool = await poolPromise;
             await pool.request()
                 .input('UserID', sql.Int, UserID)
                 .input('Moviename', sql.VarChar, Moviename)
                 .input('ScreenType', sql.VarChar, ScreenType)
-                .input('ShowDate', sql.Date, ShowDate)
-                .input('MovieTiming', sql.DateTime2(3), MovieTiming)
+                .input('ShowDate', sql.Date, formattedDate)
+                .input('MovieTiming', sql.Time, formattedTime)
                 .input('SeatNumber', sql.Char(2), SeatNumber)
                 .execute('UserBooking');
         }
@@ -445,6 +476,26 @@ const Task = {
             console.error("Error executing stored procedure:", error);
             throw error; 
         }
+    },
+    async PaymentReceipt(UserID, Moviename, ScreenType, ShowDate, MovieTiming, PaymentMethod, Amount){
+      try{
+        const formattedDate = reformatDate(ShowDate);
+        const formattedTime = reformatTime(MovieTiming);
+        const pool = await poolPromise;
+        await pool.request()
+            .input('UserID', sql.Int, UserID)
+            .input('Moviename', sql.VarChar, Moviename)
+            .input('ScreenType', sql.VarChar, ScreenType)
+            .input('ShowDate', sql.Date, formattedDate)
+            .input('MovieTiming', sql.Time, formattedTime)
+            .input('PaymentMethod', sql.VarChar, PaymentMethod)
+            .input('Amount', sql.Int, Amount)
+            .execute('PaymentReceipt');
+      }
+      catch(error){
+          console.error("Error executing stored procedure:", error);
+          throw error; 
+      }
     },
     async viewSeats(TheaterID){
       try{
@@ -459,11 +510,11 @@ const Task = {
             throw error; 
       }
     },
-    async SeatRecord(TheaterID){
+    async SeatRecord(ShowTimeID){
       try{
         const pool = await poolPromise;
         const result = await pool.request()
-          .input('TheaterID', sql.Int, TheaterID)
+          .input('ShowTimeID', sql.Int, ShowTimeID)
           .execute('getSeatRecord');
 
           return result;

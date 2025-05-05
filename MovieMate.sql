@@ -95,12 +95,20 @@ Review varchar(100),
 Foreign Key(UserID) references Users(UserID),
 Foreign Key(MovieID) references Movie(MovieID),
 Primary Key(UserID,MovieID)
-)
+);
+
+CREATE TABLE BookedSeats (
+    BookingID   INT,
+	SeatNumber  CHAR(2),
+    TheaterID   INT,
+	ShowTimeID int
+	PRIMARY KEY (BookingID, SeatNumber, TheaterID, ShowTimeID),
+    FOREIGN KEY (BookingID) REFERENCES Bookings(BookingID),
+    FOREIGN KEY (TheaterID) REFERENCES Theater(TheaterID),
+	FOREIGN KEY (ShowTimeID) REFERENCES ShowTimings(ShowTimeID)
+);
 
 --Additional Constraints
-Alter table Seat
-Add Constraint fk_Seat1
-Foreign Key(TheaterID) references Theater(TheaterID) On delete cascade On Update cascade;
 
 Alter table ShowTimings
 add CONSTRAINT Show_1
@@ -126,12 +134,16 @@ Alter table Bookings
 add constraint Book_3
 Foreign Key (PaymentID) references Payment(PaymentID) On Delete cascade On Update cascade;
 
+Alter table BookedSeats
+add constraint Booked_1
+Foreign Key (BookingID) references Bookings(BookingID) On Delete cascade On Update cascade;
+
 Alter table Bookings
 add TheaterID int;
 
-Alter table Bookings
-add constraint Book_4
-Foreign Key (SeatNumber, TheaterID) references Seat(SeatNumber, TheaterID) On Delete No Action;
+Alter table Seat
+add constraint ShowingSeat
+Foreign Key (ShowTimeID) references ShowTimings(ShowTimeID) On Delete cascade On Update cascade;
 
 Alter Table Movie
 Add constraint df_id
@@ -151,10 +163,6 @@ DEFAULT(NULL) for PaymentID;
 
 Alter Table Bookings
 Alter Column Seatnumber char(2);
-
-Alter Table Bookings
-Add constraint fk_bookings_SeatNumber
-Foreign Key (SeatNumber, TheaterID) references Seat(SeatNumber, TheaterID);
 
 Alter table Users
 alter column UserName nvarchar(30) COLLATE Latin1_General_CS_AS NOT NULL;
@@ -176,21 +184,17 @@ alter column UserPassword nvarchar(255) COLLATE Latin1_General_CS_AS NOT NULL;
 ALTER TABLE Seat
 ALTER COLUMN TheaterID INT NOT NULL;
 
-ALTER TABLE Seat
-ALTER COLUMN SeatNumber char(3);
-
-Alter Table Bookings
-Alter Column SeatNumber char(3);
-
 Alter TABLE Seat
 add constraint seat_PK
-primary key(SeatNumber, TheaterID); 
+primary key(SeatNumber, TheaterID, ShowTimeID); 
 
 
 
 Alter table Movie add links varchar(MAX);
 Alter table Movie add trailer varchar(MAX);
 Alter table Seat add available int;
+Alter Table Payment alter column Amount float;
+Alter table Seat alter column ShowTimeID int NOT NULL;
 
 --Schema View
 Select * from Movie;
@@ -204,6 +208,7 @@ Select * from Users;
 Select * from Payment;
 Select * from Rating;
 Select * from UserReview;
+Select * from BookedSeats;
 
 --Admin Functionalities
 --1, Admin can add movies
@@ -378,12 +383,14 @@ exec AddSeatRecord 200,1
 
 --7 Admin can add Show Timings for a movie
 GO
-Create Procedure AddShowTimings
+Alter Procedure AddShowTimings
 @MovieID int,
 @TheaterID int,
 @Date date,
 @ShowTime TIME
 as BEGIN
+
+Declare @ShowTimeID int;
 
 if not exists(Select 1 from Movie where @MovieID = MovieID)
 BEGIN
@@ -399,12 +406,19 @@ else
 BEGIN
 Insert into ShowTimings (MovieID,TheaterID,ShowDate,ShowTiming)
 values (@MovieID,@TheaterID,@Date,@ShowTime);
+
+set @ShowTimeID = SCOPE_IDENTITY();
+
+select @ShowTimeID AS ID;
+
+exec AssignSeats @TheaterID, @ShowTimeID;
 end
 
 END
 GO
 
 exec AddShowTimings 1,1,'2025-07-15','11:30:00';
+exec AddShowTimings 7, 3, '2025-08-15', '11:30:00';
 Select * from ShowTimings;
 
 --8 Admin can add Prices for a Specific Show
@@ -489,7 +503,7 @@ END
 
 if not exists(Select 1 from Theater where @ScreenType = ScreenType)
 BEGIN
-print('Booking failed as we not have theaters with this ScreenTyoe');
+print('Booking failed as we not have theaters with this ScreenType');
 Return;
 END
 
@@ -511,6 +525,7 @@ end
 --Now Check if seat is availaible in given ScreenType(Theater) for that movie
 declare @TheaterID int;
 declare @ShowTimeID int;
+declare @BookingID int;
 
 Select @TheaterID = T.TheaterID,@ShowTimeID = S.ShowTimeID from ShowTimings as S
 join Theater as T
@@ -528,6 +543,15 @@ print('Booking Failed as Given ScreenType has no seat availaible');
 RETURN;
 end
 
+IF NOT EXISTS (
+  SELECT 1 FROM Seat
+  WHERE TheaterID = @TheaterID AND SeatNumber = @SeatNumber AND ShowTimeID = @ShowTimeID AND Available = 1
+)
+BEGIN
+    PRINT('Booking Failed: Seat is already booked or invalid.');
+    RETURN;
+END
+
 Update Seat
 set Seat.available = 0
 where TheaterID = @TheaterID And SeatNumber = @SeatNumber; 
@@ -539,15 +563,29 @@ set AvailableSeats = AvailableSeats - 1,
 where SeatRecordID = (Select SeatRecordID from Theater
                       where @TheaterID = TheaterID);
 
+if NOT EXISTS (
+	Select 1 from Bookings
+	where UserID = @UserID and ShowTimeID = @ShowTimeID
+)
+BEGIN
+
 --Now Finally Insert into Booking Table
-Insert into Bookings (UserID,SeatNumber, TheaterID, ShowTimeID)
-values (@UserID,@Seatnumber,@TheaterID, @ShowTimeID);
+Insert into Bookings (UserID, ShowTimeID)
+values (@UserID, @ShowTimeID);
+
+END
+
+select @BookingID = BookingID from Bookings where UserID = @UserID AND ShowTimeID = @ShowTimeID;
+
+insert into BookedSeats(BookingID, SeatNumber, TheaterID, ShowTimeID)
+values(@BookingID, @SeatNumber, @TheaterID, @ShowTimeID);
 
 END
 GO
 
 exec UserBooking 1,'Batman vs Superman','Gold','2025-07-15','11:30:00','A5';
 SELECT * from Bookings;
+SELECT * FROM BookedSeats;
 SELECT * from Seat;
 SELECT * from SeatRecord;
 
@@ -1029,11 +1067,11 @@ exec CleanupIfNeeded;
 --26 get seat record of a theater
 go
 ALter PROCEDURE getSeatRecord
-@TheaterID int
+@ShowTimeID int
 as BEGIN
 
 Select SeatNumber, available from Seat
-where TheaterID = @TheaterID
+where ShowTimeID = @ShowTimeID
 Order by SeatNumber;
 
 END
@@ -1046,7 +1084,8 @@ SELECT * from Movie;
 
 GO
 ALTER PROCEDURE AssignSeats
-    @TheaterID INT
+    @TheaterID INT,
+	@ShowTimeID INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -1068,8 +1107,8 @@ BEGIN
             -- Build SeatNumber (e.g., A1, A2, ..., E10)
             SET @seatNumber = @row + CAST(@num AS VARCHAR);
 
-            INSERT INTO Seat (SeatNumber, TheaterID, available)
-            VALUES (@seatNumber, @TheaterID, @available);
+            INSERT INTO Seat (SeatNumber, TheaterID, available, ShowTimeID)
+            VALUES (@seatNumber, @TheaterID, @available, @ShowTimeID);
 
             SET @num = @num + 1;
         END
@@ -1079,7 +1118,50 @@ BEGIN
 END
 GO
 
-exec AssignSeats 3;
+
+exec AssignSeats 3, 1033;
+--30 adding an online payment
+GO
+Create Procedure PaymentReceipt
+@UserID int,
+@Moviename varchar(30),
+@ScreenType varchar(20),
+@ShowDate Date,
+@MovieTiming time,
+@PaymentMethod varchar(20),
+@Amount float
+as begin
+
+Declare @MovieID int;
+Declare @BookingID int;
+DECLARE @ShowTimeID int;
+DECLARE @TheaterID int;
+
+Select @MovieID = MovieID from Movie
+where @Moviename = Title;
+
+Select @TheaterID = T.TheaterID,@ShowTimeID = S.ShowTimeID from ShowTimings as S
+join Theater as T
+On S.TheaterID = T.TheaterID
+where @MovieID = S.MovieID and @ScreenType = T.ScreenType
+and @ShowDate = S.ShowDate and @MovieTiming = S.ShowTiming;
+
+select @BookingID = BookingID from Bookings where UserID = @UserID AND ShowTimeID = @ShowTimeID;
+
+insert into Payment(PaymentStatus, PaymentMethod, Amount)
+values('Unpaid', @PaymentMethod, @Amount);
+
+--Now Update Payemnt ID in Booking Table
+declare @PaymentID int;
+set @PaymentID = SCOPE_IDENTITY();
+
+Update Bookings
+set PaymentID = @PaymentID
+where BookingID = @BookingID;
+
+end
+GO
+
 update Movie
 set trailer = 'https://www.youtube.com/embed/NhWg7AQLI_8'
 where MovieID = 1;
@@ -1128,10 +1210,9 @@ update Movie
 set trailer = 'https://www.youtube.com/embed/9Js9joUIsAk'
 where MovieID = 12;
 
-Select * from ShowTimings;
-select * from Movie;
+select * from Bookings;
+select * from ShowTimings;
+SELECT * from Payment;
+select * from Seat;
 
-Select* from Seat
-where TheaterID = 1;
-
-delete seat;
+select * from BookedSeats;

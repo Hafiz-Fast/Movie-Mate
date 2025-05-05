@@ -334,14 +334,26 @@ exports.SeatsData = async(req, res) => {
 
 exports.seatRecord = async(req, res) => {
   try{
-      const { TheaterID } = req.body;
-      const result = await Task.SeatRecord(TheaterID);
+      const { ShowTimeID } = req.body;
+      const result = await Task.SeatRecord(ShowTimeID);
       res.json({ message: 'Seat Data Successfully retrieved',
         data:result.recordset
       });
   }
   catch(error){
     console.error("Error Getting seat Availability Record:", error);
+    res.status(500).json({ error: 'Internal Server Error'});
+  }
+}
+
+exports.PaymentReceipt = async(req, res) => {
+  try{
+    const { UserID, Moviename, ScreenType, ShowDate, MovieTiming, PaymentMethod, Amount } = req.body;
+    await Task.PaymentReceipt(UserID, Moviename, ScreenType, ShowDate, MovieTiming, PaymentMethod, Amount);
+    res.json({ message: 'Receipt Generated Successfully' })
+  }
+  catch(error){
+    console.error("Error Generating the receipt:", error);
     res.status(500).json({ error: 'Internal Server Error'});
   }
 }

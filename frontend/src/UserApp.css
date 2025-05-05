@@ -580,3 +580,186 @@ body.user-mode {
   margin: 1.3rem 25rem;
   max-width: 600px;  /* adjust to your design */
 }
+
+.user .popup-message {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4444;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0 0 10px 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  text-align: center;
+}
+
+.user .checkout-title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.user .checkout-subtitle {
+  font-size: 1.2rem;
+  color: #d0e6ff; /* soft, readable light blue */
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+}
+
+.user .booking-box {
+  background-color: #0a2b4a;
+  border-radius: 1rem;
+  padding: 2rem 3rem;
+  margin: 3rem auto;
+  max-width: 700px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  color: #e3f2fd;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.8;
+}
+
+.user .booking-box h2 {
+  font-size: 1.6rem;
+  color: #ffffff;
+  border-bottom: 1px solid #3e5f7c;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.user .booking-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user .booking-box li {
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.user .booking-box strong {
+  color: #90caf9; 
+}
+
+.user .booking-box hr {
+  border: none;
+  border-top: 1px solid #3e5f7c;
+  margin: 2rem 0;
+}
+
+.user .payment-section {
+  background-color: #0b2c4a; /* Slightly darker than #0f375e */
+  padding: 1.5rem 2rem;
+  margin: 2rem auto;
+  border-radius: 12px;
+  max-width: 600px;
+  color: #e0f0ff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.user .payment-section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #c2e0ff;
+  border-bottom: 1px solid #23415e;
+  padding-bottom: 0.3rem;
+  text-align: center;
+}
+
+.user .payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.user .payment-methods label {
+  display: flex;
+  align-items: center;
+  background-color: #123e60;
+  padding: 0.6rem 2rem;
+  border-radius: 8px;
+  border: 1px solid #1e547a;
+  cursor: pointer;
+  gap: 0.8rem; /* spacing between radio and text */
+  font-size: 0.95rem;
+}
+
+.user .payment-methods pre {
+  align-items: center;
+  cursor: pointer;
+  gap: 0.8rem; /* spacing between radio and text */
+  font-size: 0.95rem;
+}
+
+.user .payment-methods label:hover {
+  background-color: #165a88;
+}
+
+.user .payment-methods input[type="radio"] {
+  accent-color: #3ca7ff;
+  transform: scale(1.1);
+}
+
+.user .success-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #0f375e; /* Deep cinema blue background */
+  font-family: 'Arial', sans-serif;
+  color: lightcyan;
+  padding: 2rem;
+}
+
+.user .success-message {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.user .success-message h1 {
+  font-size: 3rem;
+  color: #ffa14a;  /* Orange highlight for success title */
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(255, 161, 74, 0.5);
+}
+
+.user .success-message p {
+  font-size: 1.25rem;
+  color: lightcyan; /* Light cyan for body text */
+  margin-top: 0;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.user .home-button {
+  background-color: #ffa14a;  /* Vibrant orange button */
+  color: #0f375e;             /* Contrast with background */
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 161, 74, 0.6);
+}
+
+.user .home-button:hover {
+  background-color: #ffb76b; /* Slightly lighter orange on hover */
+  color: #0a2540;
+  box-shadow: 0 0 20px rgba(255, 200, 120, 0.9);
+}
+
+.user .home-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}

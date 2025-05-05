@@ -87,4 +87,6 @@ router.post('/seats', taskController.SeatsData);
 
 router.post('/seatRecord', taskController.seatRecord);
 
+router.post('/PaymentReceipt', taskController.PaymentReceipt);
+
 module.exports = router;
