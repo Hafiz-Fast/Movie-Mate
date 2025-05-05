@@ -80,6 +80,9 @@ const Login = () => {
                     <div style={{ marginTop: '1rem' }}>
                         Don't have an account? <Link to="/signup">Sign up</Link>
                     </div>
+                    <div style={{ marginTop: '1rem' }}>
+                        Continue without Logging in? <Link to="/user/">Click Here</Link>
+                    </div>
                     <button type="submit">Login</button>
                 </form>
             </div>
