@@ -188,13 +188,11 @@ Alter TABLE Seat
 add constraint seat_PK
 primary key(SeatNumber, TheaterID, ShowTimeID); 
 
-
-
 Alter table Movie add links varchar(MAX);
 Alter table Movie add trailer varchar(MAX);
 Alter table Seat add available int;
-Alter Table Payment alter column Amount float;
-Alter table Seat alter column ShowTimeID int NOT NULL;
+Alter Table Payment add Amount float;
+Alter table Seat add ShowTimeID int NOT NULL;
 
 --Schema View
 Select * from Movie;
@@ -1068,7 +1066,7 @@ exec CleanupIfNeeded;
 
 --26 get seat record of a theater
 go
-ALter PROCEDURE getSeatRecord
+Create PROCEDURE getSeatRecord
 @ShowTimeID int
 as BEGIN
 
@@ -1085,7 +1083,7 @@ SELECT * from Movie;
 --27 Assign Seats
 
 GO
-ALTER PROCEDURE AssignSeats
+Create PROCEDURE AssignSeats
     @TheaterID INT,
 	@ShowTimeID INT
 AS
