@@ -3,8 +3,8 @@ const Task = require('../models/taskModel');
 //MovieMate
 exports.AddMovie = async (req,res) => {
   try {
-    const {Title, MovieType, Genre, Duration} = req.body;
-    await Task.AddMovie(Title, MovieType, Genre, Duration);
+    const {Title, MovieType, Genre, Duration, links} = req.body;
+    await Task.AddMovie(Title, MovieType, Genre, Duration, links);
     res.status(201).json({ message: 'Task created using stored procedure' });
   } catch (error) {
     console.error("Error creating task:", error);

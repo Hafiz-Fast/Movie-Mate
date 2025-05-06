@@ -217,7 +217,8 @@ Create Procedure AddMovie
 @Title varchar(50),
 @MovieType varchar(20),
 @Genre varchar(20),
-@Duration Time
+@Duration Time,
+@links VARCHAR(MAX)
 as begin
 
 if exists (Select * from Movie where @Title = Title)
@@ -227,8 +228,8 @@ end
 
 else
 begin
-Insert into Movie (Title,MovieType,Genre,Duration)
-values(@Title,@MovieType,@Genre,@Duration);
+Insert into Movie (Title,MovieType,Genre,Duration,links)
+values(@Title,@MovieType,@Genre,@Duration,@links);
 end
 
 end
@@ -236,6 +237,7 @@ GO
 
 exec AddMovie 'Batman vs SuperMan','HollyWood','Action','02:50:00';
 exec AddMovie 'Pathan','BollyWood','Thriller','03:10:00';
+exec AddMovie "Raaone","BollyWood","Action","03:10:00","https/kasklasklakslkas.com";
 
 --2, Admin can Add IMDB ratings of each movie
 GO

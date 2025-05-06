@@ -120,7 +120,7 @@ const reformatTime = (inputTime) => {
 const Task = {
   
   //MovieMate 
-  async AddMovie(Title, MovieType, Genre, Duration){
+  async AddMovie(Title, MovieType, Genre, Duration, links){
     try{
       const pool = await poolPromise;
       await pool.request()
@@ -128,6 +128,7 @@ const Task = {
         .input('MovieType',sql.VarChar,MovieType)
         .input('Genre',sql.VarChar,Genre)
         .input('Duration',sql.VarChar,Duration)
+        .input('links',sql.VarChar,links)
         .execute('AddMovie');
     }
     catch(error){
