@@ -5,6 +5,7 @@ const MovieForm = () => {
   const [MovieType, setMovieType] = useState('');
   const [Genre, setGenre] = useState('');
   const [Duration, setDuration] = useState('');
+  const [links, setLinks] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,13 +16,14 @@ const MovieForm = () => {
     await fetch('http://localhost:5000/api/movies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Title, MovieType, Genre, Duration:formattedDuration })
+      body: JSON.stringify({ Title, MovieType, Genre, Duration:formattedDuration, links })
     });
 
     setTitle('');
     setMovieType('');
     setGenre('');
     setDuration('');
+    setLinks('');
   };
 
   return (
@@ -47,6 +49,7 @@ const MovieForm = () => {
         <option value="Thriller" />
       </datalist>
       <input type="time" Duration value={Duration} onChange={(e) => setDuration(e.target.value)} required />
+      <input type="text" placeholder="Link" value={links} onChange={(e) => setLinks(e.target.value)} required />
       <button type="submit">Add Movie</button>
     </form>
   );

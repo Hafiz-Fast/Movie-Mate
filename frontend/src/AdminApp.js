@@ -67,7 +67,7 @@ function AppContent(){
         <Route path = "Movies" element = {
           <div>
 
-          <div class = "AddMovie">
+          <div class = "AddMovie2">
             <div class = "AddMovie-left">
               <h2>Enter Movie</h2>
             </div>
@@ -104,12 +104,8 @@ function AppContent(){
           </div>
 
           <div class = "DisplayMovie">
-            <div class = "DisplayMovie-left">
-              <h2>Movies</h2>
-            </div>
-            <div class = "DisplayMovie-right">
-              <ShowMovies />
-            </div>
+            <h1>Movies</h1>
+            <ShowMovies />
           </div>
 
           </div>
@@ -137,13 +133,9 @@ function AppContent(){
             </div>
           </div>
 
-          <div class = "AddMovie">
-             <div class = "AddMovie-left">
-               <h2>Theaters</h2>
-             </div>
-             <div class = "AddMovie-right">
-               <TheaterList />
-             </div>
+          <div class = "DisplayMovie">
+            <h1>Theaters</h1>
+            <TheaterList />
           </div>
 
           </div>
@@ -171,13 +163,9 @@ function AppContent(){
                </div>
              </div>
 
-             <div class = "AddMovie">
-               <div class = "AddMovie-left">
-                 <h2>MovieShows</h2>
-               </div>
-               <div class = "AddMovie-right">
-                 <ShowList />
-               </div>
+             <div class = "DisplayMovie">
+                <h1>Movie Shows</h1>
+                <ShowList />
              </div>
 
           </div>
@@ -185,25 +173,17 @@ function AppContent(){
 
          {/* Bookings Router */}
          <Route path = "Bookings" element = {
-          <div class = "AddMovie">
-            <div class = "AddMovie-left">
-              <h2>Bookings</h2>
-            </div>
-            <div class = "AddMovie-right">
-              <BookingList />
-            </div>
+          <div class = "DisplayMovie">
+            <h1>Bookings</h1>
+            <BookingList />
           </div>
         } />
 
         {/* Users Router */}
         <Route path = "Users" element = {
-          <div class = "AddMovie">
-            <div class = "AddMovie-left">
-              <h2>Users</h2>
-            </div>
-            <div class = "AddMovie-right">
-              <UserList />
-            </div>
+          <div class = "DisplayMovie">
+            <h1>Users</h1>
+            <UserList />
           </div>
         } />
 

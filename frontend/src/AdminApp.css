@@ -138,7 +138,6 @@ html.admin-mode, body.admin-mode{
 /* For Displaying Movie Section as they are long */
 .adm .DisplayMovie{
     margin-top: 9%;
-    display: flex;
     align-items: center;
     width: 97%;
     height: 130vh;
@@ -146,30 +145,26 @@ html.admin-mode, body.admin-mode{
     box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
     border-radius: 20px;
 }
-.adm .DisplayMovie-left{
-    flex-basis: 25%;
-}
-.adm .DisplayMovie-left h2{
-    margin-left: 15%;
-    margin-bottom: 70%;
-    font-size: 30px;
-}
-.adm .DisplayMovie-right{
-    flex-basis: 73%;
+.adm .DisplayMovie h1{
+    color: rgb(255, 162, 0);
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 3%;
 }
 
 /* The styling of row and columns of Table */
 .adm .MovieTable{
-    border: 1px solid white;
     width: 100%;
     height: 50vh;
 }
 .adm .MovieTable thead tr th{
-    border: 1px solid white;
     padding: 10px;
+    font-size: larger;
+    font-weight: bold;
+    color: rgb(255, 140, 90);
 }
 .adm .MovieTable tbody tr td{
-    border: 1px solid white;
     padding: 10px;
     width: 10px;
     text-align: center;
@@ -195,4 +190,16 @@ html.admin-mode, body.admin-mode{
     min-height: 100vh;
     width: 100%;
     position: absolute;
+}
+
+/* For MovieForm Only as it is large */
+.adm .AddMovie2{
+    margin-top: 9%;
+    display: flex;
+    align-items: center;
+    width: 97%;
+    height: 90vh;
+    border: 2px solid #fffb00;
+    box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
+    border-radius: 20px;
 }
