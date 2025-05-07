@@ -1,0 +1,765 @@
+/* General Reset and Base */
+/*Important notes
+  .Transform does not work on pure inline elements*/
+.user * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+
+body.user-mode {
+  background-color: #0f375e !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: lightcyan;
+  overflow: auto;
+}
+
+/* Title Styling */
+.user .M-Title {
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: white;
+  font-size: 800%;
+  text-align: center;
+  margin-bottom: 5%;
+}
+
+.user .M-Style {
+  color: #ffa14a !important;
+}
+
+/* Paragraph Styling */
+.user p {
+  color: lightcyan;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Label Styling */
+.user label {
+  display: block;
+  margin: 1rem auto;
+  font-size: 3.5rem;
+  color: #ffa14a;
+  text-align: center;
+}
+
+/* Dropdown Styling */
+.user select {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.75rem 1.2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #133a5e;
+  color: lightcyan;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  width: 250px;
+  cursor: pointer;
+}
+
+.user select:focus {
+  outline: none;
+  background-color: #194e79;
+}
+
+.user option {
+  background-color: #133a5e;
+  color: lightcyan;
+}
+
+/* Button Styling */
+.user button {
+  padding: 0.7rem 1.5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  background-color: #ffa14a;
+  color: #0f375e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.user button:hover {
+  background-color: #ff8c1a;
+}
+
+/* Table Styling */
+.user table {
+  margin: 2rem auto;
+  border-collapse: collapse;
+  width: 90%;
+  background-color: #133a5e;
+  color: lightcyan;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.user th, td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #0a2540;
+}
+
+.user th {
+  background-color: #ffa14a;
+  color: #0f375e;
+  font-weight: bold;
+}
+
+.user tr:hover {
+  background-color: #1a4d7a;
+}
+
+/* Form Containers */
+.user form:not(.LogData):not(.NavBar) {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 80%;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.user input, textarea {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: none;
+  background-color: #1a4d7a;
+  color: white;
+  font-size: 1rem;
+}
+
+.user .LogoF{
+  width:15%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.user .Logging{
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  margin: 0.5rem auto;
+  width: 60%;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.user a{
+  color: #48c6ef;
+}
+
+.user a:hover{
+  color: rgb(253, 211, 0);
+}
+
+.user a:focus{
+  color: #e74c3c;
+  outline: none;
+}
+
+.user input::placeholder, textarea::placeholder {
+  color: #b0d4e3;
+}
+
+.user input:focus, textarea:focus {
+  outline: none;
+  background-color: #22618e;
+}
+
+/*navigation bar for Home*/
+.user .Nav {
+  background-image: url("../public/BLogoLS.png");
+  background-position: 0 10%;
+  position: fixed;
+  width: 100%;
+  transform: translateY(0);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  top: 0;
+  right: 0.07vw;
+  z-index: 100;
+  transition: transform 0.3s ease-in-out;
+}
+
+.user .Nav::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 55, 94, 0.5);
+}
+
+.user.nav-hidden .Nav {
+  transform: translateY(-100%);
+}
+
+.user.nav-visible .Nav {
+  transform: translateY(0);
+}
+
+.user .Nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: 3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.user .Nav li {
+  position: relative;
+}
+
+.user .Nav a {
+  color: lightcyan;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.user .Nav a:hover {
+  color: rgb(253, 211, 0); /* Yellow hover */
+  background-color: rgba(255, 161, 74, 0.1); /* Light orange tint */
+}
+
+.user .Nav a:focus {
+  outline: 2px solid #ffa14a;
+  outline-offset: 3px;
+}
+
+.user .Nav a.active {
+  color: #ffa14a;
+  font-weight: bold;
+}
+
+.user .Nav li::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #ffa14a;
+  transition: width 0.3s ease;
+}
+
+.user .Nav li:hover::after {
+  width: 100%;
+}
+
+/*Search bar in Movies*/
+.user .Nav .NavSearch{
+  width:15%;
+  position:absolute;
+  top:0;
+  bottom:12%;
+  left: 10vw;
+}
+
+.user span:not(.M-Style){
+  display:flex;
+  justify-content: center;
+  font-size: 250%;
+  color:#ffa14a;
+}
+
+.user .Grid{
+  display:grid;
+  grid-template-columns: 50% 50%;
+  row-gap: 5%;
+  padding-top: 9vh;
+  place-items: center;
+  padding-bottom: 20rem;
+  font-size: 150%;
+  font-weight: bold;
+  color: white;
+}
+
+.user .Grid .Movies{
+  display: inline-block;
+  text-align: center;
+  transition: color 0.2s ease-in-out;
+}
+
+.user .Grid .Movies a{
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.user .Grid .Movies a:focus{
+  color: red;
+}
+
+.user .Grid .Movies:focus{
+  color:rgb(253, 211, 0);
+}
+
+.user .Grid .Booking{
+  font-size: 80%;
+  font-weight: normal;
+  color:rgb(253, 211, 0);
+  text-decoration: underline;
+  text-decoration-color: rgb(253, 211, 0);
+}
+
+.user .Movies img{
+    width: 15vw;
+    height: 50vh;
+    border:5px solid white;
+    transition: border 0.2s ease-in-out;
+}
+
+.user .Movies img:hover{
+    border-color: rgb(253, 211, 0);
+}
+
+.user .detailPage{
+    background-color: #1a3650;
+    border-radius: 12px;
+    display: block;
+    width: 60vw; /* or any width you like */
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 700px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
+    padding-bottom: 0;
+}
+
+.user .detailPage h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #f0993d;
+}
+
+.user .detailPage p {
+  font-size: 1.1rem;
+  color:#e0e0e0;
+  margin-bottom: 0.5rem;
+}
+
+.user .Detail{
+  width: 100%;
+  display: block;
+  text-align: justify;
+}
+
+.user .Detail h3{
+  margin: 0; 
+  padding-right: 79vw; 
+  font-weight: bold;
+  display: inline-block;
+}
+
+.user .Detail .displayD{
+  margin: 0; 
+  padding: 0;
+  display: inline-block;
+  text-align: right;
+  white-space: nowrap;
+  color:cyan;
+  text-decoration: underline;
+  text-decoration-color: cyan;
+  transition: color 0.3s ease-in-out;
+  cursor: pointer;
+} 
+
+.user .Detail .displayD .arrow {
+  font-size: 70%;
+  padding:0;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.user .Detail .displayD .arrow.up{
+  transform: rotate(180deg) !important;
+}
+
+.user .Detail .displayD .arrow:not(.up) {
+  transform: none; /* Remove any existing transformations */
+}
+
+.user .Detail .displayD:focus{
+  color:rgb(253, 211, 0);
+  text-decoration-color: rgb(253, 211, 0);
+}
+
+.user .show-card{
+  display: flex;
+  margin-left: 1rem;
+  padding: 5px;
+  justify-content: space-between;
+  background-color: #1a4d7a;
+  border-radius: 10%;
+  box-shadow: 0px 8px 30px rgba(0,0,0,0.2);
+  margin-bottom: 7vh;
+  height: 5rem; /* Set a fixed height */
+  align-items: center;
+  cursor:pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Pressed/selected state */
+.show-card.selected {
+  transform: scale(0.99) translateY(2px);
+  background: #123654; /* Darker than both container and background */
+  box-shadow: 
+    0 1px 4px rgba(0, 0, 0, 0.2),
+    inset 0 2px 3px rgba(0, 0, 0, 0.3); /* Deeper inner shadow */
+}
+
+/* Temporary click feedback */
+.show-card:active:not(.selected) {
+  transform: scale(0.95) translateY(3px);
+  background: #1a4d7a; /* Original color */
+  transition-duration: 0.1s;
+}
+
+.user .badge{
+  font-weight: bold;
+  font-size: 80%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10%;
+  color: #333333;
+}
+
+.user .badge.Bronze{
+  background-color: #CD7F32;
+}
+
+.user .badge.Silver{
+  background-color: #C0C0C0;
+}
+
+.user .badge.Gold{
+  background-color: #FFD700;
+}
+
+.user .badge.Platinum{
+  background-color: #E5E4E2;
+}
+
+
+.user .times a{
+  text-decoration: none;
+}
+
+.user .showing-container {
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out; /* Smooth transition */
+  max-height: var(--max-height, 0px); /* Default fallback value */
+}
+
+.user .lessB{
+  margin: 0;
+  color: blue;
+  font-size: 1rem;
+  transition: color 0.3s ease-in-out;
+}
+
+.user .lessB.start{
+  color: grey;
+}
+
+.user .moreB{
+  margin: 0;
+  color: red;
+  font-size: 1rem;
+  transition: color 0.3s ease-in-out;
+}
+
+.user .moreB.end{
+  color: grey;
+}
+
+.user .Screen{
+  background-color: rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.user .seat{
+  width: 4rem;
+  height: 4rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.user .seat[data-status="1"]{
+  background-image: url( "../public/available.png");
+  cursor: pointer;
+}
+
+.user .seat[data-status="you"]{
+  background-image: url("../public/your_seat.png");
+  cursor: pointer;
+}
+
+.user .seat[data-status="0"]{
+  background-image: url("../public/sold.png");
+  cursor: default;
+}
+
+.user .Full{
+  width: 4rem;
+  height: 4rem;
+  background-image: url( "../public/available.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: default;
+}
+
+.user .Full p{
+  cursor: default;
+}
+
+.user .Keys{
+  padding-left: 4rem;
+}
+
+.user .Keys img{
+  width: 2rem;
+  height: 2rem;
+  float: left;
+}
+
+.user .Keys span{
+  text-align: left;
+  color:white;
+  font-size: 100%;
+}
+
+.user .Keys .board{
+  display:flex;
+  justify-content: space-evenly;
+}
+
+.user .Keys .key-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;  /* small gap between icon & text */
+}
+
+.user .seat-grid {
+  padding-top: 5rem;
+  display: grid;
+  /* 10 columns (you have seats 0–9), each takes equal space */
+  grid-template-columns: repeat(10, 4rem);
+  /* One row per letter, use “.” for an empty/aisle cell */
+  grid-template-areas:
+    "A0 A1 . A2 A3 A4 A5 A6 . A7 A8 A9"
+    "B0 B1 . B2 B3 B4 B5 B6 . B7 B8 B9"
+    "C0 C1 . C2 C3 C4 C5 C6 . C7 C8 C9"
+    "D0 D1 . D2 D3 D4 D5 D6 . D7 D8 D9"
+    "E0 E1 . E2 E3 E4 E5 E6 . E7 E8 E9";
+  gap: 0.1rem;
+  margin: 1.3rem 25rem;
+  max-width: 600px;  /* adjust to your design */
+}
+
+.user .popup-message {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4444;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0 0 10px 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  text-align: center;
+}
+
+.user .checkout-title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.user .checkout-subtitle {
+  font-size: 1.2rem;
+  color: #d0e6ff; /* soft, readable light blue */
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+}
+
+.user .booking-box {
+  background-color: #0a2b4a;
+  border-radius: 1rem;
+  padding: 2rem 3rem;
+  margin: 3rem auto;
+  max-width: 700px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  color: #e3f2fd;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.8;
+}
+
+.user .booking-box h2 {
+  font-size: 1.6rem;
+  color: #ffffff;
+  border-bottom: 1px solid #3e5f7c;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.user .booking-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user .booking-box li {
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.user .booking-box strong {
+  color: #90caf9; 
+}
+
+.user .booking-box hr {
+  border: none;
+  border-top: 1px solid #3e5f7c;
+  margin: 2rem 0;
+}
+
+.user .payment-section {
+  background-color: #0b2c4a; /* Slightly darker than #0f375e */
+  padding: 1.5rem 2rem;
+  margin: 2rem auto;
+  border-radius: 12px;
+  max-width: 600px;
+  color: #e0f0ff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.user .payment-section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #c2e0ff;
+  border-bottom: 1px solid #23415e;
+  padding-bottom: 0.3rem;
+  text-align: center;
+}
+
+.user .payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.user .payment-methods label {
+  display: flex;
+  align-items: center;
+  background-color: #123e60;
+  padding: 0.6rem 2rem;
+  border-radius: 8px;
+  border: 1px solid #1e547a;
+  cursor: pointer;
+  gap: 0.8rem; /* spacing between radio and text */
+  font-size: 0.95rem;
+}
+
+.user .payment-methods pre {
+  align-items: center;
+  cursor: pointer;
+  gap: 0.8rem; /* spacing between radio and text */
+  font-size: 0.95rem;
+}
+
+.user .payment-methods label:hover {
+  background-color: #165a88;
+}
+
+.user .payment-methods input[type="radio"] {
+  accent-color: #3ca7ff;
+  transform: scale(1.1);
+}
+
+.user .success-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #0f375e; /* Deep cinema blue background */
+  font-family: 'Arial', sans-serif;
+  color: lightcyan;
+  padding: 2rem;
+}
+
+.user .success-message {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.user .success-message h1 {
+  font-size: 3rem;
+  color: #ffa14a;  /* Orange highlight for success title */
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(255, 161, 74, 0.5);
+}
+
+.user .success-message p {
+  font-size: 1.25rem;
+  color: lightcyan; /* Light cyan for body text */
+  margin-top: 0;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.user .home-button {
+  background-color: #ffa14a;  /* Vibrant orange button */
+  color: #0f375e;             /* Contrast with background */
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 161, 74, 0.6);
+}
+
+.user .home-button:hover {
+  background-color: #ffb76b; /* Slightly lighter orange on hover */
+  color: #0a2540;
+  box-shadow: 0 0 20px rgba(255, 200, 120, 0.9);
+}
+
+.user .home-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}

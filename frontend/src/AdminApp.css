@@ -1,14 +1,16 @@
-*{
+.adm *{
     color: white;
     font-family: Arial, sans-serif;
     box-sizing: border-box;
 }
 
-body{
+html.admin-mode, body.admin-mode{
     background: black;    /* Add seperatly as it clashes with background of home page */
+    margin: 0;
+    padding: 0;
 }
 
-.Title{
+.adm .Title{
     width: 300px;
     height: 100px;
     border: 2px solid #ff0000;
@@ -25,7 +27,7 @@ body{
     background: black;
 }
 
-.Nav ul{
+.adm .Nav ul{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,32 +40,32 @@ body{
     box-shadow: 0 0 5px rgb(255, 162, 0), 0 0 20px rgb(255, 162, 0), 0 0 40px rgb(255, 162, 0);
     background: black;
 }
-.Nav ul li{
+.adm .Nav ul li{
     display: inline-block;
     list-style: none;
     margin: 10px 20px;
     font-weight: bold;
     background: black;
 }
-.Nav ul li:last-child{
+.adm .Nav ul li:last-child{
     margin-right: 20px;
 }
-.Nav ul li:first-child{
+.adm .Nav ul li:first-child{
     margin-left: 0;
 }
-.Nav ul li a {
+.adm .Nav ul li a {
     text-decoration: none;
 }
-.Nav ul li a:hover{
+.adm .Nav ul li a:hover{
     color: rgb(255, 162, 0);
     text-shadow: 0 0 10px rgb(255, 162, 0);
 }
 
-.Admin{
+.adm .Admin{
     width: 500px;
     height: 250px;
     border: 2px solid #00ff00;
-    box-shadow: 0 0 10px #00ff00, 0 0 30px #00ff00, 0 0 50px #00ff00;
+    box-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00, 0 0 25px #00ff00;
     color: #0ff;
     font-size: 30px;
     font-weight: bold;
@@ -76,34 +78,34 @@ body{
     flex-direction: column;
     background: black;
 }
-.Admin p{
+.adm .Admin p{
     font-size: 20px;
     background: black;
 }
 
-.AddMovie{
+.adm .AddMovie{
     margin-top: 9%;
     display: flex;
     align-items: center;
     width: 97%;
     height: 80vh;
     border: 2px solid #fffb00;
-    box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
+    box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
     border-radius: 20px;
 }
-.AddMovie-left{
+.adm .AddMovie-left{
     flex-basis: 30%;
 }
-.AddMovie-left h2{
+.adm .AddMovie-left h2{
     margin-left: 15%;
     margin-bottom: 70%;
     font-size: 30px;
 }
-.AddMovie-right{
+.adm .AddMovie-right{
     flex-basis: 55%;
 }
 
-form input, form textarea{
+.adm form input, form textarea{
     width:90%;
     border:0;
     outline:none;
@@ -114,7 +116,7 @@ form input, form textarea{
     background:#262626;
     color:white;
 }
-button {
+.adm button {
     margin-top: 3%;
     background-color: black;
     color: rgb(255, 162, 0); /* Neon Pink */
@@ -128,52 +130,51 @@ button {
     transition: all 0.3s ease-in-out;
 }
   
-button:hover {
+.adm button:hover {
     box-shadow: 0 0 10px rgb(255, 162, 0), 0 0 30px rgb(255, 162, 0), 0 0 60px rgb(255, 162, 0);
     text-shadow: 0 0 10px rgb(255, 162, 0);
 }
 
 /* For Displaying Movie Section as they are long */
-.DisplayMovie{
+.adm .DisplayMovie{
     margin-top: 9%;
-    display: flex;
     align-items: center;
     width: 97%;
-    height: 100vh;
+    height: 130vh;
     border: 2px solid #fffb00;
-    box-shadow: 0 0 10px #fffb00, 0 0 30px #fffb00, 0 0 50px #fffb00;
+    box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
     border-radius: 20px;
 }
-.DisplayMovie-left{
-    flex-basis: 25%;
-}
-.DisplayMovie-left h2{
-    margin-left: 15%;
-    margin-bottom: 70%;
-    font-size: 30px;
-}
-.DisplayMovie-right{
-    flex-basis: 73%;
+.adm .DisplayMovie h1{
+    color: rgb(255, 162, 0);
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 3%;
 }
 
 /* The styling of row and columns of Table */
-.MovieTable{
-    border: 1px solid white;
+.adm .MovieTable{
     width: 100%;
     height: 50vh;
 }
-.MovieTable thead tr th{
-    border: 1px solid white;
+.adm .MovieTable thead tr th{
     padding: 10px;
+    font-size: larger;
+    font-weight: bold;
+    color: rgb(255, 140, 90);
 }
-.MovieTable tbody tr td{
-    border: 1px solid white;
+.adm .MovieTable tbody tr td{
     padding: 10px;
     width: 10px;
     text-align: center;
 }
 
-.home-background{
+.adm .MovieTable tbody tr{
+    height: 12px;
+}
+
+.adm .home-background{
     background-image: url('https://images.unsplash.com/photo-1643553517154-24eb7fd86437?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover;
     background-position: center;
@@ -184,7 +185,7 @@ button:hover {
     position: absolute;
 }
 
-.theater-background{
+.adm .theater-background{
     background-image: url('https://images.unsplash.com/photo-1653853301139-f57c5fdc069a?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover;
     background-position: center;
@@ -193,4 +194,16 @@ button:hover {
     min-height: 100vh;
     width: 100%;
     position: absolute;
+}
+
+/* For MovieForm Only as it is large */
+.adm .AddMovie2{
+    margin-top: 9%;
+    display: flex;
+    align-items: center;
+    width: 97%;
+    height: 90vh;
+    border: 2px solid #fffb00;
+    box-shadow: 0 0 5px #fffb00, 0 0 15px #fffb00, 0 0 25px #fffb00;
+    border-radius: 20px;
 }
