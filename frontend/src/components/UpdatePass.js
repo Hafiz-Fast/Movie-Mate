@@ -18,8 +18,6 @@ const UpdatePass = () => {
 
             const data = await response.json();
 
-            console.log("status:" , response);
-            console.log("statuds1:", data.message);
             setMessage(data.message);
             setMessageColor(response.ok ? 'green' : 'red');
             

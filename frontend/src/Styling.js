@@ -15,9 +15,6 @@ const RouteLogger = () => {
   const regex = /^\/(user|admin)/;
   const match = location.pathname.match(regex);
 
-  console.log('Pathname:', location.pathname);
-  console.log('match:', match)
-
   let type = match ? match[1] : null;
 
   if(type){
@@ -30,8 +27,6 @@ const RouteLogger = () => {
     body.className = '';
 
     const access = sessionStorage.getItem('AccessType');
-
-    console.log('AccessType from sessionStorage:', access);
 
     if(access === 'user' || location.pathname === '/login' || location.pathname === '/signup'){
       body.classList.add('user-mode');

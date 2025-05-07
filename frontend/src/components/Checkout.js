@@ -27,10 +27,11 @@ const Checkout = () => {
         setScreening(screening);
         setSeats(seats);
         setTotal( screening.Amount * seats.length);
-    },[]);
+    },[location.state, navigate]);
 
     const handleSubmit = async(e) => {
         e.preventDefault();
+        let IsNew = 1;
         try {
             for (const seat of seats) {
                 const response = await fetch('http://localhost:5000/api/booking', {
@@ -42,16 +43,18 @@ const Checkout = () => {
                         ScreenType: screening.ScreenType,
                         ShowDate: screening.ShowDate,
                         MovieTiming: screening.ShowTiming,
-                        SeatNumber: seat
+                        SeatNumber: seat,
+                        IsNew: parseInt(IsNew)
                     })
                 });
     
                 if (!response.ok) {
                     throw new Error(`Failed to book seat ${seat}`);
                 }
+                IsNew = 0;
             }
         } catch (err) {
-            console.Error("Error: " + err.message);
+            console.error("Error: " + err.message);
             return;
         }
 
@@ -77,7 +80,7 @@ const Checkout = () => {
                 }
             }
             catch (err) {
-                console.Error("Error: " + err.message);
+                console.error("Error: " + err.message);
             }
     };
     

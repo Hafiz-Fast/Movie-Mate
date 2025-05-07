@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const isEmail = (email) =>{
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -10,8 +10,23 @@ const Login = () => {
     const [logD, setLogD] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const location = useLocation();
     const [messageColor, setMessageColor] = useState('black');
+    const [redirect, setRedirect] = useState(false);
+    const [link, setLink] = useState('');
+    const [screening, setScreening] = useState({});
+    const [tickets, setTickets] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const { link, screening, tickets } = location.state || {};
+        if (link && screening && tickets) {
+            setLink(link);
+            setScreening(screening);
+            setTickets(tickets);
+            setRedirect(true);
+        }
+    },[location.state]);
     
 
     const handleSubmit = async(e) => {
@@ -45,7 +60,10 @@ const Login = () => {
                 //--------------------------------------------
                 setLogD('');
                 setPassword('');
-                if(user.UserType === 'Customer'){
+                if(redirect){
+                    navigate(`${link}`, {state: {screening: screening, tickets: tickets}});
+                }
+                else if(user.UserType === 'Customer'){
                     navigate('/user');
                 }else{
                     navigate('/admin');

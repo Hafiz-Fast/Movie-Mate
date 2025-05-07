@@ -12,12 +12,12 @@ const BookingList = () => {
 
   return (
     <div>
-      <table class = "MovieTable">
+      <table class = "MovieTable" style={{height: '37vh'}}>
         <thead>
           <tr>
             <th>BookingID</th>
             <th>UserName</th>
-            <th>SeatNumber</th>
+            <th>SeatNumbers</th>
             <th>ShowTimeID</th>
             <th>PaymentMethod</th>
             <th>PaymentStatus</th>
@@ -28,7 +28,7 @@ const BookingList = () => {
             <tr key={index}>
               <td>{booking.BookingID}</td>
               <td>{booking.UserName}</td>
-              <td>{booking.SeatNumber}</td>
+              <td  style={{ overflowX: 'auto', whiteSpace: 'nowrap', maxWidth: '50px'}}>{booking.SeatNumbers}</td>
               <td>{booking.ShowTimeID}</td>
               <td>{booking.PaymentMethod}</td>
               <td>{booking.PaymentStatus}</td>

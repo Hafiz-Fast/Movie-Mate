@@ -1,11 +1,10 @@
 import React , { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SeatSelection = ({ selectedScreen }) => {
     const copiedSelectedScreen = JSON.parse(JSON.stringify(selectedScreen));
     const [seatCount, setSeatCount] = useState(0);
     const [count, setCount] = useState(1);
-    const [selected, setSelected] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,9 +17,7 @@ const SeatSelection = ({ selectedScreen }) => {
                 })
 
                 const data = await response.json();
-                setSelected(data.data[0]);
                 setSeatCount(data.data[0].AvailableSeats);
-                console.log("Screening:", copiedSelectedScreen);
             }
             catch(error){
                 console.error("Error receiving data");

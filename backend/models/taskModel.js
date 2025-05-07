@@ -1,7 +1,5 @@
 const { sql, poolPromise } = require('../config/db');
-const { DeleteMovie, UpdateRating, AddTheater, AddSeatRecord, AddShowPrice, ViewMovies, ViewTheaters, ViewShows, ViewBookings, ViewUsers } = require('../controllers/taskController');
 const { NVarChar } = require('mssql');
-const { ComingSoon } = require('../controllers/taskController');
 
 const Duration = (DurationString) => {
   const duration = new Date(DurationString);
@@ -459,7 +457,7 @@ const Task = {
             throw error; 
         }
     },
-    async MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber){
+    async MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber, IsNew){
         try{
             const formattedDate = reformatDate(ShowDate);
             const formattedTime = reformatTime(MovieTiming);
@@ -471,6 +469,7 @@ const Task = {
                 .input('ShowDate', sql.Date, formattedDate)
                 .input('MovieTiming', sql.Time, formattedTime)
                 .input('SeatNumber', sql.Char(2), SeatNumber)
+                .input('IsNew', sql.Int, IsNew)
                 .execute('UserBooking');
         }
         catch(error){

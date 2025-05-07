@@ -12,16 +12,17 @@ const TheaterSetup = () => {
     const [tickets, setTickets] = useState(null);
 
     useEffect(() => {
-        if(!sessionStorage.getItem('Email')){
-            navigate('/login');
+        const { screening, tickets } = location.state || {};
+        if (!screening || !tickets) {
+            navigate('/user');
             return;
         }
 
-        const { screening, tickets } = location.state || {};
-        if (!screening || !tickets) {
-            navigate('/');
+        if(!sessionStorage.getItem('Email')){
+            navigate('/login', {state: { link: '/user/booking/', screening: screening, tickets: tickets }});
             return;
         }
+
         setScreening(screening);
         setTickets(tickets);
         const Availabilty = async() => {
@@ -36,7 +37,7 @@ const TheaterSetup = () => {
         };
 
         Availabilty();
-    }, []);
+    }, [location.state, navigate]);
 
     const handleSubmit = () => {
         if(selectedSeats.length === tickets)
@@ -115,7 +116,7 @@ const TheaterSetup = () => {
                 ))}
             </div>
 
-            <button style={{ marginLeft: '42rem' }} onClick={handleSubmit}>Proceed to Checkout</button>
+            <button style={{ marginLeft: '41rem' }} onClick={handleSubmit}>Proceed to Checkout</button>
         </>
     );
 }

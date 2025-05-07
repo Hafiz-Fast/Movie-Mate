@@ -308,8 +308,8 @@ exports.updatePaymentStatus = async (req, res) => {
 
 exports.BookMovie = async (req, res) => {
   try{
-    const { UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber } = req.body;
-    await Task.MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber);
+    const { UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber, IsNew } = req.body;
+    await Task.MovieBooking(UserID, Moviename, ScreenType, ShowDate, MovieTiming, SeatNumber, IsNew);
     res.json({ message: 'Movie Booking sucessful' });
   }
   catch(error){
