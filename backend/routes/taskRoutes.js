@@ -89,4 +89,8 @@ router.post('/seatRecord', taskController.seatRecord);
 
 router.post('/PaymentReceipt', taskController.PaymentReceipt);
 
+router.put('/AdmPass', taskController.AdminPass);
+
+router.post('/AccType', taskController.getUserType);
+
 module.exports = router;

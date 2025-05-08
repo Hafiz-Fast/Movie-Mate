@@ -19,6 +19,8 @@ const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        sessionStorage.clear();
+
         const { link, screening, tickets } = location.state || {};
         if (link && screening && tickets) {
             setLink(link);
@@ -64,8 +66,10 @@ const Login = () => {
                     navigate(`${link}`, {state: {screening: screening, tickets: tickets}});
                 }
                 else if(user.UserType === 'Customer'){
+                    sessionStorage.setItem('AccessType', 'user');
                     navigate('/user');
                 }else{
+                    sessionStorage.setItem('AccessType', 'admin');
                     navigate('/admin');
                 }
                 

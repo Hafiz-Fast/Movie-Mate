@@ -1,17 +1,13 @@
-import React , { useState, useEffect } from 'react';
+import React , { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 const Movies = () => {
-    const [refresh, setRefresh] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
     const [search, setSearch] = useState('');
     const [movies, setMovies] = useState([]);
-    const [debounceTimeOut, setDebounceTimeOut] = useState(null);
+    const debounceRef = useRef(null);
 
-    const handleDataChange = () =>{
-      setRefresh(prev => !prev);
-    }
-
-    const fetchMovies = async() =>{
+    const fetchMovies = useCallback(async() =>{
       if (search) {
         const response = await fetch('http://localhost:5000/api/search-movie', {
             method: 'POST',
@@ -25,21 +21,23 @@ const Movies = () => {
           const data = await response.json();
           setMovies(data);  // Set default movies
       }
-    };
+    },[search]);
 
     useEffect(() => {
-      if(debounceTimeOut)
-        clearTimeout(debounceTimeOut);
+      if(sessionStorage.getItem('Email')){
+        setLoggedIn(true);
+      }
 
-      const newDebounceTimeOut = setTimeout(() => {
+      if(debounceRef.current)
+        clearTimeout(debounceRef.current);
+
+      debounceRef.current = setTimeout(() => {
         fetchMovies();
       }, 500);
 
-      setDebounceTimeOut(newDebounceTimeOut);
+      return () => clearTimeout(debounceRef.current);
 
-      return () => clearTimeout(newDebounceTimeOut);
-
-    },[refresh, search]);
+    },[search, fetchMovies]);
 
     return(
         <>
@@ -50,6 +48,7 @@ const Movies = () => {
               <ul>
                 <li><Link to = "/user/home">Home</Link></li>
                 <li><Link to = "/user/movies">Movies</Link></li>
+                {loggedIn && (<Link to = "/user/PassUp" className="new-link">Change Password</Link>)}
               </ul>
             </div>
             <br /><br /><br /><br />

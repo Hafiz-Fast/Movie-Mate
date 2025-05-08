@@ -119,24 +119,23 @@ const reformatTime = (inputTime) => {
 const hashPassword = async(password) => {
   try {
     const hash = await argon2.hash(password);
-    console.log("Hashed password:", hash);
     return hash;
   } catch (err) {
     console.error("Hashing failed:", err);
+    throw err;
   }
 }
 
 const verifyPassword = async(hash, plainPassword) => {
   try {
     if (await argon2.verify(hash, plainPassword)) {
-      console.log("Password matches");
       return true;
     } else {
-      console.log("Password does not match");
       return false;
     }
   } catch (err) {
     console.error("Verification failed:", err);
+    throw err;
   }
 }
 
@@ -401,12 +400,32 @@ const Task = {
     async updatePass(email, oPass, nPass){
         try{
             const pool = await poolPromise;
-            const result = await pool.request()
-                .input('email', sql.NVarChar, email)
-                .input('oldPass', sql.NVarChar, oPass)
-                .input('newPass', sql.NVarChar, nPass)
-                .output('flag', sql.Int)
-                .execute('updatePass');
+            let result = await pool.request()
+              .input('email', sql.NVarChar, email)
+              .output('flag', sql.Int)
+              .execute('loginE');
+            const userPassword = result.recordset[0].UserPassword; // Get hashed password from DB
+
+            const isPasswordValid = await verifyPassword(userPassword, oPass); // Verify password hash
+        
+            if (isPasswordValid) {
+              const isPasswordSame = await verifyPassword(userPassword, nPass);  //check if new password and old are the same
+              if(isPasswordSame){  //if yes
+                result.output.flag = 2;  //Passwords are the same
+              }else{
+                nPass = await hashPassword(nPass);
+
+                result = await pool.request()
+                  .input('email', sql.NVarChar, email)
+                  .input('newPass', sql.NVarChar, nPass)
+                  .output('flag', sql.Int)
+                  .execute('updatePass');
+                result.output.flag = 0; //password successfully changed
+              } 
+            } else {
+              result.output.flag = 1; // Incorrect Old password
+            }
+            
                 const flag = result.output.flag;
                 return flag;
         }
@@ -566,6 +585,36 @@ const Task = {
       }catch(error){
         console.error("Error executing stored procedure:", error);
             throw error; 
+      }
+    },
+    async AdminPass(email){
+      try{
+        let Pass = await hashPassword("12345678");
+        
+        const pool = await poolPromise;
+        await pool.request()
+          .input('email', sql.NVarChar, email)
+          .input('newPass', sql.NVarChar, Pass)
+          .output('flag', sql.Int)
+          .execute('updatePass');
+      }
+      catch(error){
+        console.error("Error executing stored procedure:", error);
+            throw error;
+      }
+    },
+    async getUserType(email){
+      try{
+        const pool = await poolPromise;
+        const result = await pool.request()
+          .input('email', sql.NVarChar, email)
+          .execute('getUserType');
+
+        return result;
+      }
+      catch(error){
+        console.error("Error executing stored procedure:", error);
+            throw error;
       }
     }
   

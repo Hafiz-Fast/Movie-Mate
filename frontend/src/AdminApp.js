@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import MovieForm from './components/MovieForm';
 import IMDBForm from './components/IMDBForm';
 import DeleteMovieForm from './components/DeleteMovieForm';
@@ -13,14 +13,42 @@ import TheaterList from './components/DisplayThaeters';
 import ShowList from './components/DisplayShowTimings';
 import BookingList from './components/DisplayBookings';
 import UserList from './components/DisplayUsers';
+import AdmChangePass from './components/AmdChangePass';
 
 function AppContent(){
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(()=>{
     fetch('http://localhost:5000')
-    .then((response)=>response.text())
-  },[]);
+    .then((response)=>response.text());
+    
+    let email = '';
+    const EData = sessionStorage.getItem('Email');
+    
+    if (EData){
+      email = EData;
+    }else {
+      email = '';
+    }
+
+
+    const getAccess = async() => {
+      const response = await fetch('http://localhost:5000/api/AccType', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if(data.data.length === 0 || data.data[0].UserType === 'Customer'){
+        navigate('/');
+      }
+
+    }
+    getAccess();
+  },[navigate]);
 
   // Apply background images for different pages
   let className = '';
@@ -181,10 +209,20 @@ function AppContent(){
 
         {/* Users Router */}
         <Route path = "Users" element = {
-          <div class = "DisplayMovie">
-            <h1>Users</h1>
-            <UserList />
-          </div>
+          <>
+            <div class = "AddMovie">
+              <div class = "AddMovie-left">
+                <h2>Reset Password</h2>
+              </div>
+              <div class = "AddMovie-right">
+                <AdmChangePass />
+              </div>
+            </div>
+            <div class = "DisplayMovie">
+              <h1>Users</h1>
+              <UserList />
+            </div>
+          </>
         } />
 
       </Routes>

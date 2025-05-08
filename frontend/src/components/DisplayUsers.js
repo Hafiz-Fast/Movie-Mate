@@ -17,7 +17,6 @@ const UserList = () => {
           <tr>
             <th>UserID</th>
             <th>UserName</th>
-            <th>UserPassword</th>
             <th>UserType</th>
             <th>MovieID</th>
             <th>UserReview</th>
@@ -28,7 +27,6 @@ const UserList = () => {
             <tr key={index}>
               <td>{user.UserID}</td>
               <td>{user.UserName}</td>
-              <td>{user.UserPassword}</td>
               <td>{user.UserType}</td>
               <td>{user.MovieID}</td>
               <td>{user.Review}</td>

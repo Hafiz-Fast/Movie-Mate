@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import Home from './js/Home';
@@ -10,6 +10,7 @@ import './UserApp.css';
 import './AdminApp.css';
 
 const RouteLogger = () => {
+  const navigate = useNavigate();
   const location = useLocation();
 
   const regex = /^\/(user|admin)/;
@@ -19,7 +20,7 @@ const RouteLogger = () => {
 
   if(type){
     sessionStorage.setItem('AccessType', type);
-  }
+  } 
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -53,7 +54,7 @@ const RouteLogger = () => {
             break;
             
     }
-  }, [location]);
+  }, [location, match, navigate]);
   
   if (location.pathname === '/user/home') {
     return <Home />;
