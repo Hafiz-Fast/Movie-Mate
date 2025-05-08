@@ -1,5 +1,6 @@
 const { sql, poolPromise } = require('../config/db');
 const { NVarChar } = require('mssql');
+const argon2 = require("argon2");
 
 const Duration = (DurationString) => {
   const duration = new Date(DurationString);
@@ -114,6 +115,31 @@ const reformatTime = (inputTime) => {
 
     return new Date(`1970-01-01T${formattedTime}Z`);
 }
+
+const hashPassword = async(password) => {
+  try {
+    const hash = await argon2.hash(password);
+    console.log("Hashed password:", hash);
+    return hash;
+  } catch (err) {
+    console.error("Hashing failed:", err);
+  }
+}
+
+const verifyPassword = async(hash, plainPassword) => {
+  try {
+    if (await argon2.verify(hash, plainPassword)) {
+      console.log("Password matches");
+      return true;
+    } else {
+      console.log("Password does not match");
+      return false;
+    }
+  } catch (err) {
+    console.error("Verification failed:", err);
+  }
+}
+
 
 const Task = {
   
@@ -304,6 +330,7 @@ const Task = {
   /* Abdullah bhai */
   async SignUp(username, email, password, userType){
     try{
+        password = await hashPassword(password);
         const pool = await poolPromise;
         const result = await pool.request()
             .input('Username', sql.NVarChar, username)
@@ -324,12 +351,21 @@ const Task = {
     async LoginE(email, password){
         try{
             const pool = await poolPromise;
-            const result = await pool.request()
+            let result = await pool.request()
                 .input('email', sql.NVarChar, email)
-                .input('password', sql.NVarChar, password)
                 .output('flag', sql.Int)
                 .execute('loginE');
-            
+
+              const userPassword = result.recordset[0].UserPassword; // Get hashed password from DB
+
+              const isPasswordValid = await verifyPassword(userPassword, password); // Verify password hash
+          
+              if (isPasswordValid) {
+                result.output.flag = 0; // Login successful
+              } else {
+                result.output.flag = 1; // Incorrect password
+              }
+
             return result;
         }
         catch(error){
@@ -340,12 +376,21 @@ const Task = {
     async LoginU(userName, password){
         try{
             const pool = await poolPromise;
-            const result = await pool.request()
+            let result = await pool.request()
                 .input('Username', sql.NVarChar, userName)
-                .input('password', sql.NVarChar, password)
                 .output('flag', sql.Int)
                 .execute('loginU');
-                
+            
+              const userPassword = result.recordset[0].UserPassword; // Get hashed password from DB
+
+              const isPasswordValid = await verifyPassword(userPassword, password); // Verify password hash
+          
+              if (isPasswordValid) {
+                result.output.flag = 0; // Login successful
+              } else {
+                result.output.flag = 1; // Incorrect password
+              }
+
             return result;
         }
         catch(error){
@@ -497,11 +542,11 @@ const Task = {
           throw error; 
       }
     },
-    async viewSeats(TheaterID){
+    async viewSeats(ShowTimeID){
       try{
           const pool = await poolPromise;
           const result = await pool.request()
-            .input('TheaterID', sql.Int, TheaterID)
+            .input('ShowTimeID', sql.Int, ShowTimeID)
             .execute('ViewSeats');
 
             return result;

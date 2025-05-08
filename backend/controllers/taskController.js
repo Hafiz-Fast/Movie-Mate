@@ -320,8 +320,8 @@ exports.BookMovie = async (req, res) => {
 
 exports.SeatsData = async(req, res) => {
   try{
-    const {TheaterID} = req.body;
-    const result = await Task.viewSeats(TheaterID);
+    const {ShowTimeID} = req.body;
+    const result = await Task.viewSeats(ShowTimeID);
     res.json({ message: 'Seat Data Successfully retrieved',
               data:result.recordset
      });
