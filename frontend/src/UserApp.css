@@ -763,3 +763,32 @@ body.user-mode {
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
 }
+
+.user .Nav .new-link {
+  color: lightcyan;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 1rem; /* Adjust the position of the link */
+  bottom: 0.7rem;
+}
+
+/* Hover and Focus styles for the new link */
+.user .Nav .new-link:hover {
+  color: rgb(253, 211, 0); /* Yellow hover */
+  background-color: rgba(255, 161, 74, 0.1); /* Light orange tint */
+}
+
+.user .Nav .new-link:focus {
+  outline: 2px solid #ffa14a;
+  outline-offset: 3px;
+}
+
+/* Active state for the new link */
+.user .Nav .new-link.active {
+  color: #ffa14a;
+  font-weight: bold;
+}

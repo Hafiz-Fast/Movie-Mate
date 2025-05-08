@@ -320,8 +320,8 @@ exports.BookMovie = async (req, res) => {
 
 exports.SeatsData = async(req, res) => {
   try{
-    const {TheaterID} = req.body;
-    const result = await Task.viewSeats(TheaterID);
+    const {ShowTimeID} = req.body;
+    const result = await Task.viewSeats(ShowTimeID);
     res.json({ message: 'Seat Data Successfully retrieved',
               data:result.recordset
      });
@@ -350,10 +350,36 @@ exports.PaymentReceipt = async(req, res) => {
   try{
     const { UserID, Moviename, ScreenType, ShowDate, MovieTiming, PaymentMethod, Amount } = req.body;
     await Task.PaymentReceipt(UserID, Moviename, ScreenType, ShowDate, MovieTiming, PaymentMethod, Amount);
-    res.json({ message: 'Receipt Generated Successfully' })
+    res.json({ message: 'Receipt Generated Successfully' });
   }
   catch(error){
     console.error("Error Generating the receipt:", error);
+    res.status(500).json({ error: 'Internal Server Error'});
+  }
+}
+
+exports.AdminPass = async(req, res) => {
+  try{
+    const { email } = req.body;
+    await Task.AdminPass(email);
+    res.status(204).json({ message: 'Password Changed Successfully' })
+  }
+  catch(error){
+    console.error("Error Changing the password:", error);
+    res.status(500).json({ error: 'Internal Server Error'});
+  }
+}
+
+exports.getUserType = async(req, res) => {
+  try{
+    const { email } = req.body;
+    const result = await Task.getUserType(email);
+    res.status(200).json({ message: 'Password Changed Successfully',
+      data:result.recordset
+     });
+  }
+  catch(error){
+    console.error("Error getting user Data:", error);
     res.status(500).json({ error: 'Internal Server Error'});
   }
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 
 const Home = () => {
+    const [loggedIn, setLoggedIn] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const [Nmovies, setNMovies] = useState([]);
     const [CMovies, setCMovies] = useState([]);
@@ -24,6 +25,9 @@ const Home = () => {
     };
 
     useEffect(() => {
+      if(sessionStorage.getItem('Email')){
+        setLoggedIn(true);
+      }
       fetchNowShowing();
       fetchComingSoon();
     }, [refresh]);
@@ -35,6 +39,7 @@ const Home = () => {
               <ul>
                 <li><Link to = "/user/home">Home</Link></li>
                 <li><Link to = "/user/movies">Movies</Link></li>
+                {loggedIn && (<Link to = "/user/PassUp" className="new-link">Change Password</Link>)}
               </ul>
             </div>
             <br /><br /><br /><br />

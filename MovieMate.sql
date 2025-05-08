@@ -1,9 +1,7 @@
 Use Master
 go
 
-Create Database MovieMate
-go
-Use MovieMate
+Use MovieMate1
 go
 
 Create Table Rating(
@@ -138,6 +136,10 @@ Alter table BookedSeats
 add constraint Booked_1
 Foreign Key (BookingID) references Bookings(BookingID) On Delete cascade On Update cascade;
 
+Alter table UserReview
+add constraint User_1
+Foreign Key(UserID) references Users(UserID) On Delete cascade On Update cascade;
+
 Alter table Bookings
 add TheaterID int;
 
@@ -192,10 +194,9 @@ Alter TABLE Seat
 add constraint seat_PK
 primary key(SeatNumber, TheaterID, ShowTimeID); 
 
-
-
 Alter table Movie add links varchar(MAX);
 Alter table Movie add trailer varchar(MAX);
+Alter table users Alter Column  
 Alter table Seat add available int;
 Alter Table Payment alter column Amount float;
 Alter table Seat alter column ShowTimeID int NOT NULL;
@@ -550,16 +551,6 @@ On S.TheaterID = T.TheaterID
 where @MovieID = S.MovieID and @ScreenType = T.ScreenType
 and @ShowDate = S.ShowDate and @MovieTiming = S.ShowTiming;
 
-if not exists(Select 1 from Theater as T
-              join SeatRecord as S
-              On T.SeatRecordID = S.SeatRecordID
-              where @TheaterID = T.TheaterID
-              and S.AvailableSeats>0)
-BEGIN
-print('Booking Failed as Given ScreenType has no seat availaible');
-RETURN;
-end
-
 IF NOT EXISTS (
   SELECT 1 FROM Seat
   WHERE TheaterID = @TheaterID AND SeatNumber = @SeatNumber AND ShowTimeID = @ShowTimeID AND Available = 1
@@ -573,12 +564,27 @@ Update Seat
 set Seat.available = 0
 where TheaterID = @TheaterID And SeatNumber = @SeatNumber; 
 
+if not exists(Select 1 from Theater as T
+              join SeatRecord as S
+              On T.SeatRecordID = S.SeatRecordID
+              where @TheaterID = T.TheaterID
+              and S.AvailableSeats>0)
+BEGIN
+Update SeatRecord
+set OccupiedSeats = OccupiedSeats + 1,
+	TotalSeats = TotalSeats + 1
+where SeatRecordID = (Select SeatRecordID from Theater
+                      where @TheaterID = TheaterID);
+end
+ELSE
+BEGIN
 --Now update SeatRecord for that theater
 Update SeatRecord
 set AvailableSeats = AvailableSeats - 1, 
     OccupiedSeats = OccupiedSeats + 1
 where SeatRecordID = (Select SeatRecordID from Theater
                       where @TheaterID = TheaterID);
+END
 
 if @IsNew = 1
 BEGIN
@@ -605,9 +611,11 @@ END
 GO
 
 select * from ShowTimings;
-exec UserBooking 1,'A Working Man','Gold','2025-05-09','21:08:00','D5', 0;
+exec UserBooking 2,'A Working Man','Platinum','2025-05-09','19:16:00','A0', 1;
 SELECT * from Bookings;
 SELECT * FROM BookedSeats;
+SELECT * from Theater;
+Select * from SeatRecord;
 SELECT * from Seat;
 SELECT * from SeatRecord;
 select * from Payment;
@@ -682,28 +690,28 @@ Select * from Bookings;
 
 --10 Users can view Seats of a theater
 GO
-Create Procedure ViewSeats
-@TheaterID int
+Alter Procedure ViewSeats
+@ShowTimeID int
 as BEGIN
 
-if exists(Select 1 from theater where TheaterID = @TheaterID)
+if exists(Select 1 from ShowTimings where ShowTimeID = @ShowTimeID)
 BEGIN
-Select * from Theater as T
-join SeatRecord as S
-On T.SeatRecordID = S.SeatRecordID
-where T.TheaterID = @TheaterID;
+Select count(Available) As AvailableSeats from Seat
+where ShowTimeID = @ShowTimeID And available = 1;
 END
 
 ELSE
 BEGIN
-print('Theater not found');
+print('ShowTimings not found');
 END
 
 END
 GO
 
-exec ViewSeats 2;
+exec ViewSeats 1040;
 
+select * from Seat;
+select * from ShowTimings;
 --11 Admin can View Movies Record
 GO
 Create Procedure ViewMovies
@@ -851,8 +859,8 @@ SELECT * from Users;
 
 --16 Login using Email
 Go
-Create procedure loginE
-@email nvarchar(30), @password nvarchar(255), @flag int OUTPUT
+Alter procedure loginE
+@email nvarchar(30), @flag int OUTPUT
 
 As Begin
 if NOT Exists(select 1 from Users where @email = Email)
@@ -862,18 +870,10 @@ if NOT Exists(select 1 from Users where @email = Email)
 	end
 else
 	begin
-		if @password = (select UserPassword from Users where @email = Email)
-			begin
-				set @flag = 0 --login is successful
-				select U.UserID, U.UserName, U.Email, U.UserType
-				from Users AS U
-				where U.Email = @email;
-			end
-		else
-			begin
-				set @flag = 1 --password is incorrect
-				return;
-			end
+		set @flag = 0 --Email Exists
+		select U.UserID, U.UserName, U.Email, U.UserType, U.UserPassword
+		from Users AS U
+		where U.Email = @email;
 	end
 end
 go
@@ -884,8 +884,8 @@ Select @flag as Status;
 
 --17 login using Username
 Go
-Create procedure loginU
-@Username nvarchar(30), @password nvarchar(255), @flag int OUTPUT
+Alter procedure loginU
+@Username nvarchar(30), @flag int OUTPUT
 
 As Begin
 if NOT Exists(select 1 from Users where @Username = UserName)
@@ -895,18 +895,10 @@ if NOT Exists(select 1 from Users where @Username = UserName)
 	end
 else
 	begin
-		if @password = (select UserPassword from Users where @Username = UserName)
-			begin
-				set @flag = 0 --login is successful
-				select U.UserID, U.UserName, U.Email, U.UserType
-				from Users AS U
-				where U.UserName = @Username;
-			end
-		else
-			begin
-				set @flag = 1 --password is incorrect
-				return;
-			end
+		set @flag = 0 --username exists
+		select U.UserID, U.UserName, U.Email, U.UserType
+		from Users AS U
+		where U.UserName = @Username;
 	end
 end
 go
@@ -918,37 +910,21 @@ go
 
 --18 Update Password
 Go
-create procedure updatePass
-@UserName nvarchar(30),@oldPass nvarchar(255), @newPass nvarchar(255),
+Alter procedure updatePass
+@email nvarchar(30), @newPass nvarchar(255),
 @flag int OUTPUT
 
 As Begin
 
-if @oldPass = @newPass
-	begin
-		set @flag = 2 --password is the same
-		return;
-	end
-else
-	begin
-		if Exists (Select 1 From Users where UserName = @UserName and UserPassword = @oldPass)
-			begin
-				Update Users
-				Set UserPassword = @newPass
-				where @UserName = UserName;
-				Set @flag = 0	--password is successfully changed
-			end
-		else
-			begin
-				Set @flag = 1 --Password does not match
-				return;
-			end
-	end
+	Update Users
+	Set UserPassword = @newPass
+	where @email = Email;
+	Set @flag = 0	--password is successfully changed
+
 end
 go
 
 declare @flag int;
-exec updatePass 'Bhatti','playstation','playstation4',@flag output;
 Select * from Users;
 
 --19 Search a movie that is similar to that title
@@ -1248,3 +1224,5 @@ select * from Seat;
 select * from BookedSeats;
 
 select * from SeatRecord;
+
+Select * from Users;

@@ -1,4 +1,4 @@
-import React , { useState, useEffect, useRef } from 'react';
+import React , { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import SeatSelection from './SeatSelection';
 
@@ -22,7 +22,7 @@ const ScreeningDetail = () => {
         setFutureShows(prev => !prev);
     };
 
-    const fetchScreeningDetails = async () => {
+    const fetchScreeningDetails = useCallback(async () => {
         try {
             const response = await fetch("http://localhost:5000/api/search-screening", {
                 method: 'POST',
@@ -31,24 +31,23 @@ const ScreeningDetail = () => {
             });
             const data = await response.json();
             setScreeningDetails(data);
+            
             if (todayDivRef.current) {
-                setTodayHeight(`${todayDivRef.current.scrollHeight}px`);
-                setMaxHeight(`${todayDivRef.current.scrollHeight}px`);
+                const height = todayDivRef.current.scrollHeight;
+                setTodayHeight(`${height}px`);
+                setMaxHeight(`${height}px`);
             }
             else{
                 setTodayHeight('150px');
                 setMaxHeight('150px');                
             }
 
-            if(!selectedScreen){
-                setSelectedScreen(null);
-            }
         } catch (error) {
             console.error("Error fetching screenings:", error);
         }
-    };
+    }, [title]);
 
-    const fetchMovieDetails = async () => {
+    const fetchMovieDetails = useCallback(async () => {
         try {
             const response = await fetch("http://localhost:5000/api/search-movie", {
                 method: 'POST',
@@ -60,9 +59,9 @@ const ScreeningDetail = () => {
         } catch (error) {
             console.error("Error fetching movie details:", error);
         }
-    };
+    }, [title]);
 
-    const scheduleNextCleanup = async () => {
+    const scheduleNextCleanup = useCallback(async () => {
         const now = Date.now();
         const msUntilNext5Min = 300000 - (now % 300000) + 2000; // Next 5-minute mark + 1s buffer
 
@@ -81,7 +80,14 @@ const ScreeningDetail = () => {
                 scheduleNextCleanup(); // Keep scheduling, but don't run if still fetching
             }
         }, msUntilNext5Min);
-    };
+    },[isRunning, fetchScreeningDetails]);
+
+    useEffect(() => {
+        
+        if (!selectedScreen) {
+            setSelectedScreen(null);
+        }
+    }, [selectedScreen]);
 
     useEffect(() => {
         fetchMovieDetails(); // Fetch movie details once on mount
@@ -89,11 +95,13 @@ const ScreeningDetail = () => {
         fetchScreeningDetails(); // Fetch screening details on mount
         scheduleNextCleanup(); // Schedule subsequent data fetches
 
+        const currentTimeout = timeoutRef.current;
+
         return() => {
-            if(timeoutRef.current)
-            clearTimeout(timeoutRef.current);
+            if(currentTimeout)
+            clearTimeout(currentTimeout);
         }
-    }, [title]);
+    }, [title, fetchMovieDetails, fetchScreeningDetails, scheduleNextCleanup]);
 
     useEffect(() => {
         const element = todayRef.current;

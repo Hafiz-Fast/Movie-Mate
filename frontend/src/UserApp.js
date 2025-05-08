@@ -8,6 +8,7 @@ import ScreeningDetail from './components/ScreeningDetail';
 import TheaterSetup from './components/TheaterSetup';
 import Checkout from './components/Checkout';
 import BookingSuccessPage from './components/BookingSuccessPage';
+import ForgotPage from './components/ForgotPage';
 
 function App(){
 
@@ -29,9 +30,10 @@ function App(){
         <Route path='movies' element={<Movies />} />
         <Route path="movies/:title" element={<MovieDetail />} />
         <Route path='booking/:title' element={<ScreeningDetail />} />
-        <Route path='booking/' element={<TheaterSetup />} />
-        <Route path='checkout/' element={<Checkout />} />
-        <Route path='BookingComplete/' element={<BookingSuccessPage />} />
+        <Route path='booking' element={<TheaterSetup />} />
+        <Route path='checkout' element={<Checkout />} />
+        <Route path='BookingComplete' element={<BookingSuccessPage />} />
+        <Route path='PassUp' element={<ForgotPage />} />
       </Routes>
     </>
   );
